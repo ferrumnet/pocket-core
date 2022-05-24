@@ -10,9 +10,9 @@ option go_package = "github.com/pokt-network/pocket-core/x/bridgepool/types";
 
 // The state of the module from the beginning
 message GenesisState {
-  Params params = 1;
-  repeated string signers = 2;
-  repeated TokenLiquidity liquidities = 3;
+  Params params = 1 [ (gogoproto.nullable) = false ];
+  repeated string signers = 2 [ (gogoproto.nullable) = false ];
+  repeated TokenLiquidity liquidities = 3 [ (gogoproto.nullable) = false ];
   repeated string fees = 4;
 }
 
@@ -29,6 +29,97 @@ message TokenTarget {
     string token = 1;
     string chain_id = 2;
     string target_token = 3;
+}
+
+message MsgSetFee {
+  option (gogoproto.messagename) = true;
+  option (gogoproto.goproto_getters) = false;
+
+  bytes fromAddress = 1 [
+    (gogoproto.jsontag) = "from_address",
+    (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
+  ];
+  string token = 2;
+  uint64 fee10000 = 3;
+}
+
+message MsgAllowTarget {
+  option (gogoproto.messagename) = true;
+  option (gogoproto.goproto_getters) = false;
+
+  bytes fromAddress = 1 [
+    (gogoproto.jsontag) = "from_address",
+    (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
+  ];
+  string token = 2;
+  uint64 chainId = 3;
+  string targetToken = 4;
+}
+
+message MsgDisallowTarget {
+  option (gogoproto.messagename) = true;
+  option (gogoproto.goproto_getters) = false;
+
+  bytes fromAddress = 1 [
+    (gogoproto.jsontag) = "from_address",
+    (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
+  ];
+  string token = 2;
+  uint64 chainId = 3;
+}
+
+message MsgAddLiquidity {
+  option (gogoproto.messagename) = true;
+  option (gogoproto.goproto_getters) = false;
+
+  bytes fromAddress = 1 [
+    (gogoproto.jsontag) = "from_address",
+    (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
+  ];
+  string token = 2;
+  uint64 amount = 3;
+}
+
+message MsgRemoveLiquidity {
+  option (gogoproto.messagename) = true;
+  option (gogoproto.goproto_getters) = false;
+
+  bytes fromAddress = 1 [
+    (gogoproto.jsontag) = "from_address",
+    (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
+  ];
+  string token = 2;
+  uint64 amount = 3;
+}
+
+message MsgSwap {
+  option (gogoproto.messagename) = true;
+  option (gogoproto.goproto_getters) = false;
+
+  bytes fromAddress = 1 [
+    (gogoproto.jsontag) = "from_address",
+    (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
+  ];
+  string token = 2;
+  uint64 amount = 3;
+  string targetNetwork = 4;
+  string targetToken = 5;
+  string targetAddress = 6;
+}
+
+message MsgWithdrawSigned {
+  option (gogoproto.messagename) = true;
+  option (gogoproto.goproto_getters) = false;
+
+  bytes fromAddress = 1 [
+    (gogoproto.jsontag) = "from_address",
+    (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
+  ];
+  string token = 2;
+  string payee = 3;
+  uint64 amount = 4;
+  bytes salt = 5;
+  bytes signature = 6;
 }
 
 // define events

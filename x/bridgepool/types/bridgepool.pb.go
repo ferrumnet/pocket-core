@@ -9,6 +9,7 @@ import (
 	proto "github.com/gogo/protobuf/proto"
 	_ "github.com/pokt-network/pocket-core/codec/types"
 	_ "github.com/pokt-network/pocket-core/types"
+	github_com_pokt_network_pocket_core_types "github.com/pokt-network/pocket-core/types"
 	_ "github.com/regen-network/cosmos-proto"
 	io "io"
 	math "math"
@@ -28,10 +29,10 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // The state of the module from the beginning
 type GenesisState struct {
-	Params      *Params           `protobuf:"bytes,1,opt,name=params,proto3" json:"params,omitempty"`
-	Signers     []string          `protobuf:"bytes,2,rep,name=signers,proto3" json:"signers,omitempty"`
-	Liquidities []*TokenLiquidity `protobuf:"bytes,3,rep,name=liquidities,proto3" json:"liquidities,omitempty"`
-	Fees        []string          `protobuf:"bytes,4,rep,name=fees,proto3" json:"fees,omitempty"`
+	Params      Params           `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
+	Signers     []string         `protobuf:"bytes,2,rep,name=signers,proto3" json:"signers,omitempty"`
+	Liquidities []TokenLiquidity `protobuf:"bytes,3,rep,name=liquidities,proto3" json:"liquidities"`
+	Fees        []string         `protobuf:"bytes,4,rep,name=fees,proto3" json:"fees,omitempty"`
 }
 
 func (m *GenesisState) Reset()         { *m = GenesisState{} }
@@ -67,11 +68,11 @@ func (m *GenesisState) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_GenesisState proto.InternalMessageInfo
 
-func (m *GenesisState) GetParams() *Params {
+func (m *GenesisState) GetParams() Params {
 	if m != nil {
 		return m.Params
 	}
-	return nil
+	return Params{}
 }
 
 func (m *GenesisState) GetSigners() []string {
@@ -81,7 +82,7 @@ func (m *GenesisState) GetSigners() []string {
 	return nil
 }
 
-func (m *GenesisState) GetLiquidities() []*TokenLiquidity {
+func (m *GenesisState) GetLiquidities() []TokenLiquidity {
 	if m != nil {
 		return m.Liquidities
 	}
@@ -251,6 +252,314 @@ func (m *TokenTarget) GetTargetToken() string {
 	return ""
 }
 
+type MsgSetFee struct {
+	FromAddress github_com_pokt_network_pocket_core_types.Address `protobuf:"bytes,1,opt,name=fromAddress,proto3,casttype=github.com/pokt-network/pocket-core/types.Address" json:"from_address"`
+	Token       string                                            `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
+	Fee10000    uint64                                            `protobuf:"varint,3,opt,name=fee10000,proto3" json:"fee10000,omitempty"`
+}
+
+func (m *MsgSetFee) Reset()         { *m = MsgSetFee{} }
+func (m *MsgSetFee) String() string { return proto.CompactTextString(m) }
+func (*MsgSetFee) ProtoMessage()    {}
+func (*MsgSetFee) Descriptor() ([]byte, []int) {
+	return fileDescriptor_4cf2927c36d8981b, []int{4}
+}
+func (m *MsgSetFee) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgSetFee) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgSetFee.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgSetFee) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgSetFee.Merge(m, src)
+}
+func (m *MsgSetFee) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgSetFee) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgSetFee.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgSetFee proto.InternalMessageInfo
+
+func (*MsgSetFee) XXX_MessageName() string {
+	return "x.bridgepool.MsgSetFee"
+}
+
+type MsgAllowTarget struct {
+	FromAddress github_com_pokt_network_pocket_core_types.Address `protobuf:"bytes,1,opt,name=fromAddress,proto3,casttype=github.com/pokt-network/pocket-core/types.Address" json:"from_address"`
+	Token       string                                            `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
+	ChainId     uint64                                            `protobuf:"varint,3,opt,name=chainId,proto3" json:"chainId,omitempty"`
+	TargetToken string                                            `protobuf:"bytes,4,opt,name=targetToken,proto3" json:"targetToken,omitempty"`
+}
+
+func (m *MsgAllowTarget) Reset()         { *m = MsgAllowTarget{} }
+func (m *MsgAllowTarget) String() string { return proto.CompactTextString(m) }
+func (*MsgAllowTarget) ProtoMessage()    {}
+func (*MsgAllowTarget) Descriptor() ([]byte, []int) {
+	return fileDescriptor_4cf2927c36d8981b, []int{5}
+}
+func (m *MsgAllowTarget) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgAllowTarget) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgAllowTarget.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgAllowTarget) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAllowTarget.Merge(m, src)
+}
+func (m *MsgAllowTarget) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgAllowTarget) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAllowTarget.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgAllowTarget proto.InternalMessageInfo
+
+func (*MsgAllowTarget) XXX_MessageName() string {
+	return "x.bridgepool.MsgAllowTarget"
+}
+
+type MsgDisallowTarget struct {
+	FromAddress github_com_pokt_network_pocket_core_types.Address `protobuf:"bytes,1,opt,name=fromAddress,proto3,casttype=github.com/pokt-network/pocket-core/types.Address" json:"from_address"`
+	Token       string                                            `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
+	ChainId     uint64                                            `protobuf:"varint,3,opt,name=chainId,proto3" json:"chainId,omitempty"`
+}
+
+func (m *MsgDisallowTarget) Reset()         { *m = MsgDisallowTarget{} }
+func (m *MsgDisallowTarget) String() string { return proto.CompactTextString(m) }
+func (*MsgDisallowTarget) ProtoMessage()    {}
+func (*MsgDisallowTarget) Descriptor() ([]byte, []int) {
+	return fileDescriptor_4cf2927c36d8981b, []int{6}
+}
+func (m *MsgDisallowTarget) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgDisallowTarget) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgDisallowTarget.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgDisallowTarget) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgDisallowTarget.Merge(m, src)
+}
+func (m *MsgDisallowTarget) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgDisallowTarget) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgDisallowTarget.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgDisallowTarget proto.InternalMessageInfo
+
+func (*MsgDisallowTarget) XXX_MessageName() string {
+	return "x.bridgepool.MsgDisallowTarget"
+}
+
+type MsgAddLiquidity struct {
+	FromAddress github_com_pokt_network_pocket_core_types.Address `protobuf:"bytes,1,opt,name=fromAddress,proto3,casttype=github.com/pokt-network/pocket-core/types.Address" json:"from_address"`
+	Token       string                                            `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
+	Amount      uint64                                            `protobuf:"varint,3,opt,name=amount,proto3" json:"amount,omitempty"`
+}
+
+func (m *MsgAddLiquidity) Reset()         { *m = MsgAddLiquidity{} }
+func (m *MsgAddLiquidity) String() string { return proto.CompactTextString(m) }
+func (*MsgAddLiquidity) ProtoMessage()    {}
+func (*MsgAddLiquidity) Descriptor() ([]byte, []int) {
+	return fileDescriptor_4cf2927c36d8981b, []int{7}
+}
+func (m *MsgAddLiquidity) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgAddLiquidity) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgAddLiquidity.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgAddLiquidity) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAddLiquidity.Merge(m, src)
+}
+func (m *MsgAddLiquidity) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgAddLiquidity) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAddLiquidity.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgAddLiquidity proto.InternalMessageInfo
+
+func (*MsgAddLiquidity) XXX_MessageName() string {
+	return "x.bridgepool.MsgAddLiquidity"
+}
+
+type MsgRemoveLiquidity struct {
+	FromAddress github_com_pokt_network_pocket_core_types.Address `protobuf:"bytes,1,opt,name=fromAddress,proto3,casttype=github.com/pokt-network/pocket-core/types.Address" json:"from_address"`
+	Token       string                                            `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
+	Amount      uint64                                            `protobuf:"varint,3,opt,name=amount,proto3" json:"amount,omitempty"`
+}
+
+func (m *MsgRemoveLiquidity) Reset()         { *m = MsgRemoveLiquidity{} }
+func (m *MsgRemoveLiquidity) String() string { return proto.CompactTextString(m) }
+func (*MsgRemoveLiquidity) ProtoMessage()    {}
+func (*MsgRemoveLiquidity) Descriptor() ([]byte, []int) {
+	return fileDescriptor_4cf2927c36d8981b, []int{8}
+}
+func (m *MsgRemoveLiquidity) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRemoveLiquidity) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRemoveLiquidity.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRemoveLiquidity) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRemoveLiquidity.Merge(m, src)
+}
+func (m *MsgRemoveLiquidity) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRemoveLiquidity) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRemoveLiquidity.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRemoveLiquidity proto.InternalMessageInfo
+
+func (*MsgRemoveLiquidity) XXX_MessageName() string {
+	return "x.bridgepool.MsgRemoveLiquidity"
+}
+
+type MsgSwap struct {
+	FromAddress   github_com_pokt_network_pocket_core_types.Address `protobuf:"bytes,1,opt,name=fromAddress,proto3,casttype=github.com/pokt-network/pocket-core/types.Address" json:"from_address"`
+	Token         string                                            `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
+	Amount        uint64                                            `protobuf:"varint,3,opt,name=amount,proto3" json:"amount,omitempty"`
+	TargetNetwork string                                            `protobuf:"bytes,4,opt,name=targetNetwork,proto3" json:"targetNetwork,omitempty"`
+	TargetToken   string                                            `protobuf:"bytes,5,opt,name=targetToken,proto3" json:"targetToken,omitempty"`
+	TargetAddress string                                            `protobuf:"bytes,6,opt,name=targetAddress,proto3" json:"targetAddress,omitempty"`
+}
+
+func (m *MsgSwap) Reset()         { *m = MsgSwap{} }
+func (m *MsgSwap) String() string { return proto.CompactTextString(m) }
+func (*MsgSwap) ProtoMessage()    {}
+func (*MsgSwap) Descriptor() ([]byte, []int) {
+	return fileDescriptor_4cf2927c36d8981b, []int{9}
+}
+func (m *MsgSwap) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgSwap) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgSwap.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgSwap) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgSwap.Merge(m, src)
+}
+func (m *MsgSwap) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgSwap) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgSwap.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgSwap proto.InternalMessageInfo
+
+func (*MsgSwap) XXX_MessageName() string {
+	return "x.bridgepool.MsgSwap"
+}
+
+type MsgWithdrawSigned struct {
+	FromAddress github_com_pokt_network_pocket_core_types.Address `protobuf:"bytes,1,opt,name=fromAddress,proto3,casttype=github.com/pokt-network/pocket-core/types.Address" json:"from_address"`
+	Token       string                                            `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
+	Payee       string                                            `protobuf:"bytes,3,opt,name=payee,proto3" json:"payee,omitempty"`
+	Amount      uint64                                            `protobuf:"varint,4,opt,name=amount,proto3" json:"amount,omitempty"`
+	Salt        []byte                                            `protobuf:"bytes,5,opt,name=salt,proto3" json:"salt,omitempty"`
+	Signature   []byte                                            `protobuf:"bytes,6,opt,name=signature,proto3" json:"signature,omitempty"`
+}
+
+func (m *MsgWithdrawSigned) Reset()         { *m = MsgWithdrawSigned{} }
+func (m *MsgWithdrawSigned) String() string { return proto.CompactTextString(m) }
+func (*MsgWithdrawSigned) ProtoMessage()    {}
+func (*MsgWithdrawSigned) Descriptor() ([]byte, []int) {
+	return fileDescriptor_4cf2927c36d8981b, []int{10}
+}
+func (m *MsgWithdrawSigned) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgWithdrawSigned) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgWithdrawSigned.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgWithdrawSigned) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgWithdrawSigned.Merge(m, src)
+}
+func (m *MsgWithdrawSigned) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgWithdrawSigned) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgWithdrawSigned.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgWithdrawSigned proto.InternalMessageInfo
+
+func (*MsgWithdrawSigned) XXX_MessageName() string {
+	return "x.bridgepool.MsgWithdrawSigned"
+}
+
 // define events
 type EventTransferBySignature struct {
 	Signer   string `protobuf:"bytes,1,opt,name=signer,proto3" json:"signer,omitempty"`
@@ -264,7 +573,7 @@ func (m *EventTransferBySignature) Reset()         { *m = EventTransferBySignatu
 func (m *EventTransferBySignature) String() string { return proto.CompactTextString(m) }
 func (*EventTransferBySignature) ProtoMessage()    {}
 func (*EventTransferBySignature) Descriptor() ([]byte, []int) {
-	return fileDescriptor_4cf2927c36d8981b, []int{4}
+	return fileDescriptor_4cf2927c36d8981b, []int{11}
 }
 func (m *EventTransferBySignature) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -338,7 +647,7 @@ func (m *EventBridgeLiquidityAdded) Reset()         { *m = EventBridgeLiquidityA
 func (m *EventBridgeLiquidityAdded) String() string { return proto.CompactTextString(m) }
 func (*EventBridgeLiquidityAdded) ProtoMessage()    {}
 func (*EventBridgeLiquidityAdded) Descriptor() ([]byte, []int) {
-	return fileDescriptor_4cf2927c36d8981b, []int{5}
+	return fileDescriptor_4cf2927c36d8981b, []int{12}
 }
 func (m *EventBridgeLiquidityAdded) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -398,7 +707,7 @@ func (m *EventBridgeLiquidityRemoved) Reset()         { *m = EventBridgeLiquidit
 func (m *EventBridgeLiquidityRemoved) String() string { return proto.CompactTextString(m) }
 func (*EventBridgeLiquidityRemoved) ProtoMessage()    {}
 func (*EventBridgeLiquidityRemoved) Descriptor() ([]byte, []int) {
-	return fileDescriptor_4cf2927c36d8981b, []int{6}
+	return fileDescriptor_4cf2927c36d8981b, []int{13}
 }
 func (m *EventBridgeLiquidityRemoved) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -461,7 +770,7 @@ func (m *EventBridgeSwap) Reset()         { *m = EventBridgeSwap{} }
 func (m *EventBridgeSwap) String() string { return proto.CompactTextString(m) }
 func (*EventBridgeSwap) ProtoMessage()    {}
 func (*EventBridgeSwap) Descriptor() ([]byte, []int) {
-	return fileDescriptor_4cf2927c36d8981b, []int{7}
+	return fileDescriptor_4cf2927c36d8981b, []int{14}
 }
 func (m *EventBridgeSwap) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -537,6 +846,13 @@ func init() {
 	proto.RegisterType((*Params)(nil), "x.bridgepool.Params")
 	proto.RegisterType((*TokenLiquidity)(nil), "x.bridgepool.TokenLiquidity")
 	proto.RegisterType((*TokenTarget)(nil), "x.bridgepool.TokenTarget")
+	proto.RegisterType((*MsgSetFee)(nil), "x.bridgepool.MsgSetFee")
+	proto.RegisterType((*MsgAllowTarget)(nil), "x.bridgepool.MsgAllowTarget")
+	proto.RegisterType((*MsgDisallowTarget)(nil), "x.bridgepool.MsgDisallowTarget")
+	proto.RegisterType((*MsgAddLiquidity)(nil), "x.bridgepool.MsgAddLiquidity")
+	proto.RegisterType((*MsgRemoveLiquidity)(nil), "x.bridgepool.MsgRemoveLiquidity")
+	proto.RegisterType((*MsgSwap)(nil), "x.bridgepool.MsgSwap")
+	proto.RegisterType((*MsgWithdrawSigned)(nil), "x.bridgepool.MsgWithdrawSigned")
 	proto.RegisterType((*EventTransferBySignature)(nil), "x.bridgepool.EventTransferBySignature")
 	proto.RegisterType((*EventBridgeLiquidityAdded)(nil), "x.bridgepool.EventBridgeLiquidityAdded")
 	proto.RegisterType((*EventBridgeLiquidityRemoved)(nil), "x.bridgepool.EventBridgeLiquidityRemoved")
@@ -546,43 +862,60 @@ func init() {
 func init() { proto.RegisterFile("x/bridgepool/bridgepool.proto", fileDescriptor_4cf2927c36d8981b) }
 
 var fileDescriptor_4cf2927c36d8981b = []byte{
-	// 568 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x54, 0x41, 0x6f, 0xda, 0x30,
-	0x14, 0x6e, 0x1a, 0x9a, 0xb6, 0x86, 0x75, 0x95, 0x85, 0xaa, 0xc0, 0xba, 0x88, 0x45, 0x9a, 0xc4,
-	0x61, 0x25, 0x52, 0x27, 0xed, 0x38, 0xa9, 0x48, 0xd3, 0x36, 0x69, 0x9a, 0x2a, 0xe0, 0xb4, 0x0b,
-	0x32, 0xc9, 0x23, 0xb5, 0x20, 0x76, 0x66, 0x1b, 0x28, 0x7f, 0x62, 0xda, 0xef, 0xd8, 0xef, 0xd8,
-	0x61, 0xc7, 0x1e, 0x77, 0x9c, 0xe0, 0x8f, 0x4c, 0xb1, 0x5d, 0x08, 0x6a, 0x77, 0xdb, 0xed, 0x7d,
-	0xdf, 0xb3, 0xbf, 0xef, 0xf3, 0x7b, 0x10, 0xf4, 0xfc, 0x36, 0x1a, 0x09, 0x9a, 0xa4, 0x90, 0x73,
-	0x3e, 0x2d, 0x95, 0x9d, 0x5c, 0x70, 0xc5, 0x71, 0xed, 0xb6, 0xb3, 0xe5, 0x9a, 0x8d, 0x98, 0xcb,
-	0x8c, 0xcb, 0xa1, 0xee, 0x45, 0x06, 0x98, 0x83, 0xcd, 0x7a, 0xca, 0x53, 0x6e, 0xf8, 0xa2, 0xb2,
-	0xec, 0xa9, 0x5a, 0xe6, 0x20, 0xa3, 0x98, 0x53, 0x66, 0x99, 0x46, 0xca, 0x79, 0x3a, 0x85, 0x48,
-	0xa3, 0xd1, 0x6c, 0x1c, 0x11, 0xb6, 0x34, 0xad, 0xf0, 0x87, 0x83, 0x6a, 0xef, 0x81, 0x81, 0xa4,
-	0xb2, 0xaf, 0x88, 0x02, 0xfc, 0x0a, 0x79, 0x39, 0x11, 0x24, 0x93, 0xbe, 0xd3, 0x72, 0xda, 0xd5,
-	0xcb, 0x7a, 0xa7, 0x9c, 0xa6, 0x73, 0xad, 0x7b, 0x3d, 0x7b, 0x06, 0xfb, 0xe8, 0x50, 0xd2, 0x94,
-	0x81, 0x90, 0xfe, 0x7e, 0xcb, 0x6d, 0x1f, 0xf7, 0xee, 0x21, 0x7e, 0x8b, 0xaa, 0x53, 0xfa, 0x75,
-	0x46, 0x13, 0xaa, 0x28, 0x48, 0xdf, 0x6d, 0xb9, 0xed, 0xea, 0xe5, 0xf9, 0xae, 0xd8, 0x80, 0x4f,
-	0x80, 0x7d, 0xb2, 0xa7, 0x96, 0xbd, 0xf2, 0x05, 0x8c, 0x51, 0x65, 0x0c, 0x20, 0xfd, 0x8a, 0x96,
-	0xd5, 0x75, 0x18, 0x20, 0xcf, 0xf8, 0xe3, 0x3a, 0x3a, 0xe0, 0x0b, 0x06, 0x42, 0x87, 0x3c, 0xee,
-	0x19, 0x10, 0x7e, 0x40, 0x27, 0xbb, 0x92, 0xf8, 0x1c, 0x1d, 0xe7, 0x82, 0xcf, 0x69, 0x52, 0x24,
-	0x74, 0xb4, 0xd4, 0x96, 0x28, 0xd2, 0x93, 0x8c, 0xcf, 0x98, 0xda, 0xa4, 0xb7, 0x30, 0x24, 0xa8,
-	0xaa, 0x95, 0x06, 0x44, 0xa4, 0xa0, 0x0a, 0x3b, 0x55, 0xc0, 0x7b, 0x3b, 0x0d, 0x70, 0x03, 0x1d,
-	0xc5, 0x37, 0x84, 0xb2, 0x21, 0x4d, 0xfc, 0x7d, 0xdd, 0x38, 0xd4, 0xf8, 0x63, 0x82, 0x5f, 0xa0,
-	0x9a, 0xd2, 0x57, 0x87, 0xe6, 0x9e, 0xab, 0xdb, 0x55, 0xc3, 0x69, 0xe5, 0xf0, 0x9b, 0x83, 0xfc,
-	0x77, 0x73, 0x60, 0x6a, 0x20, 0x08, 0x93, 0x63, 0x10, 0xdd, 0x65, 0x9f, 0xa6, 0x8c, 0xa8, 0x99,
-	0x00, 0x7c, 0x86, 0x3c, 0x33, 0x48, 0xeb, 0x68, 0x11, 0x6e, 0xa2, 0x23, 0x01, 0x31, 0xd0, 0x39,
-	0x08, 0x6b, 0xb9, 0xc1, 0xdb, 0x90, 0x6e, 0x39, 0xe4, 0x19, 0xf2, 0xcc, 0xa3, 0xfc, 0x8a, 0x51,
-	0x32, 0x08, 0x9f, 0x22, 0x77, 0x0c, 0xe0, 0x1f, 0x68, 0xb2, 0x28, 0xc3, 0x21, 0x6a, 0xe8, 0x3c,
-	0x5d, 0xbd, 0xa0, 0xcd, 0x0c, 0xaf, 0x92, 0x04, 0x92, 0x42, 0x9c, 0xc4, 0x8a, 0x6f, 0x06, 0xae,
-	0xc1, 0xd6, 0x72, 0xff, 0x71, 0x4b, 0xb7, 0x6c, 0x19, 0x12, 0xf4, 0xec, 0x31, 0x83, 0x1e, 0x64,
-	0x7c, 0xfe, 0x9f, 0x2c, 0x7e, 0x3a, 0xe8, 0x69, 0xc9, 0xa3, 0xbf, 0x20, 0xb9, 0xfe, 0x25, 0x09,
-	0x9e, 0x59, 0x59, 0x5d, 0xff, 0x43, 0xf5, 0x25, 0x3a, 0xb1, 0x5b, 0x63, 0xa0, 0x16, 0x5c, 0x4c,
-	0xac, 0xfa, 0x13, 0xc3, 0x7e, 0x36, 0xe4, 0x83, 0xe5, 0x56, 0x1e, 0x2c, 0xb7, 0xa4, 0x44, 0x92,
-	0x44, 0x80, 0x94, 0x76, 0xd0, 0x56, 0xe9, 0xca, 0x90, 0xa5, 0x67, 0x78, 0xe5, 0x67, 0x74, 0xaf,
-	0x7f, 0xad, 0x02, 0xe7, 0x6e, 0x15, 0x38, 0x7f, 0x56, 0x81, 0xf3, 0x7d, 0x1d, 0xec, 0xdd, 0xad,
-	0x83, 0xbd, 0xdf, 0xeb, 0x60, 0xef, 0xcb, 0x9b, 0x94, 0xaa, 0x9b, 0xd9, 0xa8, 0x13, 0xf3, 0x2c,
-	0xca, 0xf9, 0x44, 0x5d, 0xd8, 0xa4, 0x51, 0xce, 0xe3, 0x09, 0xa8, 0x8b, 0x98, 0x0b, 0x88, 0x76,
-	0x3e, 0x2f, 0xfa, 0x6b, 0x30, 0xf2, 0xf4, 0xdf, 0xfd, 0xf5, 0xdf, 0x00, 0x00, 0x00, 0xff, 0xff,
-	0x73, 0xea, 0x52, 0xdd, 0x7b, 0x04, 0x00, 0x00,
+	// 842 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x56, 0x3f, 0x6f, 0x23, 0x45,
+	0x14, 0xf7, 0xc6, 0x8e, 0x93, 0x3c, 0x9b, 0xdc, 0xb1, 0x8a, 0xd0, 0x26, 0x1c, 0x6b, 0xb3, 0x02,
+	0x29, 0xcd, 0x79, 0x7d, 0x41, 0xa2, 0xa0, 0x8b, 0x75, 0xc7, 0x1f, 0x09, 0xa3, 0xd3, 0x3a, 0x12,
+	0x12, 0x8d, 0x35, 0xde, 0x7d, 0xde, 0xac, 0x6c, 0xef, 0x2c, 0x33, 0x63, 0xfb, 0xfc, 0x0d, 0xae,
+	0x42, 0x94, 0x94, 0x88, 0x4f, 0x80, 0x90, 0xa0, 0xa2, 0xa4, 0xb8, 0xf2, 0x1a, 0x24, 0xaa, 0x08,
+	0x25, 0x1d, 0x1f, 0x01, 0x51, 0xa0, 0xf9, 0x63, 0x7b, 0x9c, 0x1c, 0xd2, 0x15, 0x48, 0xb9, 0xeb,
+	0xe6, 0xf7, 0x66, 0xf7, 0xf7, 0x7e, 0xef, 0xdf, 0xbe, 0x85, 0x77, 0x9e, 0x84, 0x03, 0x96, 0x25,
+	0x29, 0x16, 0x94, 0x8e, 0xad, 0x63, 0xab, 0x60, 0x54, 0x50, 0xb7, 0xfe, 0xa4, 0xb5, 0xb6, 0x1d,
+	0x1d, 0xc6, 0x94, 0x4f, 0x28, 0xef, 0xab, 0xbb, 0x50, 0x03, 0xfd, 0xe0, 0xd1, 0x41, 0x4a, 0x53,
+	0xaa, 0xed, 0xf2, 0x64, 0xac, 0x77, 0xc5, 0xa2, 0x40, 0x1e, 0xc6, 0x34, 0xcb, 0x8d, 0xe5, 0x30,
+	0xa5, 0x34, 0x1d, 0x63, 0xa8, 0xd0, 0x60, 0x3a, 0x0c, 0x49, 0xbe, 0xd0, 0x57, 0xc1, 0xaf, 0x0e,
+	0xd4, 0x3f, 0xc1, 0x1c, 0x79, 0xc6, 0x7b, 0x82, 0x08, 0x74, 0x4f, 0xa0, 0x5a, 0x10, 0x46, 0x26,
+	0xdc, 0x73, 0x9a, 0xce, 0x71, 0xed, 0xe4, 0xa0, 0x65, 0xab, 0x69, 0x3d, 0x56, 0x77, 0x9d, 0xca,
+	0xb3, 0x8b, 0x46, 0x29, 0x32, 0x4f, 0xba, 0x3e, 0xec, 0xf0, 0x2c, 0xcd, 0x91, 0x71, 0x6f, 0xab,
+	0x59, 0x3e, 0xde, 0x33, 0xd7, 0x4b, 0xa3, 0xfb, 0x10, 0x6a, 0xe3, 0xec, 0xeb, 0x69, 0x96, 0x64,
+	0x22, 0x43, 0xee, 0x95, 0x9b, 0xe5, 0xe3, 0xda, 0xc9, 0xbd, 0x4d, 0xe2, 0x33, 0x3a, 0xc2, 0xfc,
+	0x73, 0xf3, 0xd4, 0xc2, 0x30, 0xd8, 0xaf, 0xb9, 0x2e, 0x54, 0x86, 0x88, 0xdc, 0xab, 0x48, 0x17,
+	0x91, 0x3a, 0x07, 0x3e, 0x54, 0xb5, 0x22, 0xf7, 0x00, 0xb6, 0xe9, 0x3c, 0x47, 0xa6, 0x64, 0xef,
+	0x45, 0x1a, 0x04, 0x9f, 0xc2, 0xfe, 0x26, 0xb1, 0x7b, 0x0f, 0xf6, 0x0a, 0x46, 0x67, 0x59, 0x22,
+	0xd5, 0x3a, 0x8a, 0x6a, 0x6d, 0x70, 0x3d, 0xd8, 0x21, 0x13, 0x3a, 0xcd, 0x85, 0x89, 0x24, 0x5a,
+	0xc2, 0x80, 0x40, 0x4d, 0x31, 0x9d, 0x11, 0x96, 0xa2, 0x90, 0xee, 0x84, 0x84, 0x4b, 0x77, 0x0a,
+	0xb8, 0x87, 0xb0, 0x1b, 0x9f, 0x93, 0x2c, 0xef, 0x67, 0x89, 0xb7, 0xa5, 0x2e, 0x76, 0x14, 0xfe,
+	0x2c, 0x71, 0xdf, 0x85, 0xba, 0x50, 0xaf, 0xf6, 0xf5, 0x7b, 0x65, 0x75, 0x5d, 0xd3, 0x36, 0xc5,
+	0x1c, 0xfc, 0xe8, 0xc0, 0x5e, 0x97, 0xa7, 0x3d, 0x14, 0x1f, 0x23, 0xba, 0x29, 0xd4, 0x86, 0x8c,
+	0x4e, 0x4e, 0x93, 0x84, 0x21, 0xd7, 0xd5, 0xa8, 0x77, 0x1e, 0xfd, 0x75, 0xd1, 0xa8, 0x4b, 0x73,
+	0x9f, 0x68, 0xfb, 0xdf, 0x17, 0x8d, 0x07, 0x69, 0x26, 0xce, 0xa7, 0x83, 0x56, 0x4c, 0x27, 0x61,
+	0x41, 0x47, 0xe2, 0x7e, 0x8e, 0x62, 0x4e, 0xd9, 0x28, 0x2c, 0x68, 0x3c, 0x42, 0x71, 0x3f, 0xa6,
+	0x0c, 0x43, 0xd5, 0x13, 0x2d, 0x43, 0x16, 0xd9, 0xcc, 0xeb, 0x50, 0xb6, 0xec, 0x50, 0x8e, 0x60,
+	0x77, 0x88, 0xf8, 0xa0, 0xdd, 0x6e, 0xb7, 0x95, 0xd6, 0x4a, 0xb4, 0xc2, 0x1f, 0xed, 0x3e, 0xfd,
+	0xbe, 0x51, 0x7a, 0xfa, 0x43, 0xc3, 0x09, 0x7e, 0x77, 0x60, 0xbf, 0xcb, 0xd3, 0xd3, 0xf1, 0x98,
+	0xce, 0x4d, 0x66, 0x6e, 0x59, 0xb7, 0x07, 0xcb, 0x94, 0x1b, 0xd9, 0xab, 0x0a, 0x34, 0xc1, 0xce,
+	0xb6, 0x57, 0xb9, 0x51, 0x00, 0x2b, 0xae, 0x5f, 0x1c, 0x78, 0xb3, 0xcb, 0xd3, 0x87, 0x19, 0x27,
+	0xaf, 0x41, 0x68, 0x96, 0xf0, 0x9f, 0x1c, 0xb8, 0x23, 0x0b, 0x92, 0x24, 0xeb, 0x96, 0xbf, 0x65,
+	0xd9, 0x6f, 0x41, 0x55, 0x0f, 0x91, 0x51, 0x6d, 0x90, 0x25, 0xfa, 0x67, 0x07, 0xdc, 0x2e, 0x4f,
+	0x23, 0x9c, 0xd0, 0x19, 0xbe, 0x46, 0xba, 0xbf, 0xdb, 0x82, 0x1d, 0x39, 0xb0, 0x73, 0x52, 0xbc,
+	0xa2, 0x62, 0xdd, 0xf7, 0xe0, 0x0d, 0xdd, 0xe1, 0x5f, 0x68, 0x2f, 0xa6, 0xed, 0x37, 0x8d, 0xd7,
+	0x47, 0x63, 0xfb, 0xc6, 0x68, 0xac, 0x79, 0x96, 0x01, 0x56, 0x6d, 0x1e, 0x63, 0xb4, 0x52, 0xf3,
+	0x8f, 0x1e, 0xa0, 0x2f, 0x33, 0x71, 0x9e, 0x30, 0x32, 0xef, 0xc9, 0x4d, 0x90, 0xdc, 0x76, 0x92,
+	0x0e, 0x60, 0xbb, 0x20, 0x0b, 0x44, 0xf3, 0xf1, 0xd5, 0xc0, 0x4a, 0x5d, 0x65, 0x23, 0x75, 0x2e,
+	0x54, 0x38, 0x19, 0x0b, 0x95, 0x8d, 0x7a, 0xa4, 0xce, 0x72, 0x7b, 0xc8, 0xa5, 0x46, 0xc4, 0x94,
+	0xa1, 0x4a, 0x41, 0x3d, 0x5a, 0x1b, 0xac, 0xf0, 0xbf, 0x71, 0xc0, 0x7b, 0x34, 0xc3, 0x5c, 0x9c,
+	0x31, 0x92, 0xf3, 0x21, 0xb2, 0xce, 0xa2, 0xb7, 0x7c, 0x4c, 0x3a, 0xd4, 0x9b, 0xd1, 0x2c, 0x0f,
+	0x83, 0xe4, 0x27, 0x97, 0x61, 0x8c, 0xd9, 0x0c, 0x99, 0xd1, 0xbd, 0xc2, 0xeb, 0x80, 0xca, 0x2f,
+	0xae, 0xba, 0x2e, 0xeb, 0x52, 0xfa, 0x5d, 0x28, 0x0f, 0x11, 0x4d, 0x1d, 0xe5, 0x31, 0xe8, 0xc3,
+	0xa1, 0xd2, 0xd3, 0x51, 0x1b, 0x77, 0x35, 0x63, 0xa7, 0x49, 0x82, 0x89, 0x24, 0x27, 0xb1, 0xa0,
+	0xab, 0xdd, 0xa9, 0xc0, 0x4b, 0x35, 0xda, 0xca, 0x65, 0x40, 0xe0, 0xed, 0x17, 0x39, 0xd0, 0x33,
+	0xfd, 0xff, 0xb8, 0xf8, 0xcd, 0x81, 0x3b, 0x96, 0x0f, 0x35, 0x76, 0xf2, 0xa7, 0x80, 0xd1, 0x89,
+	0xa1, 0x55, 0xe7, 0xff, 0x60, 0x7d, 0x1f, 0xf6, 0xcd, 0x02, 0x36, 0xbd, 0x64, 0xd8, 0xaf, 0x8d,
+	0xc2, 0xf5, 0x3d, 0x7d, 0x73, 0x4d, 0x58, 0x4c, 0xa6, 0x61, 0x4d, 0xa2, 0x37, 0x87, 0xc1, 0x0a,
+	0xa3, 0x6a, 0x87, 0xd1, 0x79, 0xfc, 0xec, 0xd2, 0x77, 0x9e, 0x5f, 0xfa, 0xce, 0x9f, 0x97, 0xbe,
+	0xf3, 0xed, 0x95, 0x5f, 0x7a, 0x7e, 0xe5, 0x97, 0xfe, 0xb8, 0xf2, 0x4b, 0x5f, 0x7d, 0xf8, 0x32,
+	0x5d, 0xbf, 0xf1, 0xef, 0xa8, 0x46, 0x60, 0x50, 0x55, 0xff, 0x72, 0x1f, 0xfc, 0x1b, 0x00, 0x00,
+	0xff, 0xff, 0x4b, 0x21, 0x87, 0xa7, 0x58, 0x0a, 0x00, 0x00,
 }
 
 func (m *GenesisState) Marshal() (dAtA []byte, err error) {
@@ -637,18 +970,16 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			dAtA[i] = 0x12
 		}
 	}
-	if m.Params != nil {
-		{
-			size, err := m.Params.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarintBridgepool(dAtA, i, uint64(size))
+	{
+		size, err := m.Params.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
 		}
-		i--
-		dAtA[i] = 0xa
+		i -= size
+		i = encodeVarintBridgepool(dAtA, i, uint64(size))
 	}
+	i--
+	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -761,6 +1092,349 @@ func (m *TokenTarget) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i -= len(m.Token)
 		copy(dAtA[i:], m.Token)
 		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.Token)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgSetFee) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgSetFee) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgSetFee) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Fee10000 != 0 {
+		i = encodeVarintBridgepool(dAtA, i, uint64(m.Fee10000))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.Token) > 0 {
+		i -= len(m.Token)
+		copy(dAtA[i:], m.Token)
+		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.Token)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.FromAddress) > 0 {
+		i -= len(m.FromAddress)
+		copy(dAtA[i:], m.FromAddress)
+		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.FromAddress)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgAllowTarget) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgAllowTarget) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgAllowTarget) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.TargetToken) > 0 {
+		i -= len(m.TargetToken)
+		copy(dAtA[i:], m.TargetToken)
+		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.TargetToken)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if m.ChainId != 0 {
+		i = encodeVarintBridgepool(dAtA, i, uint64(m.ChainId))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.Token) > 0 {
+		i -= len(m.Token)
+		copy(dAtA[i:], m.Token)
+		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.Token)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.FromAddress) > 0 {
+		i -= len(m.FromAddress)
+		copy(dAtA[i:], m.FromAddress)
+		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.FromAddress)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgDisallowTarget) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgDisallowTarget) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgDisallowTarget) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.ChainId != 0 {
+		i = encodeVarintBridgepool(dAtA, i, uint64(m.ChainId))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.Token) > 0 {
+		i -= len(m.Token)
+		copy(dAtA[i:], m.Token)
+		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.Token)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.FromAddress) > 0 {
+		i -= len(m.FromAddress)
+		copy(dAtA[i:], m.FromAddress)
+		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.FromAddress)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgAddLiquidity) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgAddLiquidity) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgAddLiquidity) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Amount != 0 {
+		i = encodeVarintBridgepool(dAtA, i, uint64(m.Amount))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.Token) > 0 {
+		i -= len(m.Token)
+		copy(dAtA[i:], m.Token)
+		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.Token)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.FromAddress) > 0 {
+		i -= len(m.FromAddress)
+		copy(dAtA[i:], m.FromAddress)
+		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.FromAddress)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRemoveLiquidity) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRemoveLiquidity) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRemoveLiquidity) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Amount != 0 {
+		i = encodeVarintBridgepool(dAtA, i, uint64(m.Amount))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.Token) > 0 {
+		i -= len(m.Token)
+		copy(dAtA[i:], m.Token)
+		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.Token)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.FromAddress) > 0 {
+		i -= len(m.FromAddress)
+		copy(dAtA[i:], m.FromAddress)
+		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.FromAddress)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgSwap) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgSwap) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgSwap) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.TargetAddress) > 0 {
+		i -= len(m.TargetAddress)
+		copy(dAtA[i:], m.TargetAddress)
+		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.TargetAddress)))
+		i--
+		dAtA[i] = 0x32
+	}
+	if len(m.TargetToken) > 0 {
+		i -= len(m.TargetToken)
+		copy(dAtA[i:], m.TargetToken)
+		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.TargetToken)))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if len(m.TargetNetwork) > 0 {
+		i -= len(m.TargetNetwork)
+		copy(dAtA[i:], m.TargetNetwork)
+		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.TargetNetwork)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if m.Amount != 0 {
+		i = encodeVarintBridgepool(dAtA, i, uint64(m.Amount))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.Token) > 0 {
+		i -= len(m.Token)
+		copy(dAtA[i:], m.Token)
+		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.Token)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.FromAddress) > 0 {
+		i -= len(m.FromAddress)
+		copy(dAtA[i:], m.FromAddress)
+		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.FromAddress)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgWithdrawSigned) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgWithdrawSigned) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgWithdrawSigned) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Signature) > 0 {
+		i -= len(m.Signature)
+		copy(dAtA[i:], m.Signature)
+		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.Signature)))
+		i--
+		dAtA[i] = 0x32
+	}
+	if len(m.Salt) > 0 {
+		i -= len(m.Salt)
+		copy(dAtA[i:], m.Salt)
+		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.Salt)))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if m.Amount != 0 {
+		i = encodeVarintBridgepool(dAtA, i, uint64(m.Amount))
+		i--
+		dAtA[i] = 0x20
+	}
+	if len(m.Payee) > 0 {
+		i -= len(m.Payee)
+		copy(dAtA[i:], m.Payee)
+		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.Payee)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.Token) > 0 {
+		i -= len(m.Token)
+		copy(dAtA[i:], m.Token)
+		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.Token)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.FromAddress) > 0 {
+		i -= len(m.FromAddress)
+		copy(dAtA[i:], m.FromAddress)
+		i = encodeVarintBridgepool(dAtA, i, uint64(len(m.FromAddress)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -995,10 +1669,8 @@ func (m *GenesisState) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.Params != nil {
-		l = m.Params.Size()
-		n += 1 + l + sovBridgepool(uint64(l))
-	}
+	l = m.Params.Size()
+	n += 1 + l + sovBridgepool(uint64(l))
 	if len(m.Signers) > 0 {
 		for _, s := range m.Signers {
 			l = len(s)
@@ -1069,6 +1741,174 @@ func (m *TokenTarget) Size() (n int) {
 		n += 1 + l + sovBridgepool(uint64(l))
 	}
 	l = len(m.TargetToken)
+	if l > 0 {
+		n += 1 + l + sovBridgepool(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgSetFee) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.FromAddress)
+	if l > 0 {
+		n += 1 + l + sovBridgepool(uint64(l))
+	}
+	l = len(m.Token)
+	if l > 0 {
+		n += 1 + l + sovBridgepool(uint64(l))
+	}
+	if m.Fee10000 != 0 {
+		n += 1 + sovBridgepool(uint64(m.Fee10000))
+	}
+	return n
+}
+
+func (m *MsgAllowTarget) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.FromAddress)
+	if l > 0 {
+		n += 1 + l + sovBridgepool(uint64(l))
+	}
+	l = len(m.Token)
+	if l > 0 {
+		n += 1 + l + sovBridgepool(uint64(l))
+	}
+	if m.ChainId != 0 {
+		n += 1 + sovBridgepool(uint64(m.ChainId))
+	}
+	l = len(m.TargetToken)
+	if l > 0 {
+		n += 1 + l + sovBridgepool(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgDisallowTarget) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.FromAddress)
+	if l > 0 {
+		n += 1 + l + sovBridgepool(uint64(l))
+	}
+	l = len(m.Token)
+	if l > 0 {
+		n += 1 + l + sovBridgepool(uint64(l))
+	}
+	if m.ChainId != 0 {
+		n += 1 + sovBridgepool(uint64(m.ChainId))
+	}
+	return n
+}
+
+func (m *MsgAddLiquidity) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.FromAddress)
+	if l > 0 {
+		n += 1 + l + sovBridgepool(uint64(l))
+	}
+	l = len(m.Token)
+	if l > 0 {
+		n += 1 + l + sovBridgepool(uint64(l))
+	}
+	if m.Amount != 0 {
+		n += 1 + sovBridgepool(uint64(m.Amount))
+	}
+	return n
+}
+
+func (m *MsgRemoveLiquidity) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.FromAddress)
+	if l > 0 {
+		n += 1 + l + sovBridgepool(uint64(l))
+	}
+	l = len(m.Token)
+	if l > 0 {
+		n += 1 + l + sovBridgepool(uint64(l))
+	}
+	if m.Amount != 0 {
+		n += 1 + sovBridgepool(uint64(m.Amount))
+	}
+	return n
+}
+
+func (m *MsgSwap) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.FromAddress)
+	if l > 0 {
+		n += 1 + l + sovBridgepool(uint64(l))
+	}
+	l = len(m.Token)
+	if l > 0 {
+		n += 1 + l + sovBridgepool(uint64(l))
+	}
+	if m.Amount != 0 {
+		n += 1 + sovBridgepool(uint64(m.Amount))
+	}
+	l = len(m.TargetNetwork)
+	if l > 0 {
+		n += 1 + l + sovBridgepool(uint64(l))
+	}
+	l = len(m.TargetToken)
+	if l > 0 {
+		n += 1 + l + sovBridgepool(uint64(l))
+	}
+	l = len(m.TargetAddress)
+	if l > 0 {
+		n += 1 + l + sovBridgepool(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgWithdrawSigned) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.FromAddress)
+	if l > 0 {
+		n += 1 + l + sovBridgepool(uint64(l))
+	}
+	l = len(m.Token)
+	if l > 0 {
+		n += 1 + l + sovBridgepool(uint64(l))
+	}
+	l = len(m.Payee)
+	if l > 0 {
+		n += 1 + l + sovBridgepool(uint64(l))
+	}
+	if m.Amount != 0 {
+		n += 1 + sovBridgepool(uint64(m.Amount))
+	}
+	l = len(m.Salt)
+	if l > 0 {
+		n += 1 + l + sovBridgepool(uint64(l))
+	}
+	l = len(m.Signature)
 	if l > 0 {
 		n += 1 + l + sovBridgepool(uint64(l))
 	}
@@ -1243,9 +2083,6 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.Params == nil {
-				m.Params = &Params{}
-			}
 			if err := m.Params.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
@@ -1311,7 +2148,7 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Liquidities = append(m.Liquidities, &TokenLiquidity{})
+			m.Liquidities = append(m.Liquidities, TokenLiquidity{})
 			if err := m.Liquidities[len(m.Liquidities)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
@@ -1698,6 +2535,1200 @@ func (m *TokenTarget) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.TargetToken = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipBridgepool(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgSetFee) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowBridgepool
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgSetFee: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgSetFee: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FromAddress", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.FromAddress = append(m.FromAddress[:0], dAtA[iNdEx:postIndex]...)
+			if m.FromAddress == nil {
+				m.FromAddress = []byte{}
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Token", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Token = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Fee10000", wireType)
+			}
+			m.Fee10000 = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Fee10000 |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipBridgepool(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgAllowTarget) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowBridgepool
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgAllowTarget: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgAllowTarget: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FromAddress", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.FromAddress = append(m.FromAddress[:0], dAtA[iNdEx:postIndex]...)
+			if m.FromAddress == nil {
+				m.FromAddress = []byte{}
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Token", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Token = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChainId", wireType)
+			}
+			m.ChainId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ChainId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TargetToken", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.TargetToken = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipBridgepool(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgDisallowTarget) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowBridgepool
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgDisallowTarget: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgDisallowTarget: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FromAddress", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.FromAddress = append(m.FromAddress[:0], dAtA[iNdEx:postIndex]...)
+			if m.FromAddress == nil {
+				m.FromAddress = []byte{}
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Token", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Token = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChainId", wireType)
+			}
+			m.ChainId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ChainId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipBridgepool(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgAddLiquidity) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowBridgepool
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgAddLiquidity: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgAddLiquidity: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FromAddress", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.FromAddress = append(m.FromAddress[:0], dAtA[iNdEx:postIndex]...)
+			if m.FromAddress == nil {
+				m.FromAddress = []byte{}
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Token", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Token = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
+			}
+			m.Amount = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Amount |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipBridgepool(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRemoveLiquidity) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowBridgepool
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRemoveLiquidity: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRemoveLiquidity: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FromAddress", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.FromAddress = append(m.FromAddress[:0], dAtA[iNdEx:postIndex]...)
+			if m.FromAddress == nil {
+				m.FromAddress = []byte{}
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Token", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Token = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
+			}
+			m.Amount = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Amount |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipBridgepool(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgSwap) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowBridgepool
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgSwap: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgSwap: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FromAddress", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.FromAddress = append(m.FromAddress[:0], dAtA[iNdEx:postIndex]...)
+			if m.FromAddress == nil {
+				m.FromAddress = []byte{}
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Token", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Token = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
+			}
+			m.Amount = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Amount |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TargetNetwork", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.TargetNetwork = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TargetToken", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.TargetToken = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TargetAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.TargetAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipBridgepool(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgWithdrawSigned) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowBridgepool
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgWithdrawSigned: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgWithdrawSigned: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FromAddress", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.FromAddress = append(m.FromAddress[:0], dAtA[iNdEx:postIndex]...)
+			if m.FromAddress == nil {
+				m.FromAddress = []byte{}
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Token", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Token = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Payee", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Payee = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
+			}
+			m.Amount = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Amount |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Salt", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Salt = append(m.Salt[:0], dAtA[iNdEx:postIndex]...)
+			if m.Salt == nil {
+				m.Salt = []byte{}
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Signature", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgepool
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgepool
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Signature = append(m.Signature[:0], dAtA[iNdEx:postIndex]...)
+			if m.Signature == nil {
+				m.Signature = []byte{}
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
