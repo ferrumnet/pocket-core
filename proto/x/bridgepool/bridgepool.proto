@@ -1,0 +1,59 @@
+syntax = "proto3";
+package x.bridgepool;
+
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "types/coin.proto";
+import "google/protobuf/any.proto";
+
+option go_package = "github.com/pokt-network/pocket-core/x/bridgepool/types";
+
+// The state of the module from the beginning
+message GenesisState {
+  Params params = 1;
+  repeated string signers = 2;
+  repeated TokenLiquidity liquidities = 3;
+  repeated string fees = 4;
+}
+
+message Params {
+  string owner = 1;
+}
+
+message TokenLiquidity {
+  repeated string providers = 1;
+  repeated string amounts = 2;
+}
+
+message TokenTarget {
+    string token = 1;
+    string chain_id = 2;
+    string target_token = 3;
+}
+
+// define events
+message EventTransferBySignature {
+  string signer = 1;
+  string receiver = 2;
+  string token = 3;
+  string amount = 4;
+  string fee = 5;
+}
+message EventBridgeLiquidityAdded {
+  string actor = 1;
+  string token = 2;
+  string amount = 3;
+}
+message EventBridgeLiquidityRemoved {
+  string actor = 1;
+  string token = 2;
+  string amount = 3;
+}
+message EventBridgeSwap {
+  string from = 1;
+  string token = 2;
+  string target_network = 3;
+  string target_token = 4;
+  string target_address = 5;
+  string amount = 6;
+};
