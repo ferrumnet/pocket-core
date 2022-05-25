@@ -5,5 +5,5 @@ import (
 )
 
 var (
-	ExampleBridgePoolError = errors.New("the application authentication token version is missing")
+	NotEnoughLiquidityError = errors.New("not enough liquidity")
 )

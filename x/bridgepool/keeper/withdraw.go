@@ -1,56 +1,55 @@
 package keeper
 
-// Implements withdrawing tokens into pocket network keeper and utility functions
+import (
+	"fmt"
 
-// function withdrawSigned(
-//         address token,
-//         address payee,
-//         uint256 amount,
-//         bytes32 salt,
-//         bytes memory signature)
-// external returns(uint256) {
-//     bytes32 message = withdrawSignedMessage(token, payee, amount, salt);
-//     address _signer = signerUnique(message, signature);
-//     require(signers[_signer], "BridgePool: Invalid signer");
+	sdk "github.com/pokt-network/pocket-core/types"
+	"github.com/pokt-network/pocket-core/x/bridgepool/types"
+)
 
-//     uint256 fee = 0;
-//     address _feeDistributor = feeDistributor;
-//     if (_feeDistributor != address(0)) {
-//         fee = amount.mul(fees[token]).div(10000);
-//         amount = amount.sub(fee);
-//         if (fee != 0) {
-//             IERC20(token).safeTransfer(_feeDistributor, fee);
-//             IGeneralTaxDistributor(_feeDistributor).distributeTax(token, msg.sender);
-//         }
-//     }
-//     IERC20(token).safeTransfer(payee, amount);
-//     emit TransferBySignature(_signer, payee, token, amount, fee);
-//     return amount;
-// }
+func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, token string, payee string, amount uint64,
+	salt string, signature string) error {
+	// TODO: verify signature
+	// function withdrawSignedMessage(
+	//         address token,
+	//         address payee,
+	//         uint256 amount,
+	//         bytes32 salt)
+	// internal pure returns (bytes32) {
+	//     return keccak256(abi.encode(
+	//       WITHDRAW_SIGNED_METHOD,
+	//       token,
+	//       payee,
+	//       amount,
+	//       salt
+	//     ));
+	// }
+	//     bytes32 message = withdrawSignedMessage(token, payee, amount, salt);
+	//     address _signer = signerUnique(message, signature);
+	signer := ""
+	//     require(signers[_signer], "BridgePool: Invalid signer");
 
-// function withdrawSignedVerify(
-//         address token,
-//         address payee,
-//         uint256 amount,
-//         bytes32 salt,
-//         bytes calldata signature)
-// external view returns (bytes32, address) {
-//     bytes32 message = withdrawSignedMessage(token, payee, amount, salt);
-//     (bytes32 digest, address _signer) = signer(message, signature);
-//     return (digest, _signer);
-// }
+	// TODO: handle fees
+	feeRate := k.GetFeeRate(ctx, token)
+	fee := amount * feeRate / 10000
+	if fee != 0 {
+		// TODO: transfer fee amount to fee handler account
+		// TODO: distribute fees by fee handler
+		amount -= fee
+	}
 
-// function withdrawSignedMessage(
-//         address token,
-//         address payee,
-//         uint256 amount,
-//         bytes32 salt)
-// internal pure returns (bytes32) {
-//     return keccak256(abi.encode(
-//       WITHDRAW_SIGNED_METHOD,
-//       token,
-//       payee,
-//       amount,
-//       salt
-//     ));
-// }
+	// TODO: transfer remaining amount to the payee
+
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventTransferBySignature,
+			sdk.NewAttribute(types.AttributeKeySigner, signer),
+			sdk.NewAttribute(types.AttributeKeyReceiver, payee),
+			sdk.NewAttribute(types.AttributeKeyToken, token),
+			sdk.NewAttribute(types.AttributeKeyAmount, fmt.Sprintf("%d", amount)),
+			sdk.NewAttribute(types.AttributeKeyFee, fmt.Sprintf("%d", fee)),
+		),
+	})
+
+	return nil
+}

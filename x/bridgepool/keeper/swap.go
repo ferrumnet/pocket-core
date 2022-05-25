@@ -1,27 +1,27 @@
 package keeper
 
-// Implements swap tokens on pocket network to other network
+import (
+	"fmt"
 
-// function swap(address token, uint256 amount, uint256 targetNetwork, address targetToken)
-// external returns(uint256) {
-//     return _swap(msg.sender, token, amount, targetNetwork, targetToken, msg.sender);
-// }
+	sdk "github.com/pokt-network/pocket-core/types"
+	"github.com/pokt-network/pocket-core/x/bridgepool/types"
+)
 
-// function swapToAddress(address token,
-//     uint256 amount,
-//     uint256 targetNetwork,
-//     address targetToken,
-//     address targetAddress)
-// external returns(uint256) {
-//     require(targetAddress != address(0), "BridgePool: targetAddress is required");
-//     return _swap(msg.sender, token, amount, targetNetwork, targetToken, targetAddress);
-// }
+func (k Keeper) Swap(ctx sdk.Ctx, from string, token string, amount uint64, targetNetwork string,
+	targetToken string, targetAddress string) error {
+	// TODO: transfer tokens from `from` account to module account by `amount`
 
-// function _swap(address from, address token, uint256 amount, uint256 targetNetwork,
-//     address targetToken, address targetAddress) internal returns(uint256) {
-// 	require(targetNetwork != 0, "BP: targetNetwork is requried");
-// 	require(allowedTargets[token][targetNetwork] == targetToken, "BP: target not allowed");
-//     amount = SafeAmount.safeTransferFrom(token, from, address(this), amount);
-//     emit BridgeSwap(from, token, targetNetwork, targetToken, targetAddress, amount);
-//     return amount;
-// }
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventBridgeSwap,
+			sdk.NewAttribute(types.AttributeKeyFrom, from),
+			sdk.NewAttribute(types.AttributeKeyToken, token),
+			sdk.NewAttribute(types.AttributeKeyTargetNetwork, targetNetwork),
+			sdk.NewAttribute(types.AttributeKeyTargetToken, targetToken),
+			sdk.NewAttribute(types.AttributeKeyTargetAddress, targetAddress),
+			sdk.NewAttribute(types.AttributeKeyAmount, fmt.Sprintf("%d", amount)),
+		),
+	})
+
+	return nil
+}

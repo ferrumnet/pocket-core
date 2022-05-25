@@ -1,28 +1,70 @@
 package keeper
 
-// function addLiquidity(address token, uint256 amount) external {
-//     require(amount != 0, "Amount must be positive");
-//     require(token != address(0), "Bad token");
-//     amount = SafeAmount.safeTransferFrom(token, msg.sender, address(this), amount);
-//     liquidities[token][msg.sender] = liquidities[token][msg.sender].add(amount);
-//     emit BridgeLiquidityAdded(msg.sender, token, amount);
-// }
+import (
+	"fmt"
 
-// function removeLiquidityIfPossible(address token, uint256 amount) external returns (uint256) {
-//     require(amount != 0, "Amount must be positive");
-//     require(token != address(0), "Bad token");
-//     uint256 liq = liquidities[token][msg.sender];
-//     require(liq >= amount, "Not enough liquidity");
-//     uint256 balance = IERC20(token).balanceOf(address(this));
-//     uint256 actualLiq = balance > amount ? amount : balance;
-//     liquidities[token][msg.sender] = liquidities[token][msg.sender].sub(actualLiq);
-//     if (actualLiq != 0) {
-//         IERC20(token).safeTransfer(msg.sender, actualLiq);
-//         emit BridgeLiquidityRemoved(msg.sender, token, amount);
-//     }
-//     return actualLiq;
-// }
+	sdk "github.com/pokt-network/pocket-core/types"
+	"github.com/pokt-network/pocket-core/x/bridgepool/types"
+)
 
-// function liquidity(address token, address liquidityAdder) public view returns (uint256) {
-//     return liquidities[token][liquidityAdder];
-// }
+func (k Keeper) SetLiquidity(ctx sdk.Ctx, token string, user string, amount uint64) error {
+	store := ctx.KVStore(k.storeKey)
+	bz, err := k.Cdc.MarshalBinaryBare(amount, ctx.BlockHeight())
+	if err != nil {
+		return err
+	}
+	return store.Set(types.LiquidityKey(token, user), bz)
+}
+
+func (k Keeper) AddLiquidity(ctx sdk.Ctx, token string, user string, amount uint64) error {
+	// TODO: send tokens from the user to module `amount`
+
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventBridgeLiquidityAdded,
+			sdk.NewAttribute(types.AttributeKeyActor, user),
+			sdk.NewAttribute(types.AttributeKeyToken, token),
+			sdk.NewAttribute(types.AttributeKeyAmount, fmt.Sprintf("%d", amount)),
+		),
+	})
+
+	liquidity := k.GetLiquidity(ctx, token, user)
+	return k.SetLiquidity(ctx, token, user, liquidity+amount)
+}
+
+func (k Keeper) RemoveLiquidity(ctx sdk.Ctx, token string, user string, amount uint64) error {
+	// TODO: send tokens from the module to user for `amount`
+
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventBridgeLiquidityRemoved,
+			sdk.NewAttribute(types.AttributeKeyActor, user),
+			sdk.NewAttribute(types.AttributeKeyToken, token),
+			sdk.NewAttribute(types.AttributeKeyAmount, fmt.Sprintf("%d", amount)),
+		),
+	})
+
+	liquidity := k.GetLiquidity(ctx, token, user)
+	if liquidity < amount {
+		return types.NotEnoughLiquidityError
+	}
+
+	return k.SetLiquidity(ctx, token, user, liquidity-amount)
+}
+
+func (k Keeper) GetLiquidity(ctx sdk.Ctx, token string, user string) uint64 {
+	store := ctx.KVStore(k.storeKey)
+	bz, err := store.Get(types.LiquidityKey(token, user))
+	if err != nil {
+		return 0
+	}
+	if bz == nil {
+		return 0
+	}
+	amount := uint64(0)
+	err = k.Cdc.UnmarshalBinaryBare(bz, &amount, ctx.BlockHeight())
+	if err != nil {
+		return 0
+	}
+	return amount
+}
