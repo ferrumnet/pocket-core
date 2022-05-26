@@ -8,7 +8,7 @@ import (
 )
 
 func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, token string, payee string, amount uint64,
-	salt string, signature string) error {
+	salt []byte, signature []byte) sdk.Error {
 	// TODO: verify signature
 	// function withdrawSignedMessage(
 	//         address token,

@@ -5,13 +5,14 @@ import (
 	"github.com/pokt-network/pocket-core/x/bridgepool/types"
 )
 
-func (k Keeper) SetFeeRate(ctx sdk.Ctx, token string, fee10000 uint64) error {
+func (k Keeper) SetFeeRate(ctx sdk.Ctx, token string, fee10000 uint64) sdk.Error {
 	store := ctx.KVStore(k.storeKey)
 	bz, err := k.Cdc.MarshalBinaryBare(fee10000, ctx.BlockHeight())
 	if err != nil {
-		return err
+		panic(err)
 	}
-	return store.Set(types.FeeRateKey(token), bz)
+	store.Set(types.FeeRateKey(token), bz)
+	return nil
 }
 
 func (k Keeper) GetFeeRate(ctx sdk.Ctx, token string) uint64 {
@@ -31,14 +32,14 @@ func (k Keeper) GetFeeRate(ctx sdk.Ctx, token string) uint64 {
 	return fee10000
 }
 
-func (k Keeper) AllowTarget(ctx sdk.Ctx, token string, chainId uint64, targetToken string) error {
+func (k Keeper) AllowTarget(ctx sdk.Ctx, token string, chainId uint64, targetToken string) {
 	store := ctx.KVStore(k.storeKey)
-	return store.Set(types.AllowedTargetKey(token, chainId), []byte(targetToken))
+	store.Set(types.AllowedTargetKey(token, chainId), []byte(targetToken))
 }
 
-func (k Keeper) DisallowTarget(ctx sdk.Ctx, token string, chainId uint64) error {
+func (k Keeper) DisallowTarget(ctx sdk.Ctx, token string, chainId uint64) {
 	store := ctx.KVStore(k.storeKey)
-	return store.Delete(types.AllowedTargetKey(token, chainId))
+	store.Delete(types.AllowedTargetKey(token, chainId))
 }
 
 func (k Keeper) GetAllowedTarget(ctx sdk.Ctx, token string, chainId uint64) string {

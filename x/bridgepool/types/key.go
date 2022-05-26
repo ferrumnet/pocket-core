@@ -25,6 +25,6 @@ func AllowedTargetKey(token string, chainId uint64) []byte {
 	return append(append(AllowedTargetKeyPrefix, token...), sdk.Uint64ToBigEndian(chainId)...)
 }
 
-func LiquidityKey(token string, user string) []byte {
+func LiquidityKey(token string, user sdk.Address) []byte {
 	return append(append(LiquidityKeyPrefix, token...), user...)
 }

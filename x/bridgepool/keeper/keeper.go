@@ -3,30 +3,27 @@ package keeper
 import (
 	"github.com/pokt-network/pocket-core/codec"
 	sdk "github.com/pokt-network/pocket-core/types"
-	"github.com/pokt-network/pocket-core/x/pocketcore/types"
-	"github.com/tendermint/tendermint/rpc/client"
+	"github.com/pokt-network/pocket-core/x/bridgepool/types"
 )
 
 // Keeper maintains the link to storage and exposes getter/setter methods for the various parts of the state machine
 type Keeper struct {
-	authKeeper types.AuthKeeper
-	posKeeper  types.PosKeeper
-	appKeeper  types.AppsKeeper
-	TmNode     client.Client
-	Paramstore sdk.Subspace
-	storeKey   sdk.StoreKey // Unexposed key to access store from sdk.Context
-	Cdc        *codec.Codec // The wire codec for binary encoding/decoding.
+	AccountKeeper types.AccountKeeper
+	Paramstore    sdk.Subspace
+	storeKey      sdk.StoreKey // Unexposed key to access store from sdk.Context
+	Cdc           *codec.Codec // The wire codec for binary encoding/decoding.
+	// codespace
+	codespace sdk.CodespaceType
 }
 
 // NewKeeper creates new instances of the pocketcore module Keeper
-func NewKeeper(storeKey sdk.StoreKey, cdc *codec.Codec, authKeeper types.AuthKeeper, posKeeper types.PosKeeper, appKeeper types.AppsKeeper, paramstore sdk.Subspace) Keeper {
+func NewKeeper(storeKey sdk.StoreKey, cdc *codec.Codec, accountKeeper types.AccountKeeper, paramstore sdk.Subspace, codespace sdk.CodespaceType) Keeper {
 	return Keeper{
-		authKeeper: authKeeper,
-		posKeeper:  posKeeper,
-		appKeeper:  appKeeper,
-		Paramstore: paramstore.WithKeyTable(ParamKeyTable()),
-		storeKey:   storeKey,
-		Cdc:        cdc,
+		AccountKeeper: accountKeeper,
+		Paramstore:    paramstore.WithKeyTable(ParamKeyTable()),
+		storeKey:      storeKey,
+		Cdc:           cdc,
+		codespace:     codespace,
 	}
 }
 

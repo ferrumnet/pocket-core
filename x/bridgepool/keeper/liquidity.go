@@ -7,22 +7,27 @@ import (
 	"github.com/pokt-network/pocket-core/x/bridgepool/types"
 )
 
-func (k Keeper) SetLiquidity(ctx sdk.Ctx, token string, user string, amount uint64) error {
+func (k Keeper) SetLiquidity(ctx sdk.Ctx, token string, user sdk.Address, amount uint64) sdk.Error {
 	store := ctx.KVStore(k.storeKey)
 	bz, err := k.Cdc.MarshalBinaryBare(amount, ctx.BlockHeight())
 	if err != nil {
-		return err
+		panic(err)
 	}
-	return store.Set(types.LiquidityKey(token, user), bz)
+	store.Set(types.LiquidityKey(token, user), bz)
+	return nil
 }
 
-func (k Keeper) AddLiquidity(ctx sdk.Ctx, token string, user string, amount uint64) error {
-	// TODO: send tokens from the user to module `amount`
+func (k Keeper) AddLiquidity(ctx sdk.Ctx, token string, user sdk.Address, amount uint64) sdk.Error {
+	// send tokens from the user to module
+	err := k.AccountKeeper.SendCoinsFromAccountToModule(ctx, user, types.ModuleName, sdk.Coins{sdk.NewInt64Coin(token, int64(amount))})
+	if err != nil {
+		return err
+	}
 
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventBridgeLiquidityAdded,
-			sdk.NewAttribute(types.AttributeKeyActor, user),
+			sdk.NewAttribute(types.AttributeKeyActor, user.String()),
 			sdk.NewAttribute(types.AttributeKeyToken, token),
 			sdk.NewAttribute(types.AttributeKeyAmount, fmt.Sprintf("%d", amount)),
 		),
@@ -32,13 +37,17 @@ func (k Keeper) AddLiquidity(ctx sdk.Ctx, token string, user string, amount uint
 	return k.SetLiquidity(ctx, token, user, liquidity+amount)
 }
 
-func (k Keeper) RemoveLiquidity(ctx sdk.Ctx, token string, user string, amount uint64) error {
-	// TODO: send tokens from the module to user for `amount`
+func (k Keeper) RemoveLiquidity(ctx sdk.Ctx, token string, user sdk.Address, amount uint64) sdk.Error {
+	// send tokens from the module to user for `amount`
+	err := k.AccountKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, user, sdk.Coins{sdk.NewInt64Coin(token, int64(amount))})
+	if err != nil {
+		return err
+	}
 
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventBridgeLiquidityRemoved,
-			sdk.NewAttribute(types.AttributeKeyActor, user),
+			sdk.NewAttribute(types.AttributeKeyActor, user.String()),
 			sdk.NewAttribute(types.AttributeKeyToken, token),
 			sdk.NewAttribute(types.AttributeKeyAmount, fmt.Sprintf("%d", amount)),
 		),
@@ -46,13 +55,13 @@ func (k Keeper) RemoveLiquidity(ctx sdk.Ctx, token string, user string, amount u
 
 	liquidity := k.GetLiquidity(ctx, token, user)
 	if liquidity < amount {
-		return types.NotEnoughLiquidityError
+		return types.ErrNotEnoughLiquidity(k.codespace)
 	}
 
 	return k.SetLiquidity(ctx, token, user, liquidity-amount)
 }
 
-func (k Keeper) GetLiquidity(ctx sdk.Ctx, token string, user string) uint64 {
+func (k Keeper) GetLiquidity(ctx sdk.Ctx, token string, user sdk.Address) uint64 {
 	store := ctx.KVStore(k.storeKey)
 	bz, err := store.Get(types.LiquidityKey(token, user))
 	if err != nil {
