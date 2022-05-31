@@ -2,51 +2,15 @@ package keeper
 
 import (
 	"fmt"
-	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/crypto/sha3"
+	"github.com/ethereum/go-ethereum/crypto"
 	sdk "github.com/pokt-network/pocket-core/types"
 	"github.com/pokt-network/pocket-core/x/bridgepool/types"
 )
 
-func withdrawSignedMessage() []byte {
-	uint256Ty, _ := abi.NewType("uint256", "uint256", nil)
-	bytes32Ty, _ := abi.NewType("bytes32", "bytes32", nil)
-	addressTy, _ := abi.NewType("address", "address", nil)
-
-	arguments := abi.Arguments{
-		{
-			Type: addressTy,
-		},
-		{
-			Type: bytes32Ty,
-		},
-		{
-			Type: uint256Ty,
-		},
-	}
-
-	bytes, _ := arguments.Pack(
-		common.HexToAddress("0x0000000000000000000000000000000000000000"),
-		[32]byte{'I', 'D', '1'},
-		big.NewInt(42),
-	)
-
-	var buf []byte
-	hash := sha3.NewKeccak256()
-	hash.Write(bytes)
-	buf = hash.Sum(buf)
-
-	fmt.Println(hexutil.Encode(buf))
-	return buf
-}
-
-func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, token string, payee string, amount uint64,
-	salt []byte, signature []byte) sdk.Error {
-	// TODO: verify signature
+func withdrawSignedMessage(token string, payee string, amount uint64, salt []byte) common.Hash {
 	// function withdrawSignedMessage(
 	//         address token,
 	//         address payee,
@@ -61,10 +25,57 @@ func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, token string, payee str
 	//       salt
 	//     ));
 	// }
-	//     bytes32 message = withdrawSignedMessage(token, payee, amount, salt);
-	//     address _signer = signerUnique(message, signature);
-	signer := ""
-	//     require(signers[_signer], "BridgePool: Invalid signer");
+
+	uint256Ty, _ := abi.NewType("uint256", "uint256", nil)
+	bytes32Ty, _ := abi.NewType("bytes32", "bytes32", nil)
+	addressTy, _ := abi.NewType("address", "address", nil)
+
+	arguments := abi.Arguments{
+		{
+			Type: bytes32Ty,
+		},
+		{
+			Type: addressTy,
+		},
+		{
+			Type: addressTy,
+		},
+		{
+			Type: uint256Ty,
+		},
+		{
+			Type: bytes32Ty,
+		},
+	}
+
+	WITHDRAW_SIGNED_METHOD := crypto.Keccak256Hash([]byte("WithdrawSigned(address token,address payee,uint256 amount,bytes32 salt)"))
+	bytes, _ := arguments.Pack(
+		WITHDRAW_SIGNED_METHOD,
+		token,
+		payee,
+		amount,
+		salt,
+	)
+
+	return crypto.Keccak256Hash(bytes)
+}
+
+func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, token string, payee string, amount uint64,
+	salt []byte, signature []byte) sdk.Error {
+	// verify signature
+	message := withdrawSignedMessage(token, payee, amount, salt)
+
+	signature[crypto.RecoveryIDOffset] -= 27 // Transform yellow paper V from 27/28 to 0/1
+	recovered, err := crypto.SigToPub(message.Bytes(), signature)
+	if err != nil {
+		return types.ErrInvalidSignature(k.codespace, err)
+	}
+	signer := crypto.PubkeyToAddress(*recovered)
+	if !k.IsSigner(ctx, signer.String()) {
+		return types.ErrInvalidSigner(k.codespace)
+	}
+
+	// TODO: avoid using same signature and salt again
 
 	// TODO: handle fees
 	feeRate := k.GetFeeRate(ctx, token)
@@ -80,7 +91,7 @@ func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, token string, payee str
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTransferBySignature,
-			sdk.NewAttribute(types.AttributeKeySigner, signer),
+			sdk.NewAttribute(types.AttributeKeySigner, signer.String()),
 			sdk.NewAttribute(types.AttributeKeyReceiver, payee),
 			sdk.NewAttribute(types.AttributeKeyToken, token),
 			sdk.NewAttribute(types.AttributeKeyAmount, fmt.Sprintf("%d", amount)),

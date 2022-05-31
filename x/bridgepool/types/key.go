@@ -15,6 +15,7 @@ var (
 	FeeRateKeyPrefix       = []byte{0x00}
 	AllowedTargetKeyPrefix = []byte{0x01}
 	LiquidityKeyPrefix     = []byte{0x02}
+	SignerKeyPrefix        = []byte{0x02}
 )
 
 func FeeRateKey(token string) []byte {
@@ -27,4 +28,8 @@ func AllowedTargetKey(token string, chainId uint64) []byte {
 
 func LiquidityKey(token string, user sdk.Address) []byte {
 	return append(append(LiquidityKeyPrefix, token...), user...)
+}
+
+func SignerKey(signer string) []byte {
+	return append(SignerKeyPrefix, signer...)
 }
