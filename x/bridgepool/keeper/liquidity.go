@@ -9,10 +9,12 @@ import (
 
 func (k Keeper) SetLiquidity(ctx sdk.Ctx, token string, user sdk.Address, amount uint64) sdk.Error {
 	store := ctx.KVStore(k.storeKey)
-	bz, err := k.Cdc.MarshalBinaryBare(amount, ctx.BlockHeight())
-	if err != nil {
-		panic(err)
+	liq := types.Liquidity{
+		Token:   token,
+		Address: user.String(),
+		Amount:  amount,
 	}
+	bz := k.Cdc.MustMarshalJSON(&liq)
 	store.Set(types.LiquidityKey(token, user), bz)
 	return nil
 }
@@ -70,10 +72,22 @@ func (k Keeper) GetLiquidity(ctx sdk.Ctx, token string, user sdk.Address) uint64
 	if bz == nil {
 		return 0
 	}
-	amount := uint64(0)
-	err = k.Cdc.UnmarshalBinaryBare(bz, &amount, ctx.BlockHeight())
-	if err != nil {
-		return 0
+
+	liq := types.Liquidity{}
+	k.Cdc.MustUnmarshalJSON(bz, &liq)
+	return liq.Amount
+}
+
+func (k Keeper) GetAllLiquidities(ctx sdk.Ctx) []types.Liquidity {
+	liquidities := []types.Liquidity{}
+	store := ctx.KVStore(k.storeKey)
+	iterator, _ := sdk.KVStorePrefixIterator(store, types.LiquidityKeyPrefix)
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		liq := types.Liquidity{}
+		k.Cdc.MustUnmarshalJSON(iterator.Value(), &liq)
+		liquidities = append(liquidities, liq)
 	}
-	return amount
+	return liquidities
 }

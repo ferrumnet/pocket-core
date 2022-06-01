@@ -12,17 +12,30 @@ option go_package = "github.com/pokt-network/pocket-core/x/bridgepool/types";
 message GenesisState {
   Params params = 1 [ (gogoproto.nullable) = false ];
   repeated string signers = 2 [ (gogoproto.nullable) = false ];
-  repeated TokenLiquidity liquidities = 3 [ (gogoproto.nullable) = false ];
-  repeated string fees = 4;
+  repeated Liquidity liquidities = 3 [ (gogoproto.nullable) = false ];
+  repeated FeeRate fees = 4 [ (gogoproto.nullable) = false ];
+  repeated AllowedTarget allowed_targets = 5 [ (gogoproto.nullable) = false ];
 }
 
 message Params {
   string owner = 1;
 }
 
-message TokenLiquidity {
-  repeated string providers = 1;
-  repeated string amounts = 2;
+message FeeRate {
+  string token = 1;
+  uint64 rate = 2;
+}
+
+message AllowedTarget {
+  string token = 1;
+  uint64 chain_id = 2;
+  string target_token = 3;
+}
+
+message Liquidity {
+  string token = 1;
+  string address = 2;
+  uint64 amount = 3;
 }
 
 message TokenTarget {

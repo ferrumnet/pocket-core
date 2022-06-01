@@ -1,12 +1,13 @@
 package types
 
 // NewGenesisState - Create a new genesis state
-func NewGenesisState(params Params, signers []string, liquidities []TokenLiquidity, fees []string) GenesisState {
+func NewGenesisState(params Params, signers []string, liquidities []Liquidity, fees []FeeRate, targets []AllowedTarget) GenesisState {
 	return GenesisState{
-		Params:      params,
-		Signers:     signers,
-		Liquidities: liquidities,
-		Fees:        fees,
+		Params:         params,
+		Signers:        signers,
+		Liquidities:    liquidities,
+		Fees:           fees,
+		AllowedTargets: targets,
 	}
 }
 
@@ -15,8 +16,9 @@ func DefaultGenesisState() GenesisState {
 	return NewGenesisState(
 		DefaultParams(),
 		[]string{},
-		[]TokenLiquidity{},
-		[]string{},
+		[]Liquidity{},
+		[]FeeRate{},
+		[]AllowedTarget{},
 	)
 }
 
