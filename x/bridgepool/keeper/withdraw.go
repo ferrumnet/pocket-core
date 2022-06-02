@@ -71,9 +71,10 @@ func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, token string, payee str
 		return types.ErrInvalidSignature(k.codespace, err)
 	}
 	signer := crypto.PubkeyToAddress(*recovered)
-	if !k.IsSigner(ctx, signer.String()) {
-		return types.ErrInvalidSigner(k.codespace)
-	}
+	// TODO: enable this when goes live
+	// if !k.IsSigner(ctx, signer.String()) {
+	// 	return types.ErrInvalidSigner(k.codespace)
+	// }
 
 	// TODO: avoid using same signature and salt again
 

@@ -134,3 +134,7 @@ message MsgWithdrawSigned {
   bytes salt = 5;
   bytes signature = 6;
 }
+
+// TODO: add MsgAddSigner
+// TODO: add MsgRemoveSigner
+

@@ -8,6 +8,8 @@ import (
 
 // Parameter keys
 var (
+	DefaultParamspace = ModuleName
+
 	OwnerKey = []byte("owner")
 )
 

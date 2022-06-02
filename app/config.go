@@ -4,6 +4,16 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"io"
+	"io/ioutil"
+	log2 "log"
+	"os"
+	fp "path/filepath"
+	"strings"
+	"sync"
+	"syscall"
+	"time"
+
 	kitlevel "github.com/go-kit/kit/log/level"
 	"github.com/go-kit/kit/log/term"
 	"github.com/pokt-network/pocket-core/baseapp"
@@ -17,6 +27,7 @@ import (
 	apps "github.com/pokt-network/pocket-core/x/apps"
 	appsTypes "github.com/pokt-network/pocket-core/x/apps/types"
 	"github.com/pokt-network/pocket-core/x/auth"
+	"github.com/pokt-network/pocket-core/x/bridgepool"
 	"github.com/pokt-network/pocket-core/x/gov"
 	"github.com/pokt-network/pocket-core/x/nodes"
 	nodesTypes "github.com/pokt-network/pocket-core/x/nodes/types"
@@ -37,15 +48,6 @@ import (
 	"github.com/tendermint/tendermint/rpc/client/local"
 	dbm "github.com/tendermint/tm-db"
 	"golang.org/x/crypto/ssh/terminal"
-	"io"
-	"io/ioutil"
-	log2 "log"
-	"os"
-	fp "path/filepath"
-	"strings"
-	"sync"
-	"syscall"
-	"time"
 )
 
 var (
@@ -717,6 +719,7 @@ func MakeCodec() {
 		gov.AppModuleBasic{},
 		nodes.AppModuleBasic{},
 		pocket.AppModuleBasic{},
+		bridgepool.AppModuleBasic{},
 	).RegisterCodec(cdc)
 	// register the sdk types
 	sdk.RegisterCodec(cdc)
