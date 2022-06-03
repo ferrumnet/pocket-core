@@ -25,8 +25,6 @@ func RegisterCodec(cdc *codec.Codec) {
 	cdc.RegisterStructure(MsgSwap{}, "bridgepool/msg_swap")
 	cdc.RegisterStructure(MsgWithdrawSigned{}, "bridgepool/msg_withdraw_signed")
 
-	cdc.RegisterInterface("x.interface.nil", (*interface{})(nil))
-
 	cdc.RegisterImplementation((*sdk.ProtoMsg)(nil),
 		&MsgSetFee{},
 		&MsgAllowTarget{},
