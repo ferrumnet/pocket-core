@@ -140,7 +140,7 @@ message MsgAddSigner {
     (gogoproto.jsontag) = "from_address",
     (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
   ];
-  string signer = 2 [
+  bytes signer = 2 [
     (gogoproto.jsontag) = "signer",
     (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
   ];
@@ -151,7 +151,7 @@ message MsgRemoveSigner {
     (gogoproto.jsontag) = "from_address",
     (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
   ];
-  string signer = 2 [
+  bytes signer = 2 [
     (gogoproto.jsontag) = "signer",
     (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
   ];
