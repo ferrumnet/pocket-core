@@ -41,12 +41,10 @@ func init() {
 	queryCmd.AddCommand(queryParam)
 	queryCmd.AddCommand(queryDAOOwner)
 	queryCmd.AddCommand(querySigningInfo)
-	queryCmd.AddCommand(querySigners)
-	// TODO: GetParams
-	// TODO: GetAllSigners
-	// TODO: GetAllLiquidities
-	// TODO: GetAllFeeRates
-	// TODO: GetAllAllowedTargets
+	queryCmd.AddCommand(queryBridgePoolAllSigners)
+	queryCmd.AddCommand(queryBridgePoolAllLiquidities)
+	queryCmd.AddCommand(queryBridgePoolAllFeeRates)
+	queryCmd.AddCommand(queryBridgePoolAllAllowedTargets)
 }
 
 var queryCmd = &cobra.Command{
@@ -1010,8 +1008,112 @@ var querySigningInfo = &cobra.Command{
 	},
 }
 
-var querySigners = &cobra.Command{
-	Use:   "signers <address> [<height>]",
+var queryBridgePoolAllSigners = &cobra.Command{
+	Use:   "signers [<height>]",
+	Short: "Get signers for bridgepool",
+	Long:  `Get signers for bridgepool at <height>.`,
+	Args:  cobra.MinimumNArgs(0),
+	Run: func(cmd *cobra.Command, args []string) {
+		app.InitConfig(datadir, tmNode, persistentPeers, seeds, remoteCLIURL)
+		var err error
+		var height int
+		params := rpc.PaginatedHeightAndAddrParams{
+			Height: int64(height),
+		}
+		j, err := json.Marshal(params)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		res, err := QueryRPC(GetBridgePoolAllSignersPath, j)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(res)
+	},
+}
+
+var queryBridgePoolAllLiquidities = &cobra.Command{
+	Use:   "liquidities <address> [<height>]",
+	Short: "Gets validator signing info",
+	Long:  `Retrieves the validator signing info with <address> at <height>.`,
+	Args:  cobra.MinimumNArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		app.InitConfig(datadir, tmNode, persistentPeers, seeds, remoteCLIURL)
+		var err error
+		var height int
+		var address string
+		switch len(args) {
+		case 1:
+			address = args[0]
+		case 2:
+			address = args[0]
+			height, err = strconv.Atoi(args[1])
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+		}
+		params := rpc.PaginatedHeightAndAddrParams{
+			Height: int64(height),
+			Addr:   address,
+		}
+		j, err := json.Marshal(params)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		res, err := QueryRPC(GetBridgePoolAllSignersPath, j)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(res)
+	},
+}
+
+var queryBridgePoolAllFeeRates = &cobra.Command{
+	Use:   "fee-rates <address> [<height>]",
+	Short: "Gets validator signing info",
+	Long:  `Retrieves the validator signing info with <address> at <height>.`,
+	Args:  cobra.MinimumNArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		app.InitConfig(datadir, tmNode, persistentPeers, seeds, remoteCLIURL)
+		var err error
+		var height int
+		var address string
+		switch len(args) {
+		case 1:
+			address = args[0]
+		case 2:
+			address = args[0]
+			height, err = strconv.Atoi(args[1])
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+		}
+		params := rpc.PaginatedHeightAndAddrParams{
+			Height: int64(height),
+			Addr:   address,
+		}
+		j, err := json.Marshal(params)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		res, err := QueryRPC(GetBridgePoolAllSignersPath, j)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(res)
+	},
+}
+
+var queryBridgePoolAllAllowedTargets = &cobra.Command{
+	Use:   "allowed-targets <address> [<height>]",
 	Short: "Gets validator signing info",
 	Long:  `Retrieves the validator signing info with <address> at <height>.`,
 	Args:  cobra.MinimumNArgs(1),
