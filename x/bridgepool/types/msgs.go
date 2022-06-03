@@ -235,5 +235,68 @@ func (msg MsgWithdrawSigned) GetFee() sdk.BigInt {
 	return sdk.NewInt(AppFeeMap[msg.Type()])
 }
 
-// case types.:
-// 	return handleMsgWithdrawSigned(ctx, msg, k)
+var _ sdk.Msg = MsgAddSigner{}
+
+// GetSigners return address(es) that must sign over msg.GetSignBytes()
+func (msg MsgAddSigner) GetSigners() []sdk.Address {
+	return []sdk.Address{msg.FromAddress}
+}
+
+func (msg MsgAddSigner) GetRecipient() sdk.Address {
+	return nil
+}
+
+// GetSignBytes returns the message bytes to sign over.
+func (msg MsgAddSigner) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(msg)
+	return sdk.MustSortJSON(bz)
+}
+
+// ValidateBasic quick validity check for staking an application
+func (msg MsgAddSigner) ValidateBasic() sdk.Error {
+	return nil
+}
+
+// Route provides router key for msg
+func (msg MsgAddSigner) Route() string { return RouterKey }
+
+// Type provides msg name
+func (msg MsgAddSigner) Type() string { return TypeMsgAddSigner }
+
+// GetFee get fee for msg
+func (msg MsgAddSigner) GetFee() sdk.BigInt {
+	return sdk.NewInt(AppFeeMap[msg.Type()])
+}
+
+var _ sdk.Msg = MsgRemoveSigner{}
+
+// GetSigners return address(es) that must sign over msg.GetSignBytes()
+func (msg MsgRemoveSigner) GetSigners() []sdk.Address {
+	return []sdk.Address{msg.FromAddress}
+}
+
+func (msg MsgRemoveSigner) GetRecipient() sdk.Address {
+	return nil
+}
+
+// GetSignBytes returns the message bytes to sign over.
+func (msg MsgRemoveSigner) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(msg)
+	return sdk.MustSortJSON(bz)
+}
+
+// ValidateBasic quick validity check for staking an application
+func (msg MsgRemoveSigner) ValidateBasic() sdk.Error {
+	return nil
+}
+
+// Route provides router key for msg
+func (msg MsgRemoveSigner) Route() string { return RouterKey }
+
+// Type provides msg name
+func (msg MsgRemoveSigner) Type() string { return TypeMsgRemoveSigner }
+
+// GetFee get fee for msg
+func (msg MsgRemoveSigner) GetFee() sdk.BigInt {
+	return sdk.NewInt(AppFeeMap[msg.Type()])
+}

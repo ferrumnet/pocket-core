@@ -28,6 +28,10 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 			return handleMsgSwap(ctx, msg, k)
 		case types.MsgWithdrawSigned:
 			return handleMsgWithdrawSigned(ctx, msg, k)
+		case types.MsgAddSigner:
+			return handleMsgAddSigner(ctx, msg, k)
+		case types.MsgRemoveSigner:
+			return handleMsgRemoveSigner(ctx, msg, k)
 		default:
 			errMsg := fmt.Sprintf("unrecognized bridgepool message type: %T", msg)
 			return sdk.ErrUnknownRequest(errMsg).Result()
@@ -82,5 +86,15 @@ func handleMsgWithdrawSigned(ctx sdk.Ctx, msg types.MsgWithdrawSigned, k keeper.
 	if err != nil {
 		return err.Result()
 	}
+	return sdk.Result{Events: ctx.EventManager().Events()}
+}
+
+func handleMsgAddSigner(ctx sdk.Ctx, msg types.MsgAddSigner, k keeper.Keeper) sdk.Result {
+	k.SetSigner(ctx, msg.Signer.String())
+	return sdk.Result{Events: ctx.EventManager().Events()}
+}
+
+func handleMsgRemoveSigner(ctx sdk.Ctx, msg types.MsgRemoveSigner, k keeper.Keeper) sdk.Result {
+	k.DeleteSigner(ctx, msg.Signer.String())
 	return sdk.Result{Events: ctx.EventManager().Events()}
 }

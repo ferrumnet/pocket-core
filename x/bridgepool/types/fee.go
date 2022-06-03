@@ -8,6 +8,8 @@ var (
 	TypeMsgRemoveLiquidity = "remove_liquidity"
 	TypeMsgSwap            = "swap"
 	TypeMsgWithdrawSigned  = "withdraw_signed"
+	TypeMsgAddSigner       = "add_signer"
+	TypeMsgRemoveSigner    = "remove_signer"
 )
 
 var (
@@ -19,5 +21,7 @@ var (
 		TypeMsgRemoveLiquidity: 10000,
 		TypeMsgSwap:            10000,
 		TypeMsgWithdrawSigned:  10000,
+		TypeMsgAddSigner:       10000,
+		TypeMsgRemoveSigner:    10000,
 	}
 )

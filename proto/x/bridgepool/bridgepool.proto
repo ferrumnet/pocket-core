@@ -135,6 +135,24 @@ message MsgWithdrawSigned {
   bytes signature = 6;
 }
 
-// TODO: add MsgAddSigner
-// TODO: add MsgRemoveSigner
+message MsgAddSigner {
+  bytes fromAddress = 1 [
+    (gogoproto.jsontag) = "from_address",
+    (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
+  ];
+  string signer = 2 [
+    (gogoproto.jsontag) = "signer",
+    (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
+  ];
+}
 
+message MsgRemoveSigner {
+  bytes fromAddress = 1 [
+    (gogoproto.jsontag) = "from_address",
+    (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
+  ];
+  string signer = 2 [
+    (gogoproto.jsontag) = "signer",
+    (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
+  ];
+}
