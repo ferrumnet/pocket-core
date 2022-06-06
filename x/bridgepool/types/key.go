@@ -8,7 +8,7 @@ const (
 	ModuleName   = "bridgepool" // name of the module
 	RouterKey    = ModuleName   // RouterKey defines the routing key for a Parameter Change
 	StoreKey     = ModuleName   // key for state store
-	TStoreKey    = ModuleName
+	TStoreKey    = "transient_bridgepool"
 	QuerierRoute = ModuleName // QuerierRoute is the querier route for the bridgepool module
 )
 
