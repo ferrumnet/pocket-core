@@ -4,15 +4,17 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	tmtypes "github.com/tendermint/tendermint/types"
 	"math"
 	"reflect"
 	"strconv"
+
+	tmtypes "github.com/tendermint/tendermint/types"
 
 	sdk "github.com/pokt-network/pocket-core/types"
 	appsTypes "github.com/pokt-network/pocket-core/x/apps/types"
 	"github.com/pokt-network/pocket-core/x/auth/exported"
 	"github.com/pokt-network/pocket-core/x/auth/util"
+	bridgepoolTypes "github.com/pokt-network/pocket-core/x/bridgepool/types"
 	"github.com/pokt-network/pocket-core/x/gov/types"
 	nodesTypes "github.com/pokt-network/pocket-core/x/nodes/types"
 	pocketTypes "github.com/pokt-network/pocket-core/x/pocketcore/types"
@@ -198,6 +200,55 @@ func (app PocketCoreApp) QueryHostedChains() (res map[string]pocketTypes.HostedB
 
 func (app PocketCoreApp) SetHostedChains(req map[string]pocketTypes.HostedBlockchain) (res map[string]pocketTypes.HostedBlockchain, err error) {
 	return app.pocketKeeper.SetHostedBlockchains(req).M, nil
+}
+
+func (app PocketCoreApp) QueryBridgePoolParams(height int64) (params bridgepoolTypes.Params, err error) {
+	ctx, err := app.NewContext(height)
+	if err != nil {
+		return
+	}
+	params = app.bridgepoolKeeper.GetParams(ctx)
+	return
+}
+
+func (app PocketCoreApp) QueryBridgePoolAllSigners(height int64) ([]string, error) {
+	ctx, err := app.NewContext(height)
+	if err != nil {
+		return []string{}, err
+	}
+
+	allSigners := app.bridgepoolKeeper.GetAllSigners(ctx)
+	return allSigners, nil
+}
+
+func (app PocketCoreApp) QueryBridgePoolAllLiquidities(height int64) ([]bridgepoolTypes.Liquidity, error) {
+	ctx, err := app.NewContext(height)
+	if err != nil {
+		return []bridgepoolTypes.Liquidity{}, err
+	}
+
+	liquidities := app.bridgepoolKeeper.GetAllLiquidities(ctx)
+	return liquidities, nil
+}
+
+func (app PocketCoreApp) QueryBridgePoolAllFeeRates(height int64) ([]bridgepoolTypes.FeeRate, error) {
+	ctx, err := app.NewContext(height)
+	if err != nil {
+		return []bridgepoolTypes.FeeRate{}, err
+	}
+
+	feeRates := app.bridgepoolKeeper.GetAllFeeRates(ctx)
+	return feeRates, nil
+}
+
+func (app PocketCoreApp) QueryBridgePoolAllAllowedTargets(height int64) ([]bridgepoolTypes.AllowedTarget, error) {
+	ctx, err := app.NewContext(height)
+	if err != nil {
+		return []bridgepoolTypes.AllowedTarget{}, err
+	}
+
+	allAllowedTargets := app.bridgepoolKeeper.GetAllAllowedTargets(ctx)
+	return allAllowedTargets, nil
 }
 
 func (app PocketCoreApp) QuerySigningInfo(height int64, addr string) (res nodesTypes.ValidatorSigningInfo, err error) {

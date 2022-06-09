@@ -214,12 +214,13 @@ func (app *PocketCoreApp) GetClient() client.Client {
 var (
 	// module account permissions
 	moduleAccountPermissions = map[string][]string{
-		auth.FeeCollectorName:     {auth.Burner, auth.Minter, auth.Staking},
-		nodesTypes.StakedPoolName: {auth.Burner, auth.Minter, auth.Staking},
-		appsTypes.StakedPoolName:  {auth.Burner, auth.Minter, auth.Staking},
-		govTypes.DAOAccountName:   {auth.Burner, auth.Minter, auth.Staking},
-		nodesTypes.ModuleName:     {auth.Burner, auth.Minter, auth.Staking},
-		appsTypes.ModuleName:      nil,
+		auth.FeeCollectorName:      {auth.Burner, auth.Minter, auth.Staking},
+		nodesTypes.StakedPoolName:  {auth.Burner, auth.Minter, auth.Staking},
+		appsTypes.StakedPoolName:   {auth.Burner, auth.Minter, auth.Staking},
+		govTypes.DAOAccountName:    {auth.Burner, auth.Minter, auth.Staking},
+		nodesTypes.ModuleName:      {auth.Burner, auth.Minter, auth.Staking},
+		bridgepoolTypes.ModuleName: nil,
+		appsTypes.ModuleName:       nil,
 	}
 )
 

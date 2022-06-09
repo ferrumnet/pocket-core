@@ -16,7 +16,7 @@ var (
 	FeeRateKeyPrefix       = []byte{0x00}
 	AllowedTargetKeyPrefix = []byte{0x01}
 	LiquidityKeyPrefix     = []byte{0x02}
-	SignerKeyPrefix        = []byte{0x02}
+	SignerKeyPrefix        = []byte{0x03}
 )
 
 func FeeRateKey(token string) []byte {

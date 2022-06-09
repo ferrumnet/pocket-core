@@ -34,25 +34,25 @@ func init() {
 }
 
 var setFeeCmd = &cobra.Command{
-	Use:   "set-fee <fromAddr> <token> <fee> <fee> <chainId>",
+	Use:   "set-fee <fromAddr> <token> <fee-rate> <fee> <chainId>",
 	Short: "Set fee for withdrawing specific token",
 	Long: `Set fee for withdrawing specific token.
 Will prompt the user for the <fromAddr> account passphrase.`,
 	Args: cobra.ExactArgs(5),
 	Run: func(cmd *cobra.Command, args []string) {
 		app.InitConfig(datadir, tmNode, persistentPeers, seeds, remoteCLIURL)
-		fee, err := strconv.Atoi(args[4])
+		fee, err := strconv.Atoi(args[3])
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-		targetChainId, err := strconv.Atoi(args[2])
+		feeRate, err := strconv.Atoi(args[2])
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 		fmt.Println("Enter Password: ")
-		res, err := SetFee(args[0], args[1], uint64(targetChainId), app.Credentials(pwd), args[5], int64(fee))
+		res, err := SetFee(args[0], args[1], uint64(feeRate), app.Credentials(pwd), args[4], int64(fee))
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -155,7 +155,7 @@ Will prompt the user for the <fromAddr> account passphrase.`,
 	Args: cobra.ExactArgs(5),
 	Run: func(cmd *cobra.Command, args []string) {
 		app.InitConfig(datadir, tmNode, persistentPeers, seeds, remoteCLIURL)
-		fee, err := strconv.Atoi(args[4])
+		fee, err := strconv.Atoi(args[3])
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -166,7 +166,7 @@ Will prompt the user for the <fromAddr> account passphrase.`,
 			return
 		}
 		fmt.Println("Enter Password: ")
-		res, err := AddLiquidity(args[0], args[1], uint64(amount), app.Credentials(pwd), args[5], int64(fee))
+		res, err := AddLiquidity(args[0], args[1], uint64(amount), app.Credentials(pwd), args[4], int64(fee))
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -193,7 +193,7 @@ Will prompt the user for the <fromAddr> account passphrase.`,
 	Args: cobra.ExactArgs(5),
 	Run: func(cmd *cobra.Command, args []string) {
 		app.InitConfig(datadir, tmNode, persistentPeers, seeds, remoteCLIURL)
-		fee, err := strconv.Atoi(args[4])
+		fee, err := strconv.Atoi(args[3])
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -204,7 +204,7 @@ Will prompt the user for the <fromAddr> account passphrase.`,
 			return
 		}
 		fmt.Println("Enter Password: ")
-		res, err := RemoveLiquidity(args[0], args[1], uint64(amount), app.Credentials(pwd), args[5], int64(fee))
+		res, err := RemoveLiquidity(args[0], args[1], uint64(amount), app.Credentials(pwd), args[4], int64(fee))
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -231,7 +231,7 @@ Will prompt the user for the <fromAddr> account passphrase.`,
 	Args: cobra.ExactArgs(8),
 	Run: func(cmd *cobra.Command, args []string) {
 		app.InitConfig(datadir, tmNode, persistentPeers, seeds, remoteCLIURL)
-		fee, err := strconv.Atoi(args[4])
+		fee, err := strconv.Atoi(args[6])
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -242,7 +242,7 @@ Will prompt the user for the <fromAddr> account passphrase.`,
 			return
 		}
 		fmt.Println("Enter Password: ")
-		res, err := Swap(args[0], args[1], uint64(amount), args[3], args[4], args[5], app.Credentials(pwd), args[5], int64(fee))
+		res, err := Swap(args[0], args[1], uint64(amount), args[3], args[4], args[5], app.Credentials(pwd), args[7], int64(fee))
 		if err != nil {
 			fmt.Println(err)
 			return
