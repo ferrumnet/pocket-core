@@ -6,6 +6,11 @@ const (
 	EventBridgeSwap             = "bridge_swap"
 	EventBridgeLiquidityAdded   = "bridge_liquidity_added"
 	EventBridgeLiquidityRemoved = "bridge_liquidity_removed"
+	EventTypeSetFeeRate         = "set_fee_rate"
+	EventTypeAllowTarget        = "allow_target"
+	EventTypeDisallowTarget     = "disallow_target"
+	EventTypeSetSigner          = "set_signer"
+	EventTypeRemoveSigner       = "remove_signer"
 
 	AttributeKeySigner        = "signer"
 	AttributeKeyReceiver      = "receiver"
@@ -17,4 +22,5 @@ const (
 	AttributeKeyTargetToken   = "target_token"
 	AttributeKeyTargetAddress = "target_address"
 	AttributeKeyActor         = "actor"
+	AttributeKeyChainId       = "chain_id"
 )

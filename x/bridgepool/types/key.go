@@ -8,7 +8,7 @@ const (
 	ModuleName   = "bridgepool" // name of the module
 	RouterKey    = ModuleName   // RouterKey defines the routing key for a Parameter Change
 	StoreKey     = ModuleName   // key for state store
-	TStoreKey    = ModuleName
+	TStoreKey    = "transient_bridgepool"
 	QuerierRoute = ModuleName // QuerierRoute is the querier route for the bridgepool module
 )
 
@@ -16,7 +16,7 @@ var (
 	FeeRateKeyPrefix       = []byte{0x00}
 	AllowedTargetKeyPrefix = []byte{0x01}
 	LiquidityKeyPrefix     = []byte{0x02}
-	SignerKeyPrefix        = []byte{0x02}
+	SignerKeyPrefix        = []byte{0x03}
 )
 
 func FeeRateKey(token string) []byte {

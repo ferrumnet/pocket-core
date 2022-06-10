@@ -65,12 +65,15 @@ func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, token string, payee str
 	// verify signature
 	message := withdrawSignedMessage(token, payee, amount, salt)
 
-	signature[crypto.RecoveryIDOffset] -= 27 // Transform yellow paper V from 27/28 to 0/1
-	recovered, err := crypto.SigToPub(message.Bytes(), signature)
-	if err != nil {
-		return types.ErrInvalidSignature(k.codespace, err)
+	signer := common.Address{}
+	if len(signature) > crypto.RecoveryIDOffset {
+		signature[crypto.RecoveryIDOffset] -= 27 // Transform yellow paper V from 27/28 to 0/1
+		recovered, err := crypto.SigToPub(message.Bytes(), signature)
+		if err != nil {
+			return types.ErrInvalidSignature(k.codespace, err)
+		}
+		signer = crypto.PubkeyToAddress(*recovered)
 	}
-	signer := crypto.PubkeyToAddress(*recovered)
 	// TODO: enable this when goes live
 	// if !k.IsSigner(ctx, signer.String()) {
 	// 	return types.ErrInvalidSigner(k.codespace)
@@ -87,7 +90,12 @@ func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, token string, payee str
 		amount -= fee
 	}
 
-	// TODO: transfer remaining amount to the payee
+	// TODO: transfer only remaining amount to the payee
+	payeeAcc, err := sdk.AddressFromHex(payee)
+	err = k.AccountKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, payeeAcc, sdk.Coins{sdk.NewInt64Coin(token, int64(amount))})
+	if err != nil {
+		return types.ErrUnexpectedError(k.codespace, err)
+	}
 
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(

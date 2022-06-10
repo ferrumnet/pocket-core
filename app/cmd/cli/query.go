@@ -41,6 +41,7 @@ func init() {
 	queryCmd.AddCommand(queryParam)
 	queryCmd.AddCommand(queryDAOOwner)
 	queryCmd.AddCommand(querySigningInfo)
+	queryCmd.AddCommand(queryBridgePoolParams)
 	queryCmd.AddCommand(queryBridgePoolAllSigners)
 	queryCmd.AddCommand(queryBridgePoolAllLiquidities)
 	queryCmd.AddCommand(queryBridgePoolAllFeeRates)
@@ -1008,6 +1009,40 @@ var querySigningInfo = &cobra.Command{
 	},
 }
 
+var queryBridgePoolParams = &cobra.Command{
+	Use:   "bridgepool-params [<height>]",
+	Short: "Get module params for bridgepool",
+	Long:  `Get module params for bridgepool at <height>.`,
+	Args:  cobra.MinimumNArgs(0),
+	Run: func(cmd *cobra.Command, args []string) {
+		app.InitConfig(datadir, tmNode, persistentPeers, seeds, remoteCLIURL)
+		var err error
+		var height int
+		switch len(args) {
+		case 1:
+			height, err = strconv.Atoi(args[0])
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+		}
+		params := rpc.HeightParams{
+			Height: int64(height),
+		}
+		j, err := json.Marshal(params)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		res, err := QueryRPC(GetBridgePoolParamsPath, j)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(res)
+	},
+}
+
 var queryBridgePoolAllSigners = &cobra.Command{
 	Use:   "signers [<height>]",
 	Short: "Get signers for bridgepool",
@@ -1046,7 +1081,7 @@ var queryBridgePoolAllLiquidities = &cobra.Command{
 	Use:   "liquidities [<height>]",
 	Short: "Get all liquidities on bridge pool",
 	Long:  `Get all liquidities on bridge pool at <height>.`,
-	Args:  cobra.MinimumNArgs(1),
+	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		app.InitConfig(datadir, tmNode, persistentPeers, seeds, remoteCLIURL)
 		var err error
@@ -1077,7 +1112,7 @@ var queryBridgePoolAllLiquidities = &cobra.Command{
 }
 
 var queryBridgePoolAllFeeRates = &cobra.Command{
-	Use:   "fee-rates <address> [<height>]",
+	Use:   "fee-rates [<height>]",
 	Short: "Gets all fee rates for the tokens on bridgepool",
 	Long:  `Gets all fee rates for the tokens on bridgepool at <height>.`,
 	Args:  cobra.MinimumNArgs(0),
@@ -1111,10 +1146,10 @@ var queryBridgePoolAllFeeRates = &cobra.Command{
 }
 
 var queryBridgePoolAllAllowedTargets = &cobra.Command{
-	Use:   "allowed-targets <address> [<height>]",
+	Use:   "allowed-targets [<height>]",
 	Short: "Get all allowed targets on bridgepool",
 	Long:  `Get all allowed targets on bridgepool at <height>.`,
-	Args:  cobra.MinimumNArgs(1),
+	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		app.InitConfig(datadir, tmNode, persistentPeers, seeds, remoteCLIURL)
 		var err error

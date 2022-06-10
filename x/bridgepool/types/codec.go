@@ -24,6 +24,8 @@ func RegisterCodec(cdc *codec.Codec) {
 	cdc.RegisterStructure(MsgRemoveLiquidity{}, "bridgepool/msg_remove_liquidity")
 	cdc.RegisterStructure(MsgSwap{}, "bridgepool/msg_swap")
 	cdc.RegisterStructure(MsgWithdrawSigned{}, "bridgepool/msg_withdraw_signed")
+	cdc.RegisterStructure(MsgAddSigner{}, "bridgepool/msg_add_signer")
+	cdc.RegisterStructure(MsgRemoveSigner{}, "bridgepool/msg_remove_signer")
 
 	cdc.RegisterImplementation((*sdk.ProtoMsg)(nil),
 		&MsgSetFee{},
@@ -33,6 +35,8 @@ func RegisterCodec(cdc *codec.Codec) {
 		&MsgRemoveLiquidity{},
 		&MsgSwap{},
 		&MsgWithdrawSigned{},
+		&MsgAddSigner{},
+		&MsgRemoveSigner{},
 	)
 	cdc.RegisterImplementation((*sdk.Msg)(nil),
 		&MsgSetFee{},
@@ -42,6 +46,8 @@ func RegisterCodec(cdc *codec.Codec) {
 		&MsgRemoveLiquidity{},
 		&MsgSwap{},
 		&MsgWithdrawSigned{},
+		&MsgAddSigner{},
+		&MsgRemoveSigner{},
 	)
 	ModuleCdc = cdc
 }

@@ -1,0 +1,36 @@
+#!/bin/sh
+
+# remove all sync data
+pocket_core reset
+
+# off-chain account commands
+pocket_core accounts list
+pocket_core accounts create
+pocket_core accounts import-raw c277380db4888d2e3c006e0d91f4c2426d66aea1976fb65236e307fb0b4576624456b290a931d6dfc512e37edeb7e8cff154f06852d5163c7476f3d8e4c292a1
+pocket_core accounts export-raw 169869f67cd3f78a722fb4795b69949fb4bc9084
+pocket_core accounts set-validator 169869f67cd3f78a722fb4795b69949fb4bc9084
+pocket_core accounts show 169869f67cd3f78a722fb4795b69949fb4bc9084
+
+# command to start node
+pocket_core start
+
+# transaction for sending tokens
+pocket_core accounts send-tx 169869f67cd3f78a722fb4795b69949fb4bc9084 169869f67cd3f78a722fb4795b69949fb4bc9084 10000000 testnet 10000 xxx
+
+pocket_core bridgepool swap 169869f67cd3f78a722fb4795b69949fb4bc9084 upokt 10000000 polygon 0xa5e0829caced8ffdd4de3c43696c57f7d7a678ff 169869f67cd3f78a722fb4795b69949fb4bc9084 10000 testnet
+pocket_core bridgepool withdraw-signed 169869f67cd3f78a722fb4795b69949fb4bc9084 upokt 169869f67cd3f78a722fb4795b69949fb4bc9084 10000000 10000 testnet
+
+pocket_core bridgepool add-liquidity 169869f67cd3f78a722fb4795b69949fb4bc9084 upokt 11111111 10000 testnet
+pocket_core bridgepool remove-liquidity 169869f67cd3f78a722fb4795b69949fb4bc9084 upokt 11011 10000 testnet
+pocket_core bridgepool add-signer 169869f67cd3f78a722fb4795b69949fb4bc9084 169869f67cd3f78a722fb4795b69949fb4bc9084 10000 testnet
+pocket_core bridgepool remove-signer 169869f67cd3f78a722fb4795b69949fb4bc9084 169869f67cd3f78a722fb4795b69949fb4bc9084 10000 testnet
+pocket_core bridgepool allow-target 169869f67cd3f78a722fb4795b69949fb4bc9084 upokt 137 0xa5e0829caced8ffdd4de3c43696c57f7d7a678ff 10000 testnet
+pocket_core bridgepool disallow-target 169869f67cd3f78a722fb4795b69949fb4bc9084 upokt 137 0xa5e0829caced8ffdd4de3c43696c57f7d7a678ff 10000 testnet
+pocket_core bridgepool set-fee 169869f67cd3f78a722fb4795b69949fb4bc9084 upokt 100 10000 testnet
+
+pocket_core query bridgepool-params 
+pocket_core query signers
+pocket_core query liquidities
+pocket_core query fee-rates
+pocket_core query allowed-targets
+pocket_core query balance 169869f67cd3f78a722fb4795b69949fb4bc9084
