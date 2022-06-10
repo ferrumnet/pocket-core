@@ -50,16 +50,40 @@ func handleMsgSetFee(ctx sdk.Ctx, msg types.MsgSetFee, k keeper.Keeper) sdk.Resu
 	if err != nil {
 		return err.Result()
 	}
+
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventTypeSetFeeRate,
+			sdk.NewAttribute(types.AttributeKeyToken, msg.Token),
+			sdk.NewAttribute(types.AttributeKeyFee, fmt.Sprintf("%d", msg.Fee10000)),
+		)},
+	)
 	return sdk.Result{Events: ctx.EventManager().Events()}
 }
 
 func handleMsgAllowTarget(ctx sdk.Ctx, msg types.MsgAllowTarget, k keeper.Keeper) sdk.Result {
 	k.AllowTarget(ctx, msg.Token, msg.ChainId, msg.TargetToken)
+
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventTypeAllowTarget,
+			sdk.NewAttribute(types.AttributeKeyToken, msg.Token),
+			sdk.NewAttribute(types.AttributeKeyChainId, fmt.Sprintf("%d", msg.ChainId)),
+			sdk.NewAttribute(types.AttributeKeyTargetToken, fmt.Sprintf("%d", msg.TargetToken)),
+		)},
+	)
 	return sdk.Result{Events: ctx.EventManager().Events()}
 }
 
 func handleMsgDisallowTarget(ctx sdk.Ctx, msg types.MsgDisallowTarget, k keeper.Keeper) sdk.Result {
 	k.DisallowTarget(ctx, msg.Token, msg.ChainId)
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventTypeDisallowTarget,
+			sdk.NewAttribute(types.AttributeKeyToken, msg.Token),
+			sdk.NewAttribute(types.AttributeKeyChainId, fmt.Sprintf("%d", msg.ChainId)),
+		)},
+	)
 	return sdk.Result{Events: ctx.EventManager().Events()}
 }
 
@@ -97,10 +121,22 @@ func handleMsgWithdrawSigned(ctx sdk.Ctx, msg types.MsgWithdrawSigned, k keeper.
 
 func handleMsgAddSigner(ctx sdk.Ctx, msg types.MsgAddSigner, k keeper.Keeper) sdk.Result {
 	k.SetSigner(ctx, msg.Signer.String())
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventTypeSetSigner,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Signer.String()),
+		)},
+	)
 	return sdk.Result{Events: ctx.EventManager().Events()}
 }
 
 func handleMsgRemoveSigner(ctx sdk.Ctx, msg types.MsgRemoveSigner, k keeper.Keeper) sdk.Result {
 	k.DeleteSigner(ctx, msg.Signer.String())
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventTypeRemoveSigner,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Signer.String()),
+		)},
+	)
 	return sdk.Result{Events: ctx.EventManager().Events()}
 }
