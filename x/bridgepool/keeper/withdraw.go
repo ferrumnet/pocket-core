@@ -7,6 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	sdk "github.com/pokt-network/pocket-core/types"
+	bridgefeeTypes "github.com/pokt-network/pocket-core/x/bridgefee/types"
 	"github.com/pokt-network/pocket-core/x/bridgepool/types"
 )
 
@@ -81,16 +82,19 @@ func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, token string, payee str
 
 	// TODO: avoid using same signature and salt again
 
-	// TODO: handle fees
+	// handle fees
 	feeRate := k.GetFeeRate(ctx, token)
 	fee := amount * feeRate / 10000
 	if fee != 0 {
-		// TODO: transfer fee amount to fee handler account
-		// TODO: distribute fees by fee handler
+		err := k.AccountKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, bridgefeeTypes.ModuleName, sdk.Coins{sdk.NewInt64Coin(token, int64(fee))})
+		if err != nil {
+			return types.ErrUnexpectedError(k.codespace, err)
+		}
+
 		amount -= fee
 	}
 
-	// TODO: transfer only remaining amount to the payee
+	// transfer amount except fee to payee account
 	payeeAcc, err := sdk.AddressFromHex(payee)
 	err = k.AccountKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, payeeAcc, sdk.Coins{sdk.NewInt64Coin(token, int64(amount))})
 	if err != nil {

@@ -13,6 +13,7 @@ import (
 	appsKeeper "github.com/pokt-network/pocket-core/x/apps/keeper"
 	appsTypes "github.com/pokt-network/pocket-core/x/apps/types"
 	"github.com/pokt-network/pocket-core/x/auth"
+	bridgefeeTypes "github.com/pokt-network/pocket-core/x/bridgefee/types"
 	bridgepoolKeeper "github.com/pokt-network/pocket-core/x/bridgepool/keeper"
 	bridgepoolTypes "github.com/pokt-network/pocket-core/x/bridgepool/types"
 	"github.com/pokt-network/pocket-core/x/gov"
@@ -220,6 +221,7 @@ var (
 		govTypes.DAOAccountName:    {auth.Burner, auth.Minter, auth.Staking},
 		nodesTypes.ModuleName:      {auth.Burner, auth.Minter, auth.Staking},
 		bridgepoolTypes.ModuleName: nil,
+		bridgefeeTypes.ModuleName:  nil,
 		appsTypes.ModuleName:       nil,
 	}
 )
