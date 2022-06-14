@@ -7,12 +7,17 @@ import (
 type CodeType = sdk.CodeType
 
 const (
-	DefaultCodespace       sdk.CodespaceType = ModuleName
-	CodeUnexpectedError    CodeType          = 101
-	CodeNotEnoughLiquidity CodeType          = 102
-	CodeInvalidSignature   CodeType          = 103
-	CodeInvalidSigner      CodeType          = 104
+	DefaultCodespace        sdk.CodespaceType = ModuleName
+	CodeUnexpectedError     CodeType          = 101
+	CodeNotEnoughLiquidity  CodeType          = 102
+	CodeInvalidSignature    CodeType          = 103
+	CodeInvalidSigner       CodeType          = 104
+	CodeNotEnoughPermission CodeType          = 105
 )
+
+func ErrNotEnoughPermission(Codespace sdk.CodespaceType) sdk.Error {
+	return sdk.NewError(Codespace, CodeNotEnoughPermission, "not enough permission")
+}
 
 func ErrNotEnoughLiquidity(Codespace sdk.CodespaceType) sdk.Error {
 	return sdk.NewError(Codespace, CodeNotEnoughLiquidity, "not enough liquidity")

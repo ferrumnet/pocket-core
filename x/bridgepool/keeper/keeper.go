@@ -30,3 +30,7 @@ func NewKeeper(storeKey sdk.StoreKey, cdc *codec.Codec, accountKeeper types.Acco
 func (k Keeper) Codec() *codec.Codec {
 	return k.Cdc
 }
+
+func (k Keeper) Codespace() sdk.CodespaceType {
+	return k.codespace
+}
