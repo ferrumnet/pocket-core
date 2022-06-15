@@ -150,7 +150,7 @@
         "ctx_cache_size": 20,
         "abci_logging": false,
         "show_relay_errors": true,
-        "disable_tx_events": true,
+        "disable_tx_events": false,
         "iavl_cache_size": 5000000,
         "chains_hot_reload": false
     }

@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"bytes"
 	"fmt"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -61,6 +62,29 @@ func withdrawSignedMessage(token string, payee string, amount uint64, salt []byt
 	return crypto.Keccak256Hash(bytes)
 }
 
+func (k Keeper) SetUsedSalt(ctx sdk.Ctx, salt []byte) {
+	store := ctx.KVStore(k.storeKey)
+	store.Set(types.WithdrawSaltKey(salt), salt)
+}
+
+func (k Keeper) IsUsedSalt(ctx sdk.Ctx, salt []byte) bool {
+	store := ctx.KVStore(k.storeKey)
+	bz, _ := store.Get(types.WithdrawSaltKey(salt))
+	return bytes.Equal(bz, salt)
+}
+
+func (k Keeper) GetAllUsedSalts(ctx sdk.Ctx) [][]byte {
+	usedSalts := [][]byte{}
+	store := ctx.KVStore(k.storeKey)
+	iterator, _ := sdk.KVStorePrefixIterator(store, types.WithdrawSaltKeyPrefix)
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		usedSalts = append(usedSalts, iterator.Value())
+	}
+	return usedSalts
+}
+
 func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, token string, payee string, amount uint64,
 	salt []byte, signature []byte) sdk.Error {
 	// verify signature
@@ -81,6 +105,9 @@ func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, token string, payee str
 	// }
 
 	// TODO: avoid using same signature and salt again
+	if k.IsUsedSalt(ctx, salt) {
+		return types.ErrAlreadyUsedWithdrawSalt(k.codespace)
+	}
 
 	// handle fees
 	feeRate := k.GetFeeRate(ctx, token)

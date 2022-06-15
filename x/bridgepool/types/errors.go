@@ -7,12 +7,13 @@ import (
 type CodeType = sdk.CodeType
 
 const (
-	DefaultCodespace        sdk.CodespaceType = ModuleName
-	CodeUnexpectedError     CodeType          = 101
-	CodeNotEnoughLiquidity  CodeType          = 102
-	CodeInvalidSignature    CodeType          = 103
-	CodeInvalidSigner       CodeType          = 104
-	CodeNotEnoughPermission CodeType          = 105
+	DefaultCodespace            sdk.CodespaceType = ModuleName
+	CodeUnexpectedError         CodeType          = 101
+	CodeNotEnoughLiquidity      CodeType          = 102
+	CodeInvalidSignature        CodeType          = 103
+	CodeInvalidSigner           CodeType          = 104
+	CodeNotEnoughPermission     CodeType          = 105
+	CodeAlreadyUsedWithdrawSalt CodeType          = 106
 )
 
 func ErrNotEnoughPermission(Codespace sdk.CodespaceType) sdk.Error {
@@ -29,6 +30,10 @@ func ErrInvalidSignature(Codespace sdk.CodespaceType, err error) sdk.Error {
 
 func ErrInvalidSigner(Codespace sdk.CodespaceType) sdk.Error {
 	return sdk.NewError(Codespace, CodeInvalidSigner, "Invalid signer")
+}
+
+func ErrAlreadyUsedWithdrawSalt(Codespace sdk.CodespaceType) sdk.Error {
+	return sdk.NewError(Codespace, CodeAlreadyUsedWithdrawSalt, "Already used withdraw salt")
 }
 
 func ErrUnexpectedError(Codespace sdk.CodespaceType, err error) sdk.Error {

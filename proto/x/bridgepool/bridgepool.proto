@@ -15,6 +15,7 @@ message GenesisState {
   repeated Liquidity liquidities = 3 [ (gogoproto.nullable) = false ];
   repeated FeeRate fees = 4 [ (gogoproto.nullable) = false ];
   repeated AllowedTarget allowed_targets = 5 [ (gogoproto.nullable) = false ];
+  repeated bytes usedWithdrawSalts = 6;
 }
 
 message Params {

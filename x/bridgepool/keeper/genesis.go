@@ -25,6 +25,9 @@ func (k Keeper) InitGenesis(ctx sdk.Ctx, data types.GenesisState) []abci.Validat
 	for _, target := range data.AllowedTargets {
 		k.AllowTarget(ctx, target.Token, target.ChainId, target.TargetToken)
 	}
+	for _, salt := range data.UsedWithdrawSalts {
+		k.SetUsedSalt(ctx, salt)
+	}
 	return []abci.ValidatorUpdate{}
 }
 
@@ -37,5 +40,6 @@ func (k Keeper) ExportGenesis(ctx sdk.Ctx) types.GenesisState {
 		k.GetAllLiquidities(ctx),
 		k.GetAllFeeRates(ctx),
 		k.GetAllAllowedTargets(ctx),
+		k.GetAllUsedSalts(ctx),
 	)
 }
