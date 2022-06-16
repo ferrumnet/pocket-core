@@ -87,6 +87,15 @@ func (k Keeper) GetAllUsedSalts(ctx sdk.Ctx) [][]byte {
 
 func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, token string, payee string, amount uint64,
 	salt []byte, signature []byte) sdk.Error {
+
+	// check ethereum addresses
+	if !common.IsHexAddress(token) {
+		return types.ErrInvalidEthereumAddress(k.codespace)
+	}
+	if !common.IsHexAddress(token) {
+		return types.ErrInvalidEthereumAddress(k.codespace)
+	}
+
 	// verify signature
 	message := withdrawSignedMessage(token, payee, amount, salt)
 
@@ -99,12 +108,13 @@ func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, token string, payee str
 		}
 		signer = crypto.PubkeyToAddress(*recovered)
 	}
+
 	// TODO: enable this when goes live
 	// if !k.IsSigner(ctx, signer.String()) {
 	// 	return types.ErrInvalidSigner(k.codespace)
 	// }
 
-	// TODO: avoid using same signature and salt again
+	// avoid using same signature and salt again
 	if k.IsUsedSalt(ctx, salt) {
 		return types.ErrAlreadyUsedWithdrawSalt(k.codespace)
 	}

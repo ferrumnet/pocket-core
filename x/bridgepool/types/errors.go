@@ -14,6 +14,7 @@ const (
 	CodeInvalidSigner           CodeType          = 104
 	CodeNotEnoughPermission     CodeType          = 105
 	CodeAlreadyUsedWithdrawSalt CodeType          = 106
+	CodeInvalidEthereumAddress  CodeType          = 107
 )
 
 func ErrNotEnoughPermission(Codespace sdk.CodespaceType) sdk.Error {
@@ -30,6 +31,10 @@ func ErrInvalidSignature(Codespace sdk.CodespaceType, err error) sdk.Error {
 
 func ErrInvalidSigner(Codespace sdk.CodespaceType) sdk.Error {
 	return sdk.NewError(Codespace, CodeInvalidSigner, "Invalid signer")
+}
+
+func ErrInvalidEthereumAddress(Codespace sdk.CodespaceType) sdk.Error {
+	return sdk.NewError(Codespace, CodeInvalidEthereumAddress, "Invalid ethereum address")
 }
 
 func ErrAlreadyUsedWithdrawSalt(Codespace sdk.CodespaceType) sdk.Error {

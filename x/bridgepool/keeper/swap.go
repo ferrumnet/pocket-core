@@ -3,12 +3,24 @@ package keeper
 import (
 	"fmt"
 
+	"github.com/ethereum/go-ethereum/common"
 	sdk "github.com/pokt-network/pocket-core/types"
 	"github.com/pokt-network/pocket-core/x/bridgepool/types"
 )
 
 func (k Keeper) Swap(ctx sdk.Ctx, from sdk.Address, token string, amount uint64, targetNetwork string,
 	targetToken string, targetAddress string) sdk.Error {
+	// check ethereum addresses
+	if !common.IsHexAddress(token) {
+		return types.ErrInvalidEthereumAddress(k.codespace)
+	}
+	if !common.IsHexAddress(targetToken) {
+		return types.ErrInvalidEthereumAddress(k.codespace)
+	}
+	if !common.IsHexAddress(targetAddress) {
+		return types.ErrInvalidEthereumAddress(k.codespace)
+	}
+
 	// transfer tokens from `from` account to module account by `amount`
 	err := k.AccountKeeper.SendCoinsFromAccountToModule(ctx, from, types.ModuleName, sdk.Coins{sdk.NewInt64Coin(token, int64(amount))})
 	if err != nil {

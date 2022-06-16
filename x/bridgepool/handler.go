@@ -51,7 +51,11 @@ func handleMsgAddSigner(ctx sdk.Ctx, msg types.MsgAddSigner, k keeper.Keeper) sd
 		return types.ErrNotEnoughPermission(k.Codespace()).Result()
 	}
 
-	k.SetSigner(ctx, msg.Signer.String())
+	err := k.SetSigner(ctx, msg.Signer.String())
+	if err != nil {
+		return err.Result()
+	}
+
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTypeSetSigner,
@@ -67,7 +71,11 @@ func handleMsgRemoveSigner(ctx sdk.Ctx, msg types.MsgRemoveSigner, k keeper.Keep
 		return types.ErrNotEnoughPermission(k.Codespace()).Result()
 	}
 
-	k.DeleteSigner(ctx, msg.Signer.String())
+	err := k.DeleteSigner(ctx, msg.Signer.String())
+	if err != nil {
+		return err.Result()
+	}
+
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTypeRemoveSigner,
@@ -104,7 +112,10 @@ func handleMsgAllowTarget(ctx sdk.Ctx, msg types.MsgAllowTarget, k keeper.Keeper
 		return types.ErrNotEnoughPermission(k.Codespace()).Result()
 	}
 
-	k.AllowTarget(ctx, msg.Token, msg.ChainId, msg.TargetToken)
+	err := k.AllowTarget(ctx, msg.Token, msg.ChainId, msg.TargetToken)
+	if err != nil {
+		return err.Result()
+	}
 
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(

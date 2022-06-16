@@ -33,7 +33,6 @@ func (k Keeper) InitGenesis(ctx sdk.Ctx, data types.GenesisState) []abci.Validat
 
 // ExportGenesis returns a GenesisState for a given context and keeper
 func (k Keeper) ExportGenesis(ctx sdk.Ctx) types.GenesisState {
-
 	return types.NewGenesisState(
 		k.GetParams(ctx),
 		k.GetAllSigners(ctx),
