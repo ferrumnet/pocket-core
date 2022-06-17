@@ -51,7 +51,7 @@ func handleMsgAddSigner(ctx sdk.Ctx, msg types.MsgAddSigner, k keeper.Keeper) sd
 		return types.ErrNotEnoughPermission(k.Codespace()).Result()
 	}
 
-	err := k.SetSigner(ctx, msg.Signer.String())
+	err := k.SetSigner(ctx, msg.Signer)
 	if err != nil {
 		return err.Result()
 	}
@@ -59,7 +59,7 @@ func handleMsgAddSigner(ctx sdk.Ctx, msg types.MsgAddSigner, k keeper.Keeper) sd
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTypeSetSigner,
-			sdk.NewAttribute(types.AttributeKeySigner, msg.Signer.String()),
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Signer),
 		)},
 	)
 	return sdk.Result{Events: ctx.EventManager().Events()}
@@ -71,7 +71,7 @@ func handleMsgRemoveSigner(ctx sdk.Ctx, msg types.MsgRemoveSigner, k keeper.Keep
 		return types.ErrNotEnoughPermission(k.Codespace()).Result()
 	}
 
-	err := k.DeleteSigner(ctx, msg.Signer.String())
+	err := k.DeleteSigner(ctx, msg.Signer)
 	if err != nil {
 		return err.Result()
 	}
@@ -79,7 +79,7 @@ func handleMsgRemoveSigner(ctx sdk.Ctx, msg types.MsgRemoveSigner, k keeper.Keep
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTypeRemoveSigner,
-			sdk.NewAttribute(types.AttributeKeySigner, msg.Signer.String()),
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Signer),
 		)},
 	)
 	return sdk.Result{Events: ctx.EventManager().Events()}
@@ -162,7 +162,7 @@ func handleMsgRemoveLiquidity(ctx sdk.Ctx, msg types.MsgRemoveLiquidity, k keepe
 }
 
 func handleMsgSwap(ctx sdk.Ctx, msg types.MsgSwap, k keeper.Keeper) sdk.Result {
-	err := k.Swap(ctx, msg.FromAddress, msg.Token, msg.Amount, msg.TargetNetwork, msg.TargetToken, msg.TargetAddress)
+	err := k.Swap(ctx, msg.FromAddress, msg.Token, msg.Amount, msg.TargetChainId, msg.TargetToken, msg.TargetAddress)
 	if err != nil {
 		return err.Result()
 	}
@@ -170,7 +170,7 @@ func handleMsgSwap(ctx sdk.Ctx, msg types.MsgSwap, k keeper.Keeper) sdk.Result {
 }
 
 func handleMsgWithdrawSigned(ctx sdk.Ctx, msg types.MsgWithdrawSigned, k keeper.Keeper) sdk.Result {
-	err := k.WithdrawSigned(ctx, msg.FromAddress.String(), msg.Token, msg.Payee, msg.Amount, msg.Salt, msg.Signature)
+	err := k.WithdrawSigned(ctx, msg.FromAddress.String(), msg.Payee, msg.Amount, msg.Salt, msg.Signature)
 	if err != nil {
 		return err.Result()
 	}

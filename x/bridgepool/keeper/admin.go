@@ -56,7 +56,7 @@ func (k Keeper) GetAllFeeRates(ctx sdk.Ctx) []types.FeeRate {
 	return feeRates
 }
 
-func (k Keeper) AllowTarget(ctx sdk.Ctx, token string, chainId uint64, targetToken string) sdk.Error {
+func (k Keeper) AllowTarget(ctx sdk.Ctx, token string, chainId string, targetToken string) sdk.Error {
 	// check ethereum addresses
 	if !common.IsHexAddress(targetToken) {
 		return types.ErrInvalidEthereumAddress(k.codespace)
@@ -73,12 +73,12 @@ func (k Keeper) AllowTarget(ctx sdk.Ctx, token string, chainId uint64, targetTok
 	return nil
 }
 
-func (k Keeper) DisallowTarget(ctx sdk.Ctx, token string, chainId uint64) {
+func (k Keeper) DisallowTarget(ctx sdk.Ctx, token string, chainId string) {
 	store := ctx.KVStore(k.storeKey)
 	store.Delete(types.AllowedTargetKey(token, chainId))
 }
 
-func (k Keeper) GetAllowedTarget(ctx sdk.Ctx, token string, chainId uint64) string {
+func (k Keeper) GetAllowedTarget(ctx sdk.Ctx, token string, chainId string) string {
 	store := ctx.KVStore(k.storeKey)
 	bz, err := store.Get(types.AllowedTargetKey(token, chainId))
 	if err != nil {

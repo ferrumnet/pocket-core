@@ -24,8 +24,8 @@ func FeeRateKey(token string) []byte {
 	return append(FeeRateKeyPrefix, token...)
 }
 
-func AllowedTargetKey(token string, chainId uint64) []byte {
-	return append(append(AllowedTargetKeyPrefix, token...), sdk.Uint64ToBigEndian(chainId)...)
+func AllowedTargetKey(token string, chainId string) []byte {
+	return append(append(AllowedTargetKeyPrefix, token...), []byte(chainId)...)
 }
 
 func LiquidityKey(token string, user sdk.Address) []byte {

@@ -2,9 +2,8 @@ package keeper
 
 import (
 	"bytes"
-	"fmt"
+	"encoding/json"
 
-	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	sdk "github.com/pokt-network/pocket-core/types"
@@ -12,101 +11,64 @@ import (
 	"github.com/pokt-network/pocket-core/x/bridgepool/types"
 )
 
-func withdrawSignedMessage(token string, payee string, amount uint64, salt []byte) common.Hash {
-	// function withdrawSignedMessage(
-	//         address token,
-	//         address payee,
-	//         uint256 amount,
-	//         bytes32 salt)
-	// internal pure returns (bytes32) {
-	//     return keccak256(abi.encode(
-	//       WITHDRAW_SIGNED_METHOD,
-	//       token,
-	//       payee,
-	//       amount,
-	//       salt
-	//     ));
-	// }
-
-	uint256Ty, _ := abi.NewType("uint256", "uint256", nil)
-	bytes32Ty, _ := abi.NewType("bytes32", "bytes32", nil)
-	addressTy, _ := abi.NewType("address", "address", nil)
-
-	arguments := abi.Arguments{
-		{
-			Type: bytes32Ty,
-		},
-		{
-			Type: addressTy,
-		},
-		{
-			Type: addressTy,
-		},
-		{
-			Type: uint256Ty,
-		},
-		{
-			Type: bytes32Ty,
-		},
-	}
-
-	WITHDRAW_SIGNED_METHOD := crypto.Keccak256Hash([]byte("WithdrawSigned(address token,address payee,uint256 amount,bytes32 salt)"))
-	bytes, _ := arguments.Pack(
-		WITHDRAW_SIGNED_METHOD,
-		token,
-		payee,
-		amount,
-		salt,
-	)
-
-	return crypto.Keccak256Hash(bytes)
-}
-
-func (k Keeper) SetUsedSalt(ctx sdk.Ctx, salt []byte) {
+func (k Keeper) SetUsedMessage(ctx sdk.Ctx, salt []byte) {
 	store := ctx.KVStore(k.storeKey)
 	store.Set(types.WithdrawSaltKey(salt), salt)
 }
 
-func (k Keeper) IsUsedSalt(ctx sdk.Ctx, salt []byte) bool {
+func (k Keeper) IsUsedMessage(ctx sdk.Ctx, message []byte) bool {
 	store := ctx.KVStore(k.storeKey)
-	bz, _ := store.Get(types.WithdrawSaltKey(salt))
-	return bytes.Equal(bz, salt)
+	bz, _ := store.Get(types.WithdrawSaltKey(message))
+	return bytes.Equal(bz, message)
 }
 
-func (k Keeper) GetAllUsedSalts(ctx sdk.Ctx) [][]byte {
-	usedSalts := [][]byte{}
+func (k Keeper) GetAllUsedMessages(ctx sdk.Ctx) [][]byte {
+	usedMessages := [][]byte{}
 	store := ctx.KVStore(k.storeKey)
 	iterator, _ := sdk.KVStorePrefixIterator(store, types.WithdrawSaltKeyPrefix)
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		usedSalts = append(usedSalts, iterator.Value())
+		usedMessages = append(usedMessages, iterator.Value())
 	}
-	return usedSalts
+	return usedMessages
 }
 
-func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, token string, payee string, amount uint64,
-	salt []byte, signature []byte) sdk.Error {
-
-	// check ethereum addresses
-	if !common.IsHexAddress(token) {
-		return types.ErrInvalidEthereumAddress(k.codespace)
-	}
-	if !common.IsHexAddress(token) {
-		return types.ErrInvalidEthereumAddress(k.codespace)
-	}
+func GetSigner(chainId string, payee string, amount sdk.Coin,
+	salt string, signature []byte) (common.Address, []byte, error) {
+	signer := common.Address{}
 
 	// verify signature
-	message := withdrawSignedMessage(token, payee, amount, salt)
+	message := &types.WithdrawSignMessage{
+		ChainId: chainId,
+		Payee:   payee,
+		Amount:  amount,
+		Salt:    salt,
+	}
+	messageBytes, err := json.Marshal(message)
+	if err != nil {
+		return signer, messageBytes, err
+	}
 
-	signer := common.Address{}
 	if len(signature) > crypto.RecoveryIDOffset {
 		signature[crypto.RecoveryIDOffset] -= 27 // Transform yellow paper V from 27/28 to 0/1
-		recovered, err := crypto.SigToPub(message.Bytes(), signature)
+		recovered, err := crypto.SigToPub(messageBytes, signature)
 		if err != nil {
-			return types.ErrInvalidSignature(k.codespace, err)
+			return signer, messageBytes, err
 		}
 		signer = crypto.PubkeyToAddress(*recovered)
+	}
+
+	return signer, messageBytes, nil
+}
+
+func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, payee string, amount sdk.Coin,
+	salt string, signature []byte) sdk.Error {
+
+	// verify signature
+	signer, messageBytes, err := GetSigner(ctx.ChainID(), payee, amount, salt, signature)
+	if err != nil {
+		return types.ErrUnexpectedError(k.codespace, err)
 	}
 
 	// TODO: enable this when goes live
@@ -115,25 +77,26 @@ func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, token string, payee str
 	// }
 
 	// avoid using same signature and salt again
-	if k.IsUsedSalt(ctx, salt) {
-		return types.ErrAlreadyUsedWithdrawSalt(k.codespace)
+	if k.IsUsedMessage(ctx, messageBytes) {
+		return types.ErrAlreadyUsedWithdrawMessage(k.codespace)
 	}
 
 	// handle fees
-	feeRate := k.GetFeeRate(ctx, token)
-	fee := amount * feeRate / 10000
-	if fee != 0 {
-		err := k.AccountKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, bridgefeeTypes.ModuleName, sdk.Coins{sdk.NewInt64Coin(token, int64(fee))})
+	feeRate := k.GetFeeRate(ctx, amount.Denom)
+	fee := amount.Amount.Mul(sdk.NewInt(int64(feeRate))).Quo(sdk.NewInt(int64(10000)))
+	amountWithoutFee := amount.Amount
+	if fee.IsPositive() {
+		err := k.AccountKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, bridgefeeTypes.ModuleName, sdk.Coins{sdk.NewCoin(amount.Denom, fee)})
 		if err != nil {
 			return types.ErrUnexpectedError(k.codespace, err)
 		}
 
-		amount -= fee
+		amountWithoutFee = amountWithoutFee.Sub(fee)
 	}
 
 	// transfer amount except fee to payee account
 	payeeAcc, err := sdk.AddressFromHex(payee)
-	err = k.AccountKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, payeeAcc, sdk.Coins{sdk.NewInt64Coin(token, int64(amount))})
+	err = k.AccountKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, payeeAcc, sdk.Coins{sdk.NewCoin(amount.Denom, amountWithoutFee)})
 	if err != nil {
 		return types.ErrUnexpectedError(k.codespace, err)
 	}
@@ -143,9 +106,9 @@ func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, token string, payee str
 			types.EventTransferBySignature,
 			sdk.NewAttribute(types.AttributeKeySigner, signer.String()),
 			sdk.NewAttribute(types.AttributeKeyReceiver, payee),
-			sdk.NewAttribute(types.AttributeKeyToken, token),
-			sdk.NewAttribute(types.AttributeKeyAmount, fmt.Sprintf("%d", amount)),
-			sdk.NewAttribute(types.AttributeKeyFee, fmt.Sprintf("%d", fee)),
+			sdk.NewAttribute(types.AttributeKeyToken, amount.Denom),
+			sdk.NewAttribute(types.AttributeKeyAmount, amount.Amount.String()),
+			sdk.NewAttribute(types.AttributeKeyFee, fee.String()),
 		),
 	})
 
