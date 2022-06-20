@@ -18,6 +18,7 @@ import (
 	"github.com/pokt-network/pocket-core/codec"
 	"github.com/pokt-network/pocket-core/store"
 	sdk "github.com/pokt-network/pocket-core/types"
+	apptypes "github.com/pokt-network/pocket-core/x/apps/types"
 	"github.com/pokt-network/pocket-core/x/auth"
 	bridgefeeTypes "github.com/pokt-network/pocket-core/x/bridgefee/types"
 	"github.com/pokt-network/pocket-core/x/bridgepool/types"
@@ -70,6 +71,7 @@ func createTestInput(t *testing.T, isCheckTx bool) (sdk.Context, []auth.Account,
 	cdc := makeTestCodec()
 
 	maccPerms := map[string][]string{
+		apptypes.StakedPoolName:   {auth.Minter, auth.Burner},
 		auth.FeeCollectorName:     nil,
 		types.ModuleName:          nil,
 		bridgefeeTypes.ModuleName: nil,
