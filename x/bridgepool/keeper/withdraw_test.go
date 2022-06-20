@@ -1,7 +1,6 @@
 package keeper
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -15,23 +14,25 @@ func TestGetSigner(t *testing.T) {
 		payee     string
 		amount    sdk.Coin
 		salt      string
+		signer    string
 		signature string
 		errors    bool
 	}{
 		{
-			name:      "unpack test",
+			name:      "get signer test",
 			payee:     "65A8F07Bd9A8598E1b5B6C0a88F4779DBC077675",
 			amount:    sdk.NewInt64Coin("upokt", 100000),
 			salt:      "74b82d4c386d401a708f401b5f1b831cb7c34adc2f02f39e60a4d5d220d66303",
 			signature: "fd41b43ee89d28652b34f0e5c769753ba3b4f0cb6b85bc63f29ba6680cedbf89688d66145b5326c1afb811117a196f0f14b73989b062dde980ce13cd06f1ad801b",
+			signer:    "0x7B848510E92B2f2F7ea06d46e7B370198F7369Bc",
 			errors:    false,
 		},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			signer, _, err := GetSigner("testnet", tc.payee, tc.amount, tc.salt, common.Hex2Bytes(tc.signature))
-			fmt.Println("signer", signer.String())
-			assert.NotNil(t, err)
+			assert.Nil(t, err)
+			assert.Equal(t, signer.String(), tc.signer)
 		})
 	}
 }

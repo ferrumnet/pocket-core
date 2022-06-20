@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 
+	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	sdk "github.com/pokt-network/pocket-core/types"
@@ -49,10 +50,9 @@ func GetSigner(chainId string, payee string, amount sdk.Coin,
 	if err != nil {
 		return signer, messageBytes, err
 	}
-
 	if len(signature) > crypto.RecoveryIDOffset {
 		signature[crypto.RecoveryIDOffset] -= 27 // Transform yellow paper V from 27/28 to 0/1
-		recovered, err := crypto.SigToPub(messageBytes, signature)
+		recovered, err := crypto.SigToPub(accounts.TextHash(messageBytes), signature)
 		if err != nil {
 			return signer, messageBytes, err
 		}
