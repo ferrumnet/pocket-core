@@ -8,8 +8,13 @@ import (
 	"github.com/pokt-network/pocket-core/x/bridgepool/types"
 )
 
-func (k Keeper) Swap(ctx sdk.Ctx, from sdk.Address, token string, amount uint64, targetNetwork string,
+func (k Keeper) Swap(ctx sdk.Ctx, from sdk.Address, token string, amount uint64, targetChainId string,
 	targetToken string, targetAddress string) sdk.Error {
+	allowedTarget := k.GetAllowedTarget(ctx, token, targetChainId)
+	if targetToken != allowedTarget {
+		return types.ErrInvalidTargetToken(k.codespace)
+	}
+
 	// check ethereum addresses
 	if !common.IsHexAddress(token) {
 		return types.ErrInvalidEthereumAddress(k.codespace)
@@ -32,7 +37,7 @@ func (k Keeper) Swap(ctx sdk.Ctx, from sdk.Address, token string, amount uint64,
 			types.EventBridgeSwap,
 			sdk.NewAttribute(types.AttributeKeyFrom, from.String()),
 			sdk.NewAttribute(types.AttributeKeyToken, token),
-			sdk.NewAttribute(types.AttributeKeyTargetNetwork, targetNetwork),
+			sdk.NewAttribute(types.AttributeKeyTargetChainId, targetChainId),
 			sdk.NewAttribute(types.AttributeKeyTargetToken, targetToken),
 			sdk.NewAttribute(types.AttributeKeyTargetAddress, targetAddress),
 			sdk.NewAttribute(types.AttributeKeyAmount, fmt.Sprintf("%d", amount)),
