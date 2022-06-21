@@ -44,3 +44,53 @@ func TestFeeRates(t *testing.T) {
 	feeRates = keeper.GetAllFeeRates(context)
 	assert.Len(t, feeRates, 2)
 }
+
+func TestAllowedTarget(t *testing.T) {
+	context, _, keeper := createTestInput(t, true)
+
+	// check initial allowed target
+	target := keeper.GetAllowedTarget(context, "upokt", "137")
+	assert.Equal(t, target, "")
+
+	targets := keeper.GetAllAllowedTargets(context)
+	assert.Len(t, targets, 0)
+
+	// set allowed target
+	err := keeper.AllowTarget(context, "upokt", "137", "0x7B848510E92B2f2F7ea06d46e7B370198F7369Bc")
+	assert.Nil(t, err)
+
+	// check allowed target
+	target = keeper.GetAllowedTarget(context, "upokt", "137")
+	assert.Equal(t, target, "0x7B848510E92B2f2F7ea06d46e7B370198F7369Bc")
+
+	// set allowed target again on same token
+	err = keeper.AllowTarget(context, "upokt", "137", "0x8A848510E92B2f2F7ea06d46e7B370198F7369Bc")
+	assert.Nil(t, err)
+
+	// check fee rate
+	target = keeper.GetAllowedTarget(context, "upokt", "137")
+	assert.Equal(t, target, "0x8A848510E92B2f2F7ea06d46e7B370198F7369Bc")
+
+	// check all allowed targets
+	targets = keeper.GetAllAllowedTargets(context)
+	assert.Len(t, targets, 1)
+
+	// set allowed target for second chain
+	err = keeper.AllowTarget(context, "upokt", "13", "0x8A848510E92B2f2F7ea06d46e7B370198F7369Bc")
+	assert.Nil(t, err)
+
+	// check all fee rates
+	targets = keeper.GetAllAllowedTargets(context)
+	assert.Len(t, targets, 2)
+
+	// disallow target
+	keeper.DisallowTarget(context, "upokt", "13")
+
+	// check after disallow
+	target = keeper.GetAllowedTarget(context, "upokt", "13")
+	assert.Equal(t, target, "")
+
+	// check all fee rates
+	targets = keeper.GetAllAllowedTargets(context)
+	assert.Len(t, targets, 1)
+}

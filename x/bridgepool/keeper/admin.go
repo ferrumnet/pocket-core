@@ -81,7 +81,7 @@ func (k Keeper) DisallowTarget(ctx sdk.Ctx, token string, chainId string) {
 func (k Keeper) GetAllowedTarget(ctx sdk.Ctx, token string, chainId string) string {
 	store := ctx.KVStore(k.storeKey)
 	bz, err := store.Get(types.AllowedTargetKey(token, chainId))
-	if err != nil {
+	if err != nil || bz == nil {
 		return ""
 	}
 	info := types.AllowedTarget{}
