@@ -121,8 +121,8 @@ func handleMsgAllowTarget(ctx sdk.Ctx, msg types.MsgAllowTarget, k keeper.Keeper
 		sdk.NewEvent(
 			types.EventTypeAllowTarget,
 			sdk.NewAttribute(types.AttributeKeyToken, msg.Token),
-			sdk.NewAttribute(types.AttributeKeyChainId, fmt.Sprintf("%d", msg.ChainId)),
-			sdk.NewAttribute(types.AttributeKeyTargetToken, fmt.Sprintf("%d", msg.TargetToken)),
+			sdk.NewAttribute(types.AttributeKeyChainId, msg.ChainId),
+			sdk.NewAttribute(types.AttributeKeyTargetToken, msg.TargetToken),
 		)},
 	)
 	return sdk.Result{Events: ctx.EventManager().Events()}
@@ -139,7 +139,7 @@ func handleMsgDisallowTarget(ctx sdk.Ctx, msg types.MsgDisallowTarget, k keeper.
 		sdk.NewEvent(
 			types.EventTypeDisallowTarget,
 			sdk.NewAttribute(types.AttributeKeyToken, msg.Token),
-			sdk.NewAttribute(types.AttributeKeyChainId, fmt.Sprintf("%d", msg.ChainId)),
+			sdk.NewAttribute(types.AttributeKeyChainId, msg.ChainId),
 		)},
 	)
 	return sdk.Result{Events: ctx.EventManager().Events()}
