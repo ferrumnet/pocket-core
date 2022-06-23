@@ -94,3 +94,45 @@ func TestAllowedTarget(t *testing.T) {
 	targets = keeper.GetAllAllowedTargets(context)
 	assert.Len(t, targets, 1)
 }
+
+func TestSigners(t *testing.T) {
+	context, _, keeper := createTestInput(t, true)
+
+	// check if signer when not set
+	isSigner := keeper.IsSigner(context, "0x7B848510E92B2f2F7ea06d46e7B370198F7369Bc")
+	assert.Equal(t, isSigner, false)
+
+	signers := keeper.GetAllSigners(context)
+	assert.Len(t, signers, 0)
+
+	// set signer
+	err := keeper.SetSigner(context, "0x7B848510E92B2f2F7ea06d46e7B370198F7369Bc")
+	assert.Nil(t, err)
+
+	// check if signer when it is set
+	isSigner = keeper.IsSigner(context, "0x7B848510E92B2f2F7ea06d46e7B370198F7369Bc")
+	assert.Equal(t, isSigner, true)
+
+	// check all signers
+	signers = keeper.GetAllSigners(context)
+	assert.Len(t, signers, 1)
+
+	// set second signer
+	err = keeper.SetSigner(context, "0x8A848510E92B2f2F7ea06d46e7B370198F7369Bc")
+	assert.Nil(t, err)
+
+	// check all fee rates
+	signers = keeper.GetAllSigners(context)
+	assert.Len(t, signers, 2)
+
+	// remove signer
+	keeper.DeleteSigner(context, "0x8A848510E92B2f2F7ea06d46e7B370198F7369Bc")
+
+	// check if signer after removal
+	isSigner = keeper.IsSigner(context, "0x8A848510E92B2f2F7ea06d46e7B370198F7369Bc")
+	assert.Equal(t, isSigner, false)
+
+	// check all signers
+	signers = keeper.GetAllSigners(context)
+	assert.Len(t, signers, 1)
+}
