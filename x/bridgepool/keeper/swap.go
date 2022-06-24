@@ -16,9 +16,6 @@ func (k Keeper) Swap(ctx sdk.Ctx, from sdk.Address, token string, amount uint64,
 	}
 
 	// check ethereum addresses
-	if !common.IsHexAddress(token) {
-		return types.ErrInvalidEthereumAddress(k.codespace)
-	}
 	if !common.IsHexAddress(targetToken) {
 		return types.ErrInvalidEthereumAddress(k.codespace)
 	}
