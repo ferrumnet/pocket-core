@@ -43,17 +43,17 @@ func handleMsgAddAllowedActor(ctx sdk.Ctx, msg types.MsgAddAllowedActor, k keepe
 		return types.ErrNotEnoughPermission(k.Codespace()).Result()
 	}
 
-	err := k.AddAllowedActor(ctx)
+	err := k.AddAllowedActor(ctx, msg.Actor)
 	if err != nil {
 		return err.Result()
 	}
 
-	// ctx.EventManager().EmitEvents(sdk.Events{
-	// 	sdk.NewEvent(
-	// 		types.EventTypeSetSigner,
-	// 		sdk.NewAttribute(types.AttributeKeySigner, msg.Signer),
-	// 	)},
-	// )
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventTypeAddAllowedActor,
+			sdk.NewAttribute(types.AttributeKeyActor, msg.Actor),
+		)},
+	)
 	return sdk.Result{Events: ctx.EventManager().Events()}
 }
 
@@ -63,17 +63,17 @@ func handleMsgRemoveAllowedActor(ctx sdk.Ctx, msg types.MsgRemoveAllowedActor, k
 		return types.ErrNotEnoughPermission(k.Codespace()).Result()
 	}
 
-	err := k.RemoveAllowedActor(ctx)
+	err := k.RemoveAllowedActor(ctx, msg.Actor)
 	if err != nil {
 		return err.Result()
 	}
 
-	// ctx.EventManager().EmitEvents(sdk.Events{
-	// 	sdk.NewEvent(
-	// 		types.EventTypeSetSigner,
-	// 		sdk.NewAttribute(types.AttributeKeySigner, msg.Signer),
-	// 	)},
-	// )
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventTypeRemoveAllowedActor,
+			sdk.NewAttribute(types.AttributeKeyActor, msg.Actor),
+		)},
+	)
 	return sdk.Result{Events: ctx.EventManager().Events()}
 }
 
@@ -83,7 +83,7 @@ func handleMsgSetTokenInfo(ctx sdk.Ctx, msg types.MsgSetTokenInfo, k keeper.Keep
 		return types.ErrNotEnoughPermission(k.Codespace()).Result()
 	}
 
-	err := k.SetTokenInfo(ctx)
+	err := k.SetTokenInfo(ctx, msg.Info)
 	if err != nil {
 		return err.Result()
 	}
@@ -103,17 +103,21 @@ func handleMsgSetTokenTargetInfos(ctx sdk.Ctx, msg types.MsgSetTokenTargetInfos,
 		return types.ErrNotEnoughPermission(k.Codespace()).Result()
 	}
 
-	err := k.SetTokenTargetInfos(ctx)
+	err := k.SetTokenTargetInfo(ctx, types.TokenTargetInfo{
+		Token:   msg.Token,
+		Targets: msg.Targets,
+	})
 	if err != nil {
 		return err.Result()
 	}
 
-	// ctx.EventManager().EmitEvents(sdk.Events{
-	// 	sdk.NewEvent(
-	// 		types.EventTypeSetSigner,
-	// 		sdk.NewAttribute(types.AttributeKeySigner, msg.Signer),
-	// 	)},
-	// )
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventTypeSetTokenTargetInfos,
+			sdk.NewAttribute(types.AttributeKeyToken, msg.Token),
+			sdk.NewAttribute(types.AttributeKeySender, msg.FromAddress.String()),
+		)},
+	)
 	return sdk.Result{Events: ctx.EventManager().Events()}
 }
 
@@ -123,16 +127,19 @@ func handleMsgSetGlobalTargetInfos(ctx sdk.Ctx, msg types.MsgSetGlobalTargetInfo
 		return types.ErrNotEnoughPermission(k.Codespace()).Result()
 	}
 
-	err := k.SetGlobalTargetInfos(ctx)
+	err := k.SetTokenTargetInfo(ctx, types.TokenTargetInfo{
+		Token:   "",
+		Targets: msg.Targets,
+	})
 	if err != nil {
 		return err.Result()
 	}
 
-	// ctx.EventManager().EmitEvents(sdk.Events{
-	// 	sdk.NewEvent(
-	// 		types.EventTypeSetSigner,
-	// 		sdk.NewAttribute(types.AttributeKeySigner, msg.Signer),
-	// 	)},
-	// )
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventTypeSetGlobalTokenTargetInfos,
+			sdk.NewAttribute(types.AttributeKeySender, msg.FromAddress.String()),
+		)},
+	)
 	return sdk.Result{Events: ctx.EventManager().Events()}
 }

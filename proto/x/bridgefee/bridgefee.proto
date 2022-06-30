@@ -16,22 +16,20 @@ enum TargetType {
 }
 
 message TokenInfo {
-    string token = 1;
-    uint64 bufferSize = 2;
-    uint32 tokenSpecificConfig = 3; // 1 or 0
-}
-
-message TargetConfig {
-    string token = 1;
-    uint32 len = 2; // Max 27 weights
-    uint32 totalW = 3;
-    uint64 weights = 4;
+  string token = 1;
+  uint64 bufferSize = 2;
+  uint32 tokenSpecificConfig = 3; // 1 or 0
 }
 
 message TargetInfo {
+  string target = 1;
+  TargetType tType = 2;
+  uint64 weight = 3;
+}
+
+message TokenTargetInfo {
   string token = 1;
-  string target = 2;
-  TargetType tType = 3;
+  repeated TargetInfo targets = 2 [ (gogoproto.nullable) = false ];
 }
 
 // The state of the module from the beginning
@@ -39,10 +37,7 @@ message GenesisState {
   Params params = 1 [ (gogoproto.nullable) = false ];
   repeated string allowedActors = 2;
   repeated TokenInfo tokenInfos = 3 [ (gogoproto.nullable) = false ];
-  repeated TargetConfig tokenTargetConfigs = 4 [ (gogoproto.nullable) = false ];
-  repeated TargetInfo tokenTargetInfos = 5 [ (gogoproto.nullable) = false ];
-  TargetConfig globalTargetConfig = 6 [ (gogoproto.nullable) = false ];
-  repeated TargetInfo targetInfos = 7 [ (gogoproto.nullable) = false ];
+  repeated TokenTargetInfo tokenTargets = 4 [ (gogoproto.nullable) = false ];
 }
 
 message Params {
@@ -88,8 +83,7 @@ message MsgSetTokenTargetInfos {
     (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
   ];
   string token = 2;
-  repeated TargetInfo info = 3 [ (gogoproto.nullable) = false ];
-  repeated uint64 weights = 4;
+  repeated TargetInfo targets = 3 [ (gogoproto.nullable) = false ];
 }
 
 message MsgSetGlobalTargetInfos {
@@ -97,6 +91,5 @@ message MsgSetGlobalTargetInfos {
     (gogoproto.jsontag) = "fromAddress",
     (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
   ];
-  repeated TargetInfo info = 3 [ (gogoproto.nullable) = false ];
-  repeated uint64 weights = 4;
+  repeated TargetInfo targets = 2 [ (gogoproto.nullable) = false ];
 }

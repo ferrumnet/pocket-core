@@ -118,85 +118,17 @@ func (m *TokenInfo) GetTokenSpecificConfig() uint32 {
 	return 0
 }
 
-type TargetConfig struct {
-	Token   string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
-	Len     uint32 `protobuf:"varint,2,opt,name=len,proto3" json:"len,omitempty"`
-	TotalW  uint32 `protobuf:"varint,3,opt,name=totalW,proto3" json:"totalW,omitempty"`
-	Weights uint64 `protobuf:"varint,4,opt,name=weights,proto3" json:"weights,omitempty"`
-}
-
-func (m *TargetConfig) Reset()         { *m = TargetConfig{} }
-func (m *TargetConfig) String() string { return proto.CompactTextString(m) }
-func (*TargetConfig) ProtoMessage()    {}
-func (*TargetConfig) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d9c309fb2d9a4e22, []int{1}
-}
-func (m *TargetConfig) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *TargetConfig) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_TargetConfig.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *TargetConfig) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_TargetConfig.Merge(m, src)
-}
-func (m *TargetConfig) XXX_Size() int {
-	return m.Size()
-}
-func (m *TargetConfig) XXX_DiscardUnknown() {
-	xxx_messageInfo_TargetConfig.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_TargetConfig proto.InternalMessageInfo
-
-func (m *TargetConfig) GetToken() string {
-	if m != nil {
-		return m.Token
-	}
-	return ""
-}
-
-func (m *TargetConfig) GetLen() uint32 {
-	if m != nil {
-		return m.Len
-	}
-	return 0
-}
-
-func (m *TargetConfig) GetTotalW() uint32 {
-	if m != nil {
-		return m.TotalW
-	}
-	return 0
-}
-
-func (m *TargetConfig) GetWeights() uint64 {
-	if m != nil {
-		return m.Weights
-	}
-	return 0
-}
-
 type TargetInfo struct {
-	Token  string     `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
-	Target string     `protobuf:"bytes,2,opt,name=target,proto3" json:"target,omitempty"`
-	TType  TargetType `protobuf:"varint,3,opt,name=tType,proto3,enum=x.bridgefee.TargetType" json:"tType,omitempty"`
+	Target string     `protobuf:"bytes,1,opt,name=target,proto3" json:"target,omitempty"`
+	TType  TargetType `protobuf:"varint,2,opt,name=tType,proto3,enum=x.bridgefee.TargetType" json:"tType,omitempty"`
+	Weight uint64     `protobuf:"varint,3,opt,name=weight,proto3" json:"weight,omitempty"`
 }
 
 func (m *TargetInfo) Reset()         { *m = TargetInfo{} }
 func (m *TargetInfo) String() string { return proto.CompactTextString(m) }
 func (*TargetInfo) ProtoMessage()    {}
 func (*TargetInfo) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d9c309fb2d9a4e22, []int{2}
+	return fileDescriptor_d9c309fb2d9a4e22, []int{1}
 }
 func (m *TargetInfo) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -225,13 +157,6 @@ func (m *TargetInfo) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_TargetInfo proto.InternalMessageInfo
 
-func (m *TargetInfo) GetToken() string {
-	if m != nil {
-		return m.Token
-	}
-	return ""
-}
-
 func (m *TargetInfo) GetTarget() string {
 	if m != nil {
 		return m.Target
@@ -246,15 +171,71 @@ func (m *TargetInfo) GetTType() TargetType {
 	return TargetType_NotSet
 }
 
+func (m *TargetInfo) GetWeight() uint64 {
+	if m != nil {
+		return m.Weight
+	}
+	return 0
+}
+
+type TokenTargetInfo struct {
+	Token   string       `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	Targets []TargetInfo `protobuf:"bytes,2,rep,name=targets,proto3" json:"targets"`
+}
+
+func (m *TokenTargetInfo) Reset()         { *m = TokenTargetInfo{} }
+func (m *TokenTargetInfo) String() string { return proto.CompactTextString(m) }
+func (*TokenTargetInfo) ProtoMessage()    {}
+func (*TokenTargetInfo) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d9c309fb2d9a4e22, []int{2}
+}
+func (m *TokenTargetInfo) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *TokenTargetInfo) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_TokenTargetInfo.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *TokenTargetInfo) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_TokenTargetInfo.Merge(m, src)
+}
+func (m *TokenTargetInfo) XXX_Size() int {
+	return m.Size()
+}
+func (m *TokenTargetInfo) XXX_DiscardUnknown() {
+	xxx_messageInfo_TokenTargetInfo.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_TokenTargetInfo proto.InternalMessageInfo
+
+func (m *TokenTargetInfo) GetToken() string {
+	if m != nil {
+		return m.Token
+	}
+	return ""
+}
+
+func (m *TokenTargetInfo) GetTargets() []TargetInfo {
+	if m != nil {
+		return m.Targets
+	}
+	return nil
+}
+
 // The state of the module from the beginning
 type GenesisState struct {
-	Params             Params         `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
-	AllowedActors      []string       `protobuf:"bytes,2,rep,name=allowedActors,proto3" json:"allowedActors,omitempty"`
-	TokenInfos         []TokenInfo    `protobuf:"bytes,3,rep,name=tokenInfos,proto3" json:"tokenInfos"`
-	TokenTargetConfigs []TargetConfig `protobuf:"bytes,4,rep,name=tokenTargetConfigs,proto3" json:"tokenTargetConfigs"`
-	TokenTargetInfos   []TargetInfo   `protobuf:"bytes,5,rep,name=tokenTargetInfos,proto3" json:"tokenTargetInfos"`
-	GlobalTargetConfig TargetConfig   `protobuf:"bytes,6,opt,name=globalTargetConfig,proto3" json:"globalTargetConfig"`
-	TargetInfos        []TargetInfo   `protobuf:"bytes,7,rep,name=targetInfos,proto3" json:"targetInfos"`
+	Params        Params            `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
+	AllowedActors []string          `protobuf:"bytes,2,rep,name=allowedActors,proto3" json:"allowedActors,omitempty"`
+	TokenInfos    []TokenInfo       `protobuf:"bytes,3,rep,name=tokenInfos,proto3" json:"tokenInfos"`
+	TokenTargets  []TokenTargetInfo `protobuf:"bytes,4,rep,name=tokenTargets,proto3" json:"tokenTargets"`
 }
 
 func (m *GenesisState) Reset()         { *m = GenesisState{} }
@@ -311,30 +292,9 @@ func (m *GenesisState) GetTokenInfos() []TokenInfo {
 	return nil
 }
 
-func (m *GenesisState) GetTokenTargetConfigs() []TargetConfig {
+func (m *GenesisState) GetTokenTargets() []TokenTargetInfo {
 	if m != nil {
-		return m.TokenTargetConfigs
-	}
-	return nil
-}
-
-func (m *GenesisState) GetTokenTargetInfos() []TargetInfo {
-	if m != nil {
-		return m.TokenTargetInfos
-	}
-	return nil
-}
-
-func (m *GenesisState) GetGlobalTargetConfig() TargetConfig {
-	if m != nil {
-		return m.GlobalTargetConfig
-	}
-	return TargetConfig{}
-}
-
-func (m *GenesisState) GetTargetInfos() []TargetInfo {
-	if m != nil {
-		return m.TargetInfos
+		return m.TokenTargets
 	}
 	return nil
 }
@@ -512,8 +472,7 @@ func (*MsgSetTokenInfo) XXX_MessageName() string {
 type MsgSetTokenTargetInfos struct {
 	FromAddress github_com_pokt_network_pocket_core_types.Address `protobuf:"bytes,1,opt,name=fromAddress,proto3,casttype=github.com/pokt-network/pocket-core/types.Address" json:"fromAddress"`
 	Token       string                                            `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
-	Info        []TargetInfo                                      `protobuf:"bytes,3,rep,name=info,proto3" json:"info"`
-	Weights     []uint64                                          `protobuf:"varint,4,rep,packed,name=weights,proto3" json:"weights,omitempty"`
+	Targets     []TargetInfo                                      `protobuf:"bytes,3,rep,name=targets,proto3" json:"targets"`
 }
 
 func (m *MsgSetTokenTargetInfos) Reset()         { *m = MsgSetTokenTargetInfos{} }
@@ -563,24 +522,16 @@ func (m *MsgSetTokenTargetInfos) GetToken() string {
 	return ""
 }
 
-func (m *MsgSetTokenTargetInfos) GetInfo() []TargetInfo {
+func (m *MsgSetTokenTargetInfos) GetTargets() []TargetInfo {
 	if m != nil {
-		return m.Info
-	}
-	return nil
-}
-
-func (m *MsgSetTokenTargetInfos) GetWeights() []uint64 {
-	if m != nil {
-		return m.Weights
+		return m.Targets
 	}
 	return nil
 }
 
 type MsgSetGlobalTargetInfos struct {
 	FromAddress github_com_pokt_network_pocket_core_types.Address `protobuf:"bytes,1,opt,name=fromAddress,proto3,casttype=github.com/pokt-network/pocket-core/types.Address" json:"fromAddress"`
-	Info        []TargetInfo                                      `protobuf:"bytes,3,rep,name=info,proto3" json:"info"`
-	Weights     []uint64                                          `protobuf:"varint,4,rep,packed,name=weights,proto3" json:"weights,omitempty"`
+	Targets     []TargetInfo                                      `protobuf:"bytes,2,rep,name=targets,proto3" json:"targets"`
 }
 
 func (m *MsgSetGlobalTargetInfos) Reset()         { *m = MsgSetGlobalTargetInfos{} }
@@ -623,16 +574,9 @@ func (m *MsgSetGlobalTargetInfos) GetFromAddress() github_com_pokt_network_pocke
 	return nil
 }
 
-func (m *MsgSetGlobalTargetInfos) GetInfo() []TargetInfo {
+func (m *MsgSetGlobalTargetInfos) GetTargets() []TargetInfo {
 	if m != nil {
-		return m.Info
-	}
-	return nil
-}
-
-func (m *MsgSetGlobalTargetInfos) GetWeights() []uint64 {
-	if m != nil {
-		return m.Weights
+		return m.Targets
 	}
 	return nil
 }
@@ -640,8 +584,8 @@ func (m *MsgSetGlobalTargetInfos) GetWeights() []uint64 {
 func init() {
 	proto.RegisterEnum("x.bridgefee.TargetType", TargetType_name, TargetType_value)
 	proto.RegisterType((*TokenInfo)(nil), "x.bridgefee.TokenInfo")
-	proto.RegisterType((*TargetConfig)(nil), "x.bridgefee.TargetConfig")
 	proto.RegisterType((*TargetInfo)(nil), "x.bridgefee.TargetInfo")
+	proto.RegisterType((*TokenTargetInfo)(nil), "x.bridgefee.TokenTargetInfo")
 	proto.RegisterType((*GenesisState)(nil), "x.bridgefee.GenesisState")
 	proto.RegisterType((*Params)(nil), "x.bridgefee.Params")
 	proto.RegisterType((*MsgAddAllowedActor)(nil), "x.bridgefee.MsgAddAllowedActor")
@@ -654,53 +598,49 @@ func init() {
 func init() { proto.RegisterFile("x/bridgefee/bridgefee.proto", fileDescriptor_d9c309fb2d9a4e22) }
 
 var fileDescriptor_d9c309fb2d9a4e22 = []byte{
-	// 733 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x55, 0x4f, 0x4b, 0x1b, 0x5b,
-	0x14, 0xcf, 0x64, 0x62, 0x34, 0x27, 0xea, 0x0b, 0x57, 0x9f, 0x8e, 0x3e, 0x98, 0x84, 0xf0, 0x16,
-	0xe1, 0x81, 0x19, 0xf5, 0xd1, 0x4d, 0x29, 0x48, 0xd2, 0x82, 0xb8, 0xb0, 0xca, 0x44, 0x28, 0x74,
-	0x53, 0x26, 0x93, 0x3b, 0xe3, 0x90, 0xc9, 0x9c, 0x30, 0xf7, 0xa6, 0xd1, 0x7e, 0x02, 0x97, 0xfd,
-	0x00, 0x85, 0x96, 0x7e, 0x87, 0x7e, 0x07, 0x57, 0x45, 0xe8, 0xa6, 0x2b, 0x29, 0x66, 0xd7, 0x8f,
-	0xd0, 0x55, 0x99, 0x7b, 0x27, 0xf5, 0x06, 0xd3, 0xea, 0xa2, 0x48, 0x77, 0xf7, 0x77, 0xfe, 0xfe,
-	0xce, 0x3d, 0xe7, 0x9e, 0x0b, 0xff, 0x9c, 0x58, 0xed, 0x38, 0xe8, 0xf8, 0xd4, 0xa3, 0xf4, 0xfa,
-	0x54, 0xef, 0xc7, 0xc8, 0x91, 0x14, 0x4f, 0xea, 0x3f, 0x44, 0xeb, 0x6b, 0x2e, 0xb2, 0x1e, 0xb2,
-	0x17, 0x42, 0x65, 0x49, 0x20, 0xed, 0xd6, 0x97, 0x7d, 0xf4, 0x51, 0xca, 0x93, 0x53, 0x2a, 0x2d,
-	0xf1, 0xd3, 0x3e, 0x65, 0x96, 0x8b, 0x41, 0x94, 0x4a, 0xd6, 0x7c, 0x44, 0x3f, 0xa4, 0x96, 0x40,
-	0xed, 0x81, 0x67, 0x39, 0xd1, 0xa9, 0x54, 0x55, 0x19, 0x14, 0x8e, 0xb0, 0x4b, 0xa3, 0xbd, 0xc8,
-	0x43, 0xb2, 0x0c, 0x33, 0x3c, 0x01, 0x86, 0x56, 0xd1, 0x6a, 0x05, 0x5b, 0x02, 0x62, 0x02, 0xb4,
-	0x07, 0x9e, 0x47, 0xe3, 0x56, 0xf0, 0x8a, 0x1a, 0xd9, 0x8a, 0x56, 0xcb, 0xd9, 0x8a, 0x84, 0x6c,
-	0xc2, 0x92, 0x30, 0x6c, 0xf5, 0xa9, 0x1b, 0x78, 0x81, 0xfb, 0x18, 0x23, 0x2f, 0xf0, 0x0d, 0xbd,
-	0xa2, 0xd5, 0x16, 0xec, 0x69, 0xaa, 0xea, 0x31, 0xcc, 0x1f, 0x39, 0xb1, 0x4f, 0xb9, 0xc4, 0x3f,
-	0xc9, 0x5b, 0x02, 0x3d, 0xa4, 0x91, 0x48, 0xb8, 0x60, 0x27, 0x47, 0xb2, 0x02, 0x79, 0x8e, 0xdc,
-	0x09, 0x9f, 0xa5, 0xc1, 0x53, 0x44, 0x0c, 0x98, 0x1d, 0xd2, 0xc0, 0x3f, 0xe6, 0xcc, 0xc8, 0x09,
-	0x7a, 0x63, 0x58, 0x0d, 0x00, 0x64, 0xa6, 0x5f, 0xd4, 0x97, 0x44, 0x15, 0x36, 0x22, 0x55, 0xc1,
-	0x4e, 0x11, 0xd9, 0x80, 0x19, 0x7e, 0x74, 0xda, 0xa7, 0x22, 0xd9, 0xe2, 0xf6, 0x6a, 0x5d, 0xe9,
-	0x4a, 0x5d, 0x46, 0x4d, 0xd4, 0xb6, 0xb4, 0xaa, 0x7e, 0xd2, 0x61, 0x7e, 0x97, 0x46, 0x94, 0x05,
-	0xac, 0xc5, 0x1d, 0x4e, 0xc9, 0x16, 0xe4, 0xfb, 0x4e, 0xec, 0xf4, 0x98, 0x48, 0x57, 0xdc, 0x5e,
-	0x9a, 0x08, 0x70, 0x28, 0x54, 0xcd, 0xdc, 0xf9, 0x65, 0x39, 0x63, 0xa7, 0x86, 0xe4, 0x5f, 0x58,
-	0x70, 0xc2, 0x10, 0x87, 0xb4, 0xd3, 0x70, 0x39, 0xc6, 0xcc, 0xc8, 0x56, 0xf4, 0x5a, 0xc1, 0x9e,
-	0x14, 0x92, 0x47, 0x00, 0x7c, 0xdc, 0x33, 0x66, 0xe8, 0x15, 0xbd, 0x56, 0xdc, 0x5e, 0x99, 0x64,
-	0x37, 0x56, 0xa7, 0xf1, 0x15, 0x7b, 0x72, 0x00, 0x44, 0x20, 0xb5, 0x03, 0xc9, 0xbd, 0x25, 0x51,
-	0xd6, 0xa6, 0xd4, 0x28, 0x2d, 0xd2, 0x40, 0x53, 0x5c, 0xc9, 0x1e, 0x94, 0x14, 0xa9, 0x24, 0x35,
-	0x23, 0xc2, 0x4d, 0xbb, 0x32, 0x85, 0xd5, 0x0d, 0xb7, 0x84, 0x9b, 0x1f, 0x62, 0xdb, 0x09, 0xd5,
-	0x0c, 0x46, 0x5e, 0x5c, 0xdf, 0xed, 0xdc, 0x6e, 0xba, 0x92, 0x1d, 0x28, 0x72, 0x85, 0xd6, 0xec,
-	0x5d, 0x68, 0xa9, 0x1e, 0x55, 0x13, 0xf2, 0xb2, 0x53, 0xc9, 0xf0, 0xe0, 0x30, 0xa2, 0xf1, 0x78,
-	0x78, 0x04, 0xa8, 0xbe, 0xd1, 0x80, 0xec, 0x33, 0xbf, 0xd1, 0xe9, 0x34, 0x94, 0x1e, 0x11, 0x0f,
-	0x8a, 0x5e, 0x8c, 0xbd, 0x46, 0xa7, 0x13, 0x53, 0x26, 0x07, 0x60, 0xbe, 0xf9, 0xe4, 0xeb, 0x65,
-	0x59, 0x15, 0x7f, 0xbb, 0x2c, 0x6f, 0xf9, 0x01, 0x3f, 0x1e, 0xb4, 0xeb, 0x2e, 0xf6, 0xac, 0x3e,
-	0x76, 0xf9, 0x46, 0x44, 0xf9, 0x10, 0xe3, 0xae, 0xd5, 0x47, 0xb7, 0x4b, 0xf9, 0x86, 0x8b, 0x31,
-	0xb5, 0xc4, 0x7b, 0xae, 0xa7, 0x4e, 0xb6, 0x1a, 0x21, 0x21, 0xe5, 0x24, 0x09, 0xd3, 0xd1, 0x95,
-	0xe0, 0xe1, 0xdc, 0xd9, 0xbb, 0x72, 0xe6, 0xec, 0x7d, 0x59, 0xab, 0xbe, 0xd5, 0xe0, 0xef, 0x7d,
-	0xe6, 0xdb, 0xb4, 0x87, 0x2f, 0xe9, 0x1f, 0xc9, 0xf0, 0x83, 0x06, 0x7f, 0xed, 0x33, 0xbf, 0x45,
-	0xf9, 0xf5, 0x1e, 0xba, 0x2f, 0x6e, 0x9b, 0x90, 0x0b, 0x22, 0x0f, 0x05, 0xb5, 0xdb, 0x9e, 0x90,
-	0xb0, 0x54, 0x78, 0x8f, 0x34, 0x58, 0x51, 0x78, 0xab, 0x53, 0x7c, 0x8f, 0x57, 0x2b, 0xd7, 0x59,
-	0x56, 0x5d, 0x67, 0x5b, 0x69, 0x51, 0xfa, 0x5d, 0x66, 0x5d, 0x98, 0x4e, 0xee, 0x4f, 0x5d, 0xdd,
-	0x9f, 0x1f, 0x35, 0x58, 0x95, 0x55, 0xee, 0x2a, 0x8f, 0xeb, 0x7e, 0xcb, 0xfc, 0x9d, 0x05, 0xfd,
-	0xb7, 0x33, 0xfe, 0x10, 0x92, 0x9d, 0x4d, 0x00, 0xf2, 0x4f, 0x91, 0xb7, 0x28, 0x2f, 0x65, 0xc8,
-	0x1c, 0xe4, 0x9a, 0x83, 0x38, 0x2a, 0x69, 0xa4, 0x08, 0xb3, 0x69, 0xee, 0x52, 0x96, 0x2c, 0x02,
-	0xd8, 0x74, 0xe8, 0xc4, 0x9d, 0x43, 0xc4, 0xb0, 0xa4, 0x37, 0x0f, 0xce, 0xaf, 0x4c, 0xed, 0xe2,
-	0xca, 0xd4, 0xbe, 0x5c, 0x99, 0xda, 0xeb, 0x91, 0x99, 0xb9, 0x18, 0x99, 0x99, 0xcf, 0x23, 0x33,
-	0xf3, 0xfc, 0xc1, 0x5d, 0xea, 0x54, 0xbf, 0x7d, 0x51, 0x73, 0x3b, 0x2f, 0x3e, 0xe2, 0xff, 0xbf,
-	0x07, 0x00, 0x00, 0xff, 0xff, 0xfa, 0xb0, 0x2d, 0xcf, 0x12, 0x08, 0x00, 0x00,
+	// 669 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x55, 0xcd, 0x6e, 0xd3, 0x4a,
+	0x14, 0xce, 0x24, 0x69, 0xda, 0x9c, 0xf4, 0x27, 0x9a, 0xf6, 0xb6, 0x69, 0xef, 0x95, 0x13, 0x59,
+	0x77, 0x11, 0x21, 0x35, 0x6e, 0x8b, 0x10, 0x12, 0x42, 0x42, 0x09, 0x88, 0x8a, 0x45, 0xa1, 0x72,
+	0xba, 0x62, 0x03, 0x8e, 0x3d, 0x76, 0xad, 0x24, 0x3e, 0x96, 0x67, 0x42, 0x5a, 0x9e, 0xa0, 0x4b,
+	0x1e, 0x00, 0x09, 0xc4, 0x3b, 0xb0, 0xe1, 0x09, 0xba, 0xa3, 0x4b, 0x56, 0x15, 0x6a, 0x77, 0x48,
+	0xbc, 0x00, 0x2b, 0xe4, 0x19, 0x87, 0x38, 0x6a, 0x11, 0x3f, 0x8b, 0xc2, 0xce, 0xdf, 0xf9, 0xfb,
+	0xbe, 0x73, 0x3c, 0x67, 0x06, 0xfe, 0x3d, 0x30, 0x3a, 0x91, 0xef, 0x78, 0xcc, 0x65, 0x6c, 0xfc,
+	0xd5, 0x08, 0x23, 0x14, 0x48, 0x4b, 0x07, 0x8d, 0x6f, 0xa6, 0xb5, 0x55, 0x1b, 0x79, 0x1f, 0xf9,
+	0x13, 0xe9, 0x32, 0x14, 0x50, 0x71, 0x6b, 0x4b, 0x1e, 0x7a, 0xa8, 0xec, 0xf1, 0x57, 0x62, 0x2d,
+	0x8b, 0xc3, 0x90, 0x71, 0xc3, 0x46, 0x3f, 0x48, 0x2c, 0xab, 0x1e, 0xa2, 0xd7, 0x63, 0x86, 0x44,
+	0x9d, 0x81, 0x6b, 0x58, 0xc1, 0xa1, 0x72, 0xe9, 0x1c, 0x8a, 0x7b, 0xd8, 0x65, 0xc1, 0x83, 0xc0,
+	0x45, 0xba, 0x04, 0x53, 0x22, 0x06, 0x15, 0x52, 0x23, 0xf5, 0xa2, 0xa9, 0x00, 0xd5, 0x00, 0x3a,
+	0x03, 0xd7, 0x65, 0x51, 0xdb, 0x7f, 0xce, 0x2a, 0xd9, 0x1a, 0xa9, 0xe7, 0xcd, 0x94, 0x85, 0x6e,
+	0xc0, 0xa2, 0x0c, 0x6c, 0x87, 0xcc, 0xf6, 0x5d, 0xdf, 0xbe, 0x8b, 0x81, 0xeb, 0x7b, 0x95, 0x5c,
+	0x8d, 0xd4, 0xe7, 0xcc, 0xcb, 0x5c, 0x7a, 0x17, 0x60, 0xcf, 0x8a, 0x3c, 0x26, 0x24, 0xeb, 0x32,
+	0x14, 0x84, 0x44, 0x09, 0x6d, 0x82, 0xe8, 0x3a, 0x4c, 0x89, 0xbd, 0xc3, 0x50, 0x51, 0xce, 0x6f,
+	0xad, 0x34, 0x52, 0x53, 0x69, 0xa8, 0xfc, 0xd8, 0x6d, 0xaa, 0xa8, 0xb8, 0xcc, 0x90, 0xf9, 0xde,
+	0xbe, 0x90, 0xcc, 0x79, 0x33, 0x41, 0xfa, 0x53, 0x58, 0x90, 0x1d, 0xa6, 0x18, 0x2f, 0xef, 0xf3,
+	0x26, 0x4c, 0x2b, 0x66, 0x5e, 0xc9, 0xd6, 0x72, 0xf5, 0xd2, 0xa5, 0x8c, 0x71, 0x7e, 0x2b, 0x7f,
+	0x7c, 0x5a, 0xcd, 0x98, 0xa3, 0x68, 0xfd, 0x33, 0x81, 0xd9, 0x6d, 0x16, 0x30, 0xee, 0xf3, 0xb6,
+	0xb0, 0x04, 0xa3, 0x9b, 0x50, 0x08, 0xad, 0xc8, 0xea, 0x73, 0x49, 0x50, 0xda, 0x5a, 0x9c, 0x28,
+	0xb4, 0x2b, 0x5d, 0x49, 0x91, 0x24, 0x90, 0xfe, 0x0f, 0x73, 0x56, 0xaf, 0x87, 0x43, 0xe6, 0x34,
+	0x6d, 0x81, 0x91, 0x92, 0x50, 0x34, 0x27, 0x8d, 0xf4, 0x36, 0x80, 0x18, 0xfd, 0x2d, 0x5e, 0xc9,
+	0x49, 0x95, 0xcb, 0x93, 0x2a, 0x47, 0xee, 0xa4, 0x7e, 0x2a, 0x9e, 0xde, 0x87, 0x59, 0x31, 0x9e,
+	0x04, 0xaf, 0xe4, 0x65, 0xfe, 0x7f, 0x17, 0xf3, 0x2f, 0xb4, 0x3a, 0x91, 0xa7, 0x6b, 0x50, 0x50,
+	0x3d, 0xc4, 0x83, 0xc4, 0x61, 0xc0, 0xa2, 0xd1, 0x20, 0x25, 0xd0, 0x5f, 0x12, 0xa0, 0x3b, 0xdc,
+	0x6b, 0x3a, 0x4e, 0x33, 0xa5, 0x9e, 0xba, 0x50, 0x72, 0x23, 0xec, 0x37, 0x1d, 0x27, 0x62, 0x5c,
+	0x8d, 0x66, 0xb6, 0x75, 0xef, 0xd3, 0x69, 0x35, 0x6d, 0xfe, 0x72, 0x5a, 0xdd, 0xf4, 0x7c, 0xb1,
+	0x3f, 0xe8, 0x34, 0x6c, 0xec, 0x1b, 0x21, 0x76, 0xc5, 0x7a, 0xc0, 0xc4, 0x10, 0xa3, 0xae, 0x11,
+	0xa2, 0xdd, 0x65, 0x62, 0xdd, 0xc6, 0x88, 0x19, 0xf2, 0x8c, 0x37, 0x92, 0x24, 0x33, 0x5d, 0x21,
+	0x16, 0x65, 0xc5, 0x84, 0xf2, 0xdc, 0x14, 0x4d, 0x05, 0x6e, 0xcd, 0x1c, 0xbd, 0xae, 0x66, 0x8e,
+	0xde, 0x54, 0x89, 0xfe, 0x8a, 0xc0, 0x3f, 0x3b, 0xdc, 0x33, 0x59, 0x1f, 0x9f, 0xb1, 0xbf, 0x52,
+	0xe1, 0x5b, 0x02, 0x0b, 0x3b, 0xdc, 0x6b, 0x33, 0x31, 0xde, 0xcd, 0xab, 0xd2, 0xb6, 0x01, 0x79,
+	0x3f, 0x70, 0x51, 0x4a, 0xfb, 0xd1, 0xe1, 0x92, 0x91, 0x29, 0xdd, 0xef, 0x09, 0x2c, 0xa7, 0x74,
+	0x8f, 0x8f, 0x11, 0xbf, 0xca, 0xd1, 0xaa, 0xd5, 0xce, 0x7e, 0x67, 0xb5, 0x73, 0xbf, 0xb4, 0xda,
+	0xef, 0x08, 0xac, 0xa8, 0x8e, 0xb6, 0x7b, 0xd8, 0xb1, 0x7a, 0x7f, 0xa2, 0xa5, 0xdf, 0xbd, 0x97,
+	0xae, 0xdd, 0x19, 0x5d, 0xb3, 0xf2, 0x7e, 0x04, 0x28, 0x3c, 0x44, 0xd1, 0x66, 0xa2, 0x9c, 0xa1,
+	0x33, 0x90, 0x6f, 0x0d, 0xa2, 0xa0, 0x4c, 0x68, 0x09, 0xa6, 0x13, 0x9e, 0x72, 0x96, 0xce, 0x03,
+	0x98, 0x6c, 0x68, 0x45, 0xce, 0x2e, 0x62, 0xaf, 0x9c, 0x6b, 0x3d, 0x3a, 0x3e, 0xd3, 0xc8, 0xc9,
+	0x99, 0x46, 0x3e, 0x9e, 0x69, 0xe4, 0xc5, 0xb9, 0x96, 0x39, 0x39, 0xd7, 0x32, 0x1f, 0xce, 0xb5,
+	0xcc, 0xe3, 0x1b, 0x3f, 0xd3, 0x53, 0xfa, 0x89, 0x93, 0xfd, 0x75, 0x0a, 0xf2, 0xd1, 0xb9, 0xfe,
+	0x35, 0x00, 0x00, 0xff, 0xff, 0x86, 0xc8, 0x84, 0x15, 0xfe, 0x06, 0x00, 0x00,
 }
 
 func (m *TokenInfo) Marshal() (dAtA []byte, err error) {
@@ -743,51 +683,6 @@ func (m *TokenInfo) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *TargetConfig) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *TargetConfig) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *TargetConfig) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.Weights != 0 {
-		i = encodeVarintBridgefee(dAtA, i, uint64(m.Weights))
-		i--
-		dAtA[i] = 0x20
-	}
-	if m.TotalW != 0 {
-		i = encodeVarintBridgefee(dAtA, i, uint64(m.TotalW))
-		i--
-		dAtA[i] = 0x18
-	}
-	if m.Len != 0 {
-		i = encodeVarintBridgefee(dAtA, i, uint64(m.Len))
-		i--
-		dAtA[i] = 0x10
-	}
-	if len(m.Token) > 0 {
-		i -= len(m.Token)
-		copy(dAtA[i:], m.Token)
-		i = encodeVarintBridgefee(dAtA, i, uint64(len(m.Token)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
 func (m *TargetInfo) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -808,17 +703,59 @@ func (m *TargetInfo) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	if m.Weight != 0 {
+		i = encodeVarintBridgefee(dAtA, i, uint64(m.Weight))
+		i--
+		dAtA[i] = 0x18
+	}
 	if m.TType != 0 {
 		i = encodeVarintBridgefee(dAtA, i, uint64(m.TType))
 		i--
-		dAtA[i] = 0x18
+		dAtA[i] = 0x10
 	}
 	if len(m.Target) > 0 {
 		i -= len(m.Target)
 		copy(dAtA[i:], m.Target)
 		i = encodeVarintBridgefee(dAtA, i, uint64(len(m.Target)))
 		i--
-		dAtA[i] = 0x12
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *TokenTargetInfo) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *TokenTargetInfo) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *TokenTargetInfo) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Targets) > 0 {
+		for iNdEx := len(m.Targets) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Targets[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintBridgefee(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x12
+		}
 	}
 	if len(m.Token) > 0 {
 		i -= len(m.Token)
@@ -850,48 +787,10 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.TargetInfos) > 0 {
-		for iNdEx := len(m.TargetInfos) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.TokenTargets) > 0 {
+		for iNdEx := len(m.TokenTargets) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.TargetInfos[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintBridgefee(dAtA, i, uint64(size))
-			}
-			i--
-			dAtA[i] = 0x3a
-		}
-	}
-	{
-		size, err := m.GlobalTargetConfig.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintBridgefee(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0x32
-	if len(m.TokenTargetInfos) > 0 {
-		for iNdEx := len(m.TokenTargetInfos) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.TokenTargetInfos[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintBridgefee(dAtA, i, uint64(size))
-			}
-			i--
-			dAtA[i] = 0x2a
-		}
-	}
-	if len(m.TokenTargetConfigs) > 0 {
-		for iNdEx := len(m.TokenTargetConfigs) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.TokenTargetConfigs[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.TokenTargets[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -1102,28 +1001,10 @@ func (m *MsgSetTokenTargetInfos) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 	_ = i
 	var l int
 	_ = l
-	if len(m.Weights) > 0 {
-		dAtA5 := make([]byte, len(m.Weights)*10)
-		var j4 int
-		for _, num := range m.Weights {
-			for num >= 1<<7 {
-				dAtA5[j4] = uint8(uint64(num)&0x7f | 0x80)
-				num >>= 7
-				j4++
-			}
-			dAtA5[j4] = uint8(num)
-			j4++
-		}
-		i -= j4
-		copy(dAtA[i:], dAtA5[:j4])
-		i = encodeVarintBridgefee(dAtA, i, uint64(j4))
-		i--
-		dAtA[i] = 0x22
-	}
-	if len(m.Info) > 0 {
-		for iNdEx := len(m.Info) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.Targets) > 0 {
+		for iNdEx := len(m.Targets) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.Info[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.Targets[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -1171,28 +1052,10 @@ func (m *MsgSetGlobalTargetInfos) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	_ = i
 	var l int
 	_ = l
-	if len(m.Weights) > 0 {
-		dAtA7 := make([]byte, len(m.Weights)*10)
-		var j6 int
-		for _, num := range m.Weights {
-			for num >= 1<<7 {
-				dAtA7[j6] = uint8(uint64(num)&0x7f | 0x80)
-				num >>= 7
-				j6++
-			}
-			dAtA7[j6] = uint8(num)
-			j6++
-		}
-		i -= j6
-		copy(dAtA[i:], dAtA7[:j6])
-		i = encodeVarintBridgefee(dAtA, i, uint64(j6))
-		i--
-		dAtA[i] = 0x22
-	}
-	if len(m.Info) > 0 {
-		for iNdEx := len(m.Info) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.Targets) > 0 {
+		for iNdEx := len(m.Targets) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.Info[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.Targets[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -1200,7 +1063,7 @@ func (m *MsgSetGlobalTargetInfos) MarshalToSizedBuffer(dAtA []byte) (int, error)
 				i = encodeVarintBridgefee(dAtA, i, uint64(size))
 			}
 			i--
-			dAtA[i] = 0x1a
+			dAtA[i] = 0x12
 		}
 	}
 	if len(m.FromAddress) > 0 {
@@ -1243,44 +1106,40 @@ func (m *TokenInfo) Size() (n int) {
 	return n
 }
 
-func (m *TargetConfig) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Token)
-	if l > 0 {
-		n += 1 + l + sovBridgefee(uint64(l))
-	}
-	if m.Len != 0 {
-		n += 1 + sovBridgefee(uint64(m.Len))
-	}
-	if m.TotalW != 0 {
-		n += 1 + sovBridgefee(uint64(m.TotalW))
-	}
-	if m.Weights != 0 {
-		n += 1 + sovBridgefee(uint64(m.Weights))
-	}
-	return n
-}
-
 func (m *TargetInfo) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.Token)
-	if l > 0 {
-		n += 1 + l + sovBridgefee(uint64(l))
-	}
 	l = len(m.Target)
 	if l > 0 {
 		n += 1 + l + sovBridgefee(uint64(l))
 	}
 	if m.TType != 0 {
 		n += 1 + sovBridgefee(uint64(m.TType))
+	}
+	if m.Weight != 0 {
+		n += 1 + sovBridgefee(uint64(m.Weight))
+	}
+	return n
+}
+
+func (m *TokenTargetInfo) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Token)
+	if l > 0 {
+		n += 1 + l + sovBridgefee(uint64(l))
+	}
+	if len(m.Targets) > 0 {
+		for _, e := range m.Targets {
+			l = e.Size()
+			n += 1 + l + sovBridgefee(uint64(l))
+		}
 	}
 	return n
 }
@@ -1305,22 +1164,8 @@ func (m *GenesisState) Size() (n int) {
 			n += 1 + l + sovBridgefee(uint64(l))
 		}
 	}
-	if len(m.TokenTargetConfigs) > 0 {
-		for _, e := range m.TokenTargetConfigs {
-			l = e.Size()
-			n += 1 + l + sovBridgefee(uint64(l))
-		}
-	}
-	if len(m.TokenTargetInfos) > 0 {
-		for _, e := range m.TokenTargetInfos {
-			l = e.Size()
-			n += 1 + l + sovBridgefee(uint64(l))
-		}
-	}
-	l = m.GlobalTargetConfig.Size()
-	n += 1 + l + sovBridgefee(uint64(l))
-	if len(m.TargetInfos) > 0 {
-		for _, e := range m.TargetInfos {
+	if len(m.TokenTargets) > 0 {
+		for _, e := range m.TokenTargets {
 			l = e.Size()
 			n += 1 + l + sovBridgefee(uint64(l))
 		}
@@ -1404,18 +1249,11 @@ func (m *MsgSetTokenTargetInfos) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovBridgefee(uint64(l))
 	}
-	if len(m.Info) > 0 {
-		for _, e := range m.Info {
+	if len(m.Targets) > 0 {
+		for _, e := range m.Targets {
 			l = e.Size()
 			n += 1 + l + sovBridgefee(uint64(l))
 		}
-	}
-	if len(m.Weights) > 0 {
-		l = 0
-		for _, e := range m.Weights {
-			l += sovBridgefee(uint64(e))
-		}
-		n += 1 + sovBridgefee(uint64(l)) + l
 	}
 	return n
 }
@@ -1430,18 +1268,11 @@ func (m *MsgSetGlobalTargetInfos) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovBridgefee(uint64(l))
 	}
-	if len(m.Info) > 0 {
-		for _, e := range m.Info {
+	if len(m.Targets) > 0 {
+		for _, e := range m.Targets {
 			l = e.Size()
 			n += 1 + l + sovBridgefee(uint64(l))
 		}
-	}
-	if len(m.Weights) > 0 {
-		l = 0
-		for _, e := range m.Weights {
-			l += sovBridgefee(uint64(e))
-		}
-		n += 1 + sovBridgefee(uint64(l)) + l
 	}
 	return n
 }
@@ -1572,145 +1403,6 @@ func (m *TokenInfo) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *TargetConfig) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowBridgefee
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: TargetConfig: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: TargetConfig: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Token", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowBridgefee
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthBridgefee
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthBridgefee
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Token = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Len", wireType)
-			}
-			m.Len = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowBridgefee
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Len |= uint32(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 3:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field TotalW", wireType)
-			}
-			m.TotalW = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowBridgefee
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.TotalW |= uint32(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 4:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Weights", wireType)
-			}
-			m.Weights = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowBridgefee
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Weights |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		default:
-			iNdEx = preIndex
-			skippy, err := skipBridgefee(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthBridgefee
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
 func (m *TargetInfo) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1742,6 +1434,126 @@ func (m *TargetInfo) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Target", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgefee
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthBridgefee
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgefee
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Target = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TType", wireType)
+			}
+			m.TType = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgefee
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.TType |= TargetType(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Weight", wireType)
+			}
+			m.Weight = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowBridgefee
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Weight |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipBridgefee(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthBridgefee
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *TokenTargetInfo) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowBridgefee
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: TokenTargetInfo: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: TokenTargetInfo: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Token", wireType)
 			}
 			var stringLen uint64
@@ -1774,9 +1586,9 @@ func (m *TargetInfo) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Target", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Targets", wireType)
 			}
-			var stringLen uint64
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowBridgefee
@@ -1786,43 +1598,26 @@ func (m *TargetInfo) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
+			if msglen < 0 {
 				return ErrInvalidLengthBridgefee
 			}
-			postIndex := iNdEx + intStringLen
+			postIndex := iNdEx + msglen
 			if postIndex < 0 {
 				return ErrInvalidLengthBridgefee
 			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Target = string(dAtA[iNdEx:postIndex])
+			m.Targets = append(m.Targets, TargetInfo{})
+			if err := m.Targets[len(m.Targets)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
-		case 3:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field TType", wireType)
-			}
-			m.TType = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowBridgefee
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.TType |= TargetType(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipBridgefee(dAtA[iNdEx:])
@@ -1974,7 +1769,7 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field TokenTargetConfigs", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field TokenTargets", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -2001,109 +1796,8 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.TokenTargetConfigs = append(m.TokenTargetConfigs, TargetConfig{})
-			if err := m.TokenTargetConfigs[len(m.TokenTargetConfigs)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 5:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field TokenTargetInfos", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowBridgefee
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthBridgefee
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthBridgefee
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.TokenTargetInfos = append(m.TokenTargetInfos, TargetInfo{})
-			if err := m.TokenTargetInfos[len(m.TokenTargetInfos)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 6:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field GlobalTargetConfig", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowBridgefee
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthBridgefee
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthBridgefee
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.GlobalTargetConfig.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 7:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field TargetInfos", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowBridgefee
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthBridgefee
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthBridgefee
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.TargetInfos = append(m.TargetInfos, TargetInfo{})
-			if err := m.TargetInfos[len(m.TargetInfos)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.TokenTargets = append(m.TokenTargets, TokenTargetInfo{})
+			if err := m.TokenTargets[len(m.TokenTargets)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -2656,7 +2350,7 @@ func (m *MsgSetTokenTargetInfos) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Info", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Targets", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -2683,87 +2377,11 @@ func (m *MsgSetTokenTargetInfos) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Info = append(m.Info, TargetInfo{})
-			if err := m.Info[len(m.Info)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.Targets = append(m.Targets, TargetInfo{})
+			if err := m.Targets[len(m.Targets)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
-		case 4:
-			if wireType == 0 {
-				var v uint64
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return ErrIntOverflowBridgefee
-					}
-					if iNdEx >= l {
-						return io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					v |= uint64(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				m.Weights = append(m.Weights, v)
-			} else if wireType == 2 {
-				var packedLen int
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return ErrIntOverflowBridgefee
-					}
-					if iNdEx >= l {
-						return io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					packedLen |= int(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				if packedLen < 0 {
-					return ErrInvalidLengthBridgefee
-				}
-				postIndex := iNdEx + packedLen
-				if postIndex < 0 {
-					return ErrInvalidLengthBridgefee
-				}
-				if postIndex > l {
-					return io.ErrUnexpectedEOF
-				}
-				var elementCount int
-				var count int
-				for _, integer := range dAtA[iNdEx:postIndex] {
-					if integer < 128 {
-						count++
-					}
-				}
-				elementCount = count
-				if elementCount != 0 && len(m.Weights) == 0 {
-					m.Weights = make([]uint64, 0, elementCount)
-				}
-				for iNdEx < postIndex {
-					var v uint64
-					for shift := uint(0); ; shift += 7 {
-						if shift >= 64 {
-							return ErrIntOverflowBridgefee
-						}
-						if iNdEx >= l {
-							return io.ErrUnexpectedEOF
-						}
-						b := dAtA[iNdEx]
-						iNdEx++
-						v |= uint64(b&0x7F) << shift
-						if b < 0x80 {
-							break
-						}
-					}
-					m.Weights = append(m.Weights, v)
-				}
-			} else {
-				return fmt.Errorf("proto: wrong wireType = %d for field Weights", wireType)
-			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipBridgefee(dAtA[iNdEx:])
@@ -2848,9 +2466,9 @@ func (m *MsgSetGlobalTargetInfos) Unmarshal(dAtA []byte) error {
 				m.FromAddress = []byte{}
 			}
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Info", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Targets", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -2877,87 +2495,11 @@ func (m *MsgSetGlobalTargetInfos) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Info = append(m.Info, TargetInfo{})
-			if err := m.Info[len(m.Info)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.Targets = append(m.Targets, TargetInfo{})
+			if err := m.Targets[len(m.Targets)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
-		case 4:
-			if wireType == 0 {
-				var v uint64
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return ErrIntOverflowBridgefee
-					}
-					if iNdEx >= l {
-						return io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					v |= uint64(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				m.Weights = append(m.Weights, v)
-			} else if wireType == 2 {
-				var packedLen int
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return ErrIntOverflowBridgefee
-					}
-					if iNdEx >= l {
-						return io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					packedLen |= int(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				if packedLen < 0 {
-					return ErrInvalidLengthBridgefee
-				}
-				postIndex := iNdEx + packedLen
-				if postIndex < 0 {
-					return ErrInvalidLengthBridgefee
-				}
-				if postIndex > l {
-					return io.ErrUnexpectedEOF
-				}
-				var elementCount int
-				var count int
-				for _, integer := range dAtA[iNdEx:postIndex] {
-					if integer < 128 {
-						count++
-					}
-				}
-				elementCount = count
-				if elementCount != 0 && len(m.Weights) == 0 {
-					m.Weights = make([]uint64, 0, elementCount)
-				}
-				for iNdEx < postIndex {
-					var v uint64
-					for shift := uint(0); ; shift += 7 {
-						if shift >= 64 {
-							return ErrIntOverflowBridgefee
-						}
-						if iNdEx >= l {
-							return io.ErrUnexpectedEOF
-						}
-						b := dAtA[iNdEx]
-						iNdEx++
-						v |= uint64(b&0x7F) << shift
-						if b < 0x80 {
-							break
-						}
-					}
-					m.Weights = append(m.Weights, v)
-				}
-			} else {
-				return fmt.Errorf("proto: wrong wireType = %d for field Weights", wireType)
-			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipBridgefee(dAtA[iNdEx:])
