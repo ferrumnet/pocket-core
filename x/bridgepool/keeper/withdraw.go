@@ -91,6 +91,7 @@ func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, payee string, amount sd
 			return types.ErrUnexpectedError(k.codespace, err)
 		}
 
+		k.bridgeFeeKeeper.DistributeTax(ctx, amount.Denom)
 		amountWithoutFee = amountWithoutFee.Sub(fee)
 	}
 

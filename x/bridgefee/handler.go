@@ -20,10 +20,6 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		}
 
 		switch msg := msg.(type) {
-		case types.MsgAddAllowedActor:
-			return handleMsgAddAllowedActor(ctx, msg, k)
-		case types.MsgRemoveAllowedActor:
-			return handleMsgRemoveAllowedActor(ctx, msg, k)
 		case types.MsgSetTokenInfo:
 			return handleMsgSetTokenInfo(ctx, msg, k)
 		case types.MsgSetTokenTargetInfos:
@@ -37,46 +33,6 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 	}
 }
 
-func handleMsgAddAllowedActor(ctx sdk.Ctx, msg types.MsgAddAllowedActor, k keeper.Keeper) sdk.Result {
-	moduleOwner := k.GetParams(ctx).Owner
-	if msg.FromAddress.String() != moduleOwner {
-		return types.ErrNotEnoughPermission(k.Codespace()).Result()
-	}
-
-	err := k.AddAllowedActor(ctx, msg.Actor)
-	if err != nil {
-		return err.Result()
-	}
-
-	ctx.EventManager().EmitEvents(sdk.Events{
-		sdk.NewEvent(
-			types.EventTypeAddAllowedActor,
-			sdk.NewAttribute(types.AttributeKeyActor, msg.Actor),
-		)},
-	)
-	return sdk.Result{Events: ctx.EventManager().Events()}
-}
-
-func handleMsgRemoveAllowedActor(ctx sdk.Ctx, msg types.MsgRemoveAllowedActor, k keeper.Keeper) sdk.Result {
-	moduleOwner := k.GetParams(ctx).Owner
-	if msg.FromAddress.String() != moduleOwner {
-		return types.ErrNotEnoughPermission(k.Codespace()).Result()
-	}
-
-	err := k.RemoveAllowedActor(ctx, msg.Actor)
-	if err != nil {
-		return err.Result()
-	}
-
-	ctx.EventManager().EmitEvents(sdk.Events{
-		sdk.NewEvent(
-			types.EventTypeRemoveAllowedActor,
-			sdk.NewAttribute(types.AttributeKeyActor, msg.Actor),
-		)},
-	)
-	return sdk.Result{Events: ctx.EventManager().Events()}
-}
-
 func handleMsgSetTokenInfo(ctx sdk.Ctx, msg types.MsgSetTokenInfo, k keeper.Keeper) sdk.Result {
 	moduleOwner := k.GetParams(ctx).Owner
 	if msg.FromAddress.String() != moduleOwner {
@@ -88,12 +44,12 @@ func handleMsgSetTokenInfo(ctx sdk.Ctx, msg types.MsgSetTokenInfo, k keeper.Keep
 		return err.Result()
 	}
 
-	// ctx.EventManager().EmitEvents(sdk.Events{
-	// 	sdk.NewEvent(
-	// 		types.EventTypeSetSigner,
-	// 		sdk.NewAttribute(types.AttributeKeySigner, msg.Signer),
-	// 	)},
-	// )
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventTypeSetTokenInfo,
+			sdk.NewAttribute(types.AttributeKeyToken, msg.Info.Token),
+		)},
+	)
 	return sdk.Result{Events: ctx.EventManager().Events()}
 }
 

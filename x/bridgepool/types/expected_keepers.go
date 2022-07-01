@@ -37,3 +37,7 @@ type AccountKeeper interface {
 	// send coins
 	SendCoins(ctx sdk.Ctx, fromAddr sdk.Address, toAddr sdk.Address, amt sdk.Coins) sdk.Error
 }
+
+type BridgeFeeKeeper interface {
+	DistributeTax(ctx sdk.Ctx, token string)
+}

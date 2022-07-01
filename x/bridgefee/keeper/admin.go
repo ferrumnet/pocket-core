@@ -5,39 +5,6 @@ import (
 	"github.com/pokt-network/pocket-core/x/bridgefee/types"
 )
 
-func (k Keeper) AddAllowedActor(ctx sdk.Ctx, actor string) sdk.Error {
-	store := ctx.KVStore(k.storeKey)
-	store.Set(types.AllowedActorKey(actor), []byte(actor))
-	return nil
-}
-
-func (k Keeper) RemoveAllowedActor(ctx sdk.Ctx, actor string) sdk.Error {
-	store := ctx.KVStore(k.storeKey)
-	store.Delete(types.AllowedActorKey(actor))
-	return nil
-}
-
-func (k Keeper) IsAllowedActor(ctx sdk.Ctx, actor string) bool {
-	store := ctx.KVStore(k.storeKey)
-	bz, err := store.Get(types.AllowedActorKey(actor))
-	if bz == nil || err != nil {
-		return false
-	}
-	return true
-}
-
-func (k Keeper) GetAllAllowedActors(ctx sdk.Ctx) []string {
-	actors := []string{}
-	store := ctx.KVStore(k.storeKey)
-	iterator, _ := sdk.KVStorePrefixIterator(store, types.AllowedActorKeyPrefix)
-	defer iterator.Close()
-
-	for ; iterator.Valid(); iterator.Next() {
-		actors = append(actors, string(iterator.Value()))
-	}
-	return actors
-}
-
 func (k Keeper) SetTokenInfo(ctx sdk.Ctx, info types.TokenInfo) sdk.Error {
 	store := ctx.KVStore(k.storeKey)
 	bz := k.Cdc.MustMarshalJSON(&info)
@@ -88,7 +55,7 @@ func (k Keeper) GetTokenTargetInfo(ctx sdk.Ctx, token string) types.TokenTargetI
 	return info
 }
 
-func (k Keeper) GetGlobalTokenTargetInfo(ctx sdk.Context) types.TokenTargetInfo {
+func (k Keeper) GetGlobalTokenTargetInfo(ctx sdk.Ctx) types.TokenTargetInfo {
 	info := types.TokenTargetInfo{}
 	store := ctx.KVStore(k.storeKey)
 	bz, err := store.Get(types.TokenTargetInfoKey(""))
