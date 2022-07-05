@@ -23,7 +23,7 @@ func (k Keeper) GetTokenInfo(ctx sdk.Ctx, token string) types.TokenInfo {
 	return info
 }
 
-func (k Keeper) GetAllTokenInfos(ctx sdk.Ctx, token string) []types.TokenInfo {
+func (k Keeper) GetAllTokenInfos(ctx sdk.Ctx) []types.TokenInfo {
 	infos := []types.TokenInfo{}
 	store := ctx.KVStore(k.storeKey)
 	iterator, _ := sdk.KVStorePrefixIterator(store, types.TokenInfoKeyPrefix)
@@ -66,7 +66,7 @@ func (k Keeper) GetGlobalTokenTargetInfo(ctx sdk.Ctx) types.TokenTargetInfo {
 	return info
 }
 
-func (k Keeper) GetAllTokenTargetInfos(ctx sdk.Ctx, token string) []types.TokenTargetInfo {
+func (k Keeper) GetAllTokenTargetInfos(ctx sdk.Ctx) []types.TokenTargetInfo {
 	infos := []types.TokenTargetInfo{}
 	store := ctx.KVStore(k.storeKey)
 	iterator, _ := sdk.KVStorePrefixIterator(store, types.TokenTargetInfoKeyPrefix)

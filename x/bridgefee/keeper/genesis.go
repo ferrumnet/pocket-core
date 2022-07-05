@@ -10,6 +10,12 @@ import (
 func (k Keeper) InitGenesis(ctx sdk.Ctx, data types.GenesisState) []abci.ValidatorUpdate {
 	k.SetParams(ctx, data.Params)
 
+	for _, tokenInfo := range data.TokenInfos {
+		k.SetTokenInfo(ctx, tokenInfo)
+	}
+	for _, target := range data.TokenTargets {
+		k.SetTokenTargetInfo(ctx, target)
+	}
 	return []abci.ValidatorUpdate{}
 }
 
@@ -17,5 +23,7 @@ func (k Keeper) InitGenesis(ctx sdk.Ctx, data types.GenesisState) []abci.Validat
 func (k Keeper) ExportGenesis(ctx sdk.Ctx) types.GenesisState {
 	return types.NewGenesisState(
 		k.GetParams(ctx),
+		k.GetAllTokenInfos(ctx),
+		k.GetAllTokenTargetInfos(ctx),
 	)
 }

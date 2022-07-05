@@ -1,9 +1,11 @@
 package types
 
 // NewGenesisState - Create a new genesis state
-func NewGenesisState(params Params) GenesisState {
+func NewGenesisState(params Params, tokenInfos []TokenInfo, tokenTargetInfos []TokenTargetInfo) GenesisState {
 	return GenesisState{
-		Params: params,
+		Params:       params,
+		TokenInfos:   tokenInfos,
+		TokenTargets: tokenTargetInfos,
 	}
 }
 
@@ -11,6 +13,8 @@ func NewGenesisState(params Params) GenesisState {
 func DefaultGenesisState() GenesisState {
 	return NewGenesisState(
 		DefaultParams(),
+		[]TokenInfo{},
+		[]TokenTargetInfo{},
 	)
 }
 

@@ -35,9 +35,8 @@ message TokenTargetInfo {
 // The state of the module from the beginning
 message GenesisState {
   Params params = 1 [ (gogoproto.nullable) = false ];
-  repeated string allowedActors = 2;
-  repeated TokenInfo tokenInfos = 3 [ (gogoproto.nullable) = false ];
-  repeated TokenTargetInfo tokenTargets = 4 [ (gogoproto.nullable) = false ];
+  repeated TokenInfo tokenInfos = 2 [ (gogoproto.nullable) = false ];
+  repeated TokenTargetInfo tokenTargets = 3 [ (gogoproto.nullable) = false ];
 }
 
 message Params {
