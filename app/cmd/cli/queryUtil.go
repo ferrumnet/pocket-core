@@ -124,7 +124,7 @@ func init() {
 			GetBridgePoolAllAllowedTargetsPath = route.Path
 		case "QueryBridgeFeeParams":
 			GetBridgeFeeParamsPath = route.Path
-		case "QueryBridgeFeeAllTokenInfoss":
+		case "QueryBridgeFeeAllTokenInfos":
 			GetBridgeFeeAllTokenInfosPath = route.Path
 		case "QueryBridgeFeeAllTokenTargetInfos":
 			GetBridgeFeeAllTokenTargetInfosPath = route.Path

@@ -266,7 +266,8 @@
             "receipts": null,
             "claims": null
         },
-        "bridgepool": {}
+        "bridgepool": {},
+        "bridgefee": {}
     }
 }
 

@@ -72,8 +72,8 @@ Will prompt the user for the <fromAddr> account passphrase.`,
 
 var setTokenTargetInfos = &cobra.Command{
 	Use:   "set-token-target-infos <fromAddr> <token> <targets> <weights> <targetTypes> <fee> <chainId>",
-	Short: "Allow target network for withdrawal",
-	Long: `Allow target network for withdrawal.
+	Short: "Set token target infos",
+	Long: `Set token target infos.
 Will prompt the user for the <fromAddr> account passphrase.`,
 	Args: cobra.ExactArgs(7),
 	Run: func(cmd *cobra.Command, args []string) {
@@ -104,9 +104,9 @@ Will prompt the user for the <fromAddr> account passphrase.`,
 }
 
 var setGlobalTargetInfos = &cobra.Command{
-	Use:   "set-token-target-infos <fromAddr> <targets> <weights> <targetTypes> <fee> <chainId>",
-	Short: "Allow target network for withdrawal",
-	Long: `Allow target network for withdrawal.
+	Use:   "set-global-target-infos <fromAddr> <targets> <weights> <targetTypes> <fee> <chainId>",
+	Short: "Set global target infos.",
+	Long: `Set global target infos.
 Will prompt the user for the <fromAddr> account passphrase.`,
 	Args: cobra.ExactArgs(6),
 	Run: func(cmd *cobra.Command, args []string) {

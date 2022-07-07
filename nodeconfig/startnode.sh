@@ -34,3 +34,11 @@ pocket_core query liquidities
 pocket_core query fee-rates
 pocket_core query allowed-targets
 pocket_core query balance 169869f67cd3f78a722fb4795b69949fb4bc9084
+
+pocket_core bridgefee set-token-info 169869f67cd3f78a722fb4795b69949fb4bc9084 upokt 10000 0 10000 testnet
+pocket_core bridgefee set-token-target-infos 169869f67cd3f78a722fb4795b69949fb4bc9084 upokt 924364bbf0347842e1e0fa9cd2167dc630fc3c0c 1 Address 10000 testnet
+pocket_core bridgefee set-global-target-infos 169869f67cd3f78a722fb4795b69949fb4bc9084 924364bbf0347842e1e0fa9cd2167dc630fc3c0c 1 Burn 10000 testnet
+
+pocket_core query bridgefee-params
+pocket_core query all-token-infos
+pocket_core query all-token-target-infos
