@@ -48,7 +48,10 @@ var (
 	GetBridgePoolAllSignersPath,
 	GetBridgePoolAllLiquiditiesPath,
 	GetBridgePoolAllFeeRatesPath,
-	GetBridgePoolAllAllowedTargetsPath string
+	GetBridgePoolAllAllowedTargetsPath,
+	GetBridgeFeeParamsPath,
+	GetBridgeFeeAllTokenInfosPath,
+	GetBridgeFeeAllTokenTargetInfosPath string
 )
 
 func init() {
@@ -119,6 +122,12 @@ func init() {
 			GetBridgePoolAllFeeRatesPath = route.Path
 		case "QueryBridgePoolAllAllowedTargets":
 			GetBridgePoolAllAllowedTargetsPath = route.Path
+		case "QueryBridgeFeeParams":
+			GetBridgeFeeParamsPath = route.Path
+		case "QueryBridgeFeeAllTokenInfoss":
+			GetBridgeFeeAllTokenInfosPath = route.Path
+		case "QueryBridgeFeeAllTokenTargetInfos":
+			GetBridgeFeeAllTokenTargetInfosPath = route.Path
 		default:
 			continue
 		}

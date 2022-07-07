@@ -14,6 +14,7 @@ import (
 	appsTypes "github.com/pokt-network/pocket-core/x/apps/types"
 	"github.com/pokt-network/pocket-core/x/auth/exported"
 	"github.com/pokt-network/pocket-core/x/auth/util"
+	bridgefeeTypes "github.com/pokt-network/pocket-core/x/bridgefee/types"
 	bridgepoolTypes "github.com/pokt-network/pocket-core/x/bridgepool/types"
 	"github.com/pokt-network/pocket-core/x/gov/types"
 	nodesTypes "github.com/pokt-network/pocket-core/x/nodes/types"
@@ -249,6 +250,35 @@ func (app PocketCoreApp) QueryBridgePoolAllAllowedTargets(height int64) ([]bridg
 
 	allAllowedTargets := app.bridgepoolKeeper.GetAllAllowedTargets(ctx)
 	return allAllowedTargets, nil
+}
+
+func (app PocketCoreApp) QueryBridgeFeeParams(height int64) (params bridgefeeTypes.Params, err error) {
+	ctx, err := app.NewContext(height)
+	if err != nil {
+		return
+	}
+	params = app.bridgeFeeKeeper.GetParams(ctx)
+	return
+}
+
+func (app PocketCoreApp) QueryBridgeFeeAllTokenInfos(height int64) ([]bridgefeeTypes.TokenInfo, error) {
+	ctx, err := app.NewContext(height)
+	if err != nil {
+		return []bridgefeeTypes.TokenInfo{}, err
+	}
+
+	allTokenInfos := app.bridgeFeeKeeper.GetAllTokenInfos(ctx)
+	return allTokenInfos, nil
+}
+
+func (app PocketCoreApp) QueryBridgeFeeAllTokenTargetInfos(height int64) ([]bridgefeeTypes.TokenTargetInfo, error) {
+	ctx, err := app.NewContext(height)
+	if err != nil {
+		return []bridgefeeTypes.TokenTargetInfo{}, err
+	}
+
+	targetInfos := app.bridgeFeeKeeper.GetAllTokenTargetInfos(ctx)
+	return targetInfos, nil
 }
 
 func (app PocketCoreApp) QuerySigningInfo(height int64, addr string) (res nodesTypes.ValidatorSigningInfo, err error) {

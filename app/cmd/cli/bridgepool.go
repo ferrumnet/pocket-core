@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/pokt-network/pocket-core/app"
+	sdk "github.com/pokt-network/pocket-core/types"
 	"github.com/spf13/cobra"
 )
 
@@ -24,9 +25,8 @@ func init() {
 
 var bridgepoolCmd = &cobra.Command{
 	Use:   "bridgepool",
-	Short: "node management",
-	Long: `The node namespace handles all node related interactions,
-from staking and unstaking; to unjailing.`,
+	Short: "bridgepool management",
+	Long:  `The bridgepool namespace handles all bridgepool related interactions.`,
 }
 
 func init() {
@@ -84,13 +84,8 @@ Will prompt the user for the <fromAddr> account passphrase.`,
 			fmt.Println(err)
 			return
 		}
-		targetChainId, err := strconv.Atoi(args[2])
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
 		fmt.Println("Enter Password: ")
-		res, err := AllowTarget(args[0], args[1], uint64(targetChainId), args[3], app.Credentials(pwd), args[5], int64(fee))
+		res, err := AllowTarget(args[0], args[1], args[2], args[3], app.Credentials(pwd), args[5], int64(fee))
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -122,13 +117,9 @@ Will prompt the user for the <fromAddr> account passphrase.`,
 			fmt.Println(err)
 			return
 		}
-		targetChainId, err := strconv.Atoi(args[2])
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
+
 		fmt.Println("Enter Password: ")
-		res, err := DisallowTarget(args[0], args[1], uint64(targetChainId), app.Credentials(pwd), args[5], int64(fee))
+		res, err := DisallowTarget(args[0], args[1], args[2], app.Credentials(pwd), args[5], int64(fee))
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -274,13 +265,13 @@ Will prompt the user for the <fromAddr> account passphrase.`,
 			fmt.Println(err)
 			return
 		}
-		amount, err := strconv.Atoi(args[3])
+		amount, err := sdk.ParseCoin(args[3])
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 		fmt.Println("Enter Password: ")
-		res, err := WithdrawSigned(args[0], args[1], args[2], uint64(amount), app.Credentials(pwd), args[5], int64(fee))
+		res, err := WithdrawSigned(args[0], args[1], args[2], amount, app.Credentials(pwd), args[5], int64(fee))
 		if err != nil {
 			fmt.Println(err)
 			return
