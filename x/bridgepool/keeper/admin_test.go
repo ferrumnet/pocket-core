@@ -7,7 +7,7 @@ import (
 )
 
 func TestFeeRates(t *testing.T) {
-	context, _, keeper := createTestInput(t, true)
+	context, _, keeper, _ := createTestInput(t, true)
 
 	// check initial fee rate
 	feeRate := keeper.GetFeeRate(context, "upokt")
@@ -46,7 +46,7 @@ func TestFeeRates(t *testing.T) {
 }
 
 func TestAllowedTarget(t *testing.T) {
-	context, _, keeper := createTestInput(t, true)
+	context, _, keeper, _ := createTestInput(t, true)
 
 	// check initial allowed target
 	target := keeper.GetAllowedTarget(context, "upokt", "137")
@@ -96,7 +96,7 @@ func TestAllowedTarget(t *testing.T) {
 }
 
 func TestSigners(t *testing.T) {
-	context, _, keeper := createTestInput(t, true)
+	context, _, keeper, _ := createTestInput(t, true)
 
 	// check if signer when not set
 	isSigner := keeper.IsSigner(context, "0x7B848510E92B2f2F7ea06d46e7B370198F7369Bc")

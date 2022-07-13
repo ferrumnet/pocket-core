@@ -99,7 +99,7 @@ func TestWithdrawSigned(t *testing.T) {
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			context, accs, keeper := createTestInput(t, true)
+			context, accs, keeper, _ := createTestInput(t, true)
 			_, _, _ = context, accs, keeper
 			err := keeper.SetFeeRate(context, tc.amount.Denom, tc.feeRate)
 			assert.Nil(t, err)

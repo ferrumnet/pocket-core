@@ -8,7 +8,7 @@ import (
 )
 
 func TestExportGenesis(t *testing.T) {
-	context, _, keeper := createTestInput(t, true)
+	context, _, keeper, _ := createTestInput(t, true)
 
 	defaultGenesis := types.DefaultGenesisState()
 	genesis := keeper.ExportGenesis(context)
@@ -16,7 +16,7 @@ func TestExportGenesis(t *testing.T) {
 }
 
 func TestInitGenesis(t *testing.T) {
-	context, _, keeper := createTestInput(t, true)
+	context, _, keeper, _ := createTestInput(t, true)
 
 	genesis := types.DefaultGenesisState()
 	genesis.AllowedTargets = []types.AllowedTarget{{

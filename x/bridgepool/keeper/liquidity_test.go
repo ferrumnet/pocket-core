@@ -19,7 +19,7 @@ func TestLiquidityRawStorage(t *testing.T) {
 	addr1 := genAccount()
 	addr2 := genAccount()
 
-	context, _, keeper := createTestInput(t, true)
+	context, _, keeper, _ := createTestInput(t, true)
 
 	// check liquidity when not set
 	liquidity := keeper.GetLiquidity(context, "upokt", addr1)
@@ -57,7 +57,7 @@ func TestLiquidityAddRemove(t *testing.T) {
 	addr1 := genAccount()
 	addr2 := genAccount()
 
-	context, _, keeper := createTestInput(t, true)
+	context, _, keeper, _ := createTestInput(t, true)
 
 	// check liquidity when not set
 	liquidity := keeper.GetLiquidity(context, "upokt", addr1)

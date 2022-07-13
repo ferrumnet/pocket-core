@@ -12,7 +12,7 @@ import (
 func TestSwap(t *testing.T) {
 	addr1 := genAccount()
 
-	context, _, keeper := createTestInput(t, true)
+	context, _, keeper, _ := createTestInput(t, true)
 
 	// try swap for not allowed target
 	err := keeper.Swap(context, addr1, "upokt", 1000000, "137", "0x7B848510E92B2f2F7ea06d46e7B370198F7369Bc", "0x8A848510E92B2f2F7ea06d46e7B370198F7369Bc")

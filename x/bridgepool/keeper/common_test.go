@@ -20,6 +20,7 @@ import (
 	sdk "github.com/pokt-network/pocket-core/types"
 	apptypes "github.com/pokt-network/pocket-core/x/apps/types"
 	"github.com/pokt-network/pocket-core/x/auth"
+	bridgefeeKeeper "github.com/pokt-network/pocket-core/x/bridgefee/keeper"
 	bridgefeeTypes "github.com/pokt-network/pocket-core/x/bridgefee/types"
 	"github.com/pokt-network/pocket-core/x/bridgepool/types"
 )
@@ -43,18 +44,20 @@ func makeTestCodec() *codec.Codec {
 }
 
 // : deadcode unused
-func createTestInput(t *testing.T, isCheckTx bool) (sdk.Context, []auth.Account, Keeper) {
+func createTestInput(t *testing.T, isCheckTx bool) (sdk.Context, []auth.Account, Keeper, bridgefeeKeeper.Keeper) {
 	initPower := int64(100000000000)
 	nAccs := int64(4)
 
 	keyAcc := sdk.NewKVStoreKey(auth.StoreKey)
 	keyParams := sdk.ParamsKey
 	tkeyParams := sdk.ParamsTKey
-	keyBridepool := sdk.NewKVStoreKey(types.ModuleName)
+	keyBridgepool := sdk.NewKVStoreKey(types.ModuleName)
+	keyBridgefee := sdk.NewKVStoreKey(bridgefeeTypes.ModuleName)
 	db := dbm.NewMemDB()
 	ms := store.NewCommitMultiStore(db, false, 5000000)
 	ms.MountStoreWithDB(keyAcc, sdk.StoreTypeIAVL, db)
-	ms.MountStoreWithDB(keyBridepool, sdk.StoreTypeIAVL, db)
+	ms.MountStoreWithDB(keyBridgepool, sdk.StoreTypeIAVL, db)
+	ms.MountStoreWithDB(keyBridgefee, sdk.StoreTypeIAVL, db)
 	ms.MountStoreWithDB(keyParams, sdk.StoreTypeIAVL, db)
 	ms.MountStoreWithDB(tkeyParams, sdk.StoreTypeTransient, db)
 	err := ms.LoadLatestVersion()
@@ -83,6 +86,7 @@ func createTestInput(t *testing.T, isCheckTx bool) (sdk.Context, []auth.Account,
 	valTokens := sdk.TokensFromConsensusPower(initPower)
 	accSubspace := sdk.NewSubspace(auth.DefaultParamspace)
 	bridgepoolSubspace := sdk.NewSubspace(types.ModuleName)
+	bridgefeeSubspace := sdk.NewSubspace(bridgefeeTypes.ModuleName)
 	ak := auth.NewKeeper(cdc, keyAcc, accSubspace, maccPerms)
 	moduleManager := module.NewManager(
 		auth.NewAppModule(ak),
@@ -91,10 +95,11 @@ func createTestInput(t *testing.T, isCheckTx bool) (sdk.Context, []auth.Account,
 	moduleManager.InitGenesis(ctx, genesisState)
 	initialCoins := sdk.NewCoins(sdk.NewCoin(sdk.DefaultStakeDenom, valTokens))
 	accs := createTestAccs(ctx, int(nAccs), initialCoins, &ak)
-	keeper := NewKeeper(keyBridepool, cdc, ak, bridgepoolSubspace, "bridgepool")
+	feeKeeper := bridgefeeKeeper.NewKeeper(keyBridgefee, cdc, ak, bridgefeeSubspace, "bridgefee")
+	keeper := NewKeeper(keyBridgepool, cdc, ak, feeKeeper, bridgepoolSubspace, "bridgepool")
 	params := types.DefaultParams()
 	keeper.SetParams(ctx, params)
-	return ctx, accs, keeper
+	return ctx, accs, keeper, feeKeeper
 }
 
 // : unparam deadcode unused
