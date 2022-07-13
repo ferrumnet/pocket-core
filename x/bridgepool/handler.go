@@ -46,10 +46,10 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 }
 
 func handleMsgAddSigner(ctx sdk.Ctx, msg types.MsgAddSigner, k keeper.Keeper) sdk.Result {
-	moduleOwner := k.GetParams(ctx).Owner
-	if msg.FromAddress.String() != moduleOwner {
-		return types.ErrNotEnoughPermission(k.Codespace()).Result()
-	}
+	// moduleOwner := k.GetParams(ctx).Owner
+	// if msg.FromAddress.String() != moduleOwner {
+	// 	return types.ErrNotEnoughPermission(k.Codespace()).Result()
+	// }
 
 	err := k.SetSigner(ctx, msg.Signer)
 	if err != nil {
@@ -66,10 +66,10 @@ func handleMsgAddSigner(ctx sdk.Ctx, msg types.MsgAddSigner, k keeper.Keeper) sd
 }
 
 func handleMsgRemoveSigner(ctx sdk.Ctx, msg types.MsgRemoveSigner, k keeper.Keeper) sdk.Result {
-	moduleOwner := k.GetParams(ctx).Owner
-	if msg.FromAddress.String() != moduleOwner {
-		return types.ErrNotEnoughPermission(k.Codespace()).Result()
-	}
+	// moduleOwner := k.GetParams(ctx).Owner
+	// if msg.FromAddress.String() != moduleOwner {
+	// 	return types.ErrNotEnoughPermission(k.Codespace()).Result()
+	// }
 
 	err := k.DeleteSigner(ctx, msg.Signer)
 	if err != nil {
@@ -86,10 +86,10 @@ func handleMsgRemoveSigner(ctx sdk.Ctx, msg types.MsgRemoveSigner, k keeper.Keep
 }
 
 func handleMsgSetFee(ctx sdk.Ctx, msg types.MsgSetFee, k keeper.Keeper) sdk.Result {
-	moduleOwner := k.GetParams(ctx).Owner
-	if msg.FromAddress.String() != moduleOwner {
-		return types.ErrNotEnoughPermission(k.Codespace()).Result()
-	}
+	// moduleOwner := k.GetParams(ctx).Owner
+	// if msg.FromAddress.String() != moduleOwner {
+	// 	return types.ErrNotEnoughPermission(k.Codespace()).Result()
+	// }
 
 	err := k.SetFeeRate(ctx, msg.Token, msg.Fee10000)
 	if err != nil {
@@ -107,10 +107,10 @@ func handleMsgSetFee(ctx sdk.Ctx, msg types.MsgSetFee, k keeper.Keeper) sdk.Resu
 }
 
 func handleMsgAllowTarget(ctx sdk.Ctx, msg types.MsgAllowTarget, k keeper.Keeper) sdk.Result {
-	moduleOwner := k.GetParams(ctx).Owner
-	if msg.FromAddress.String() != moduleOwner {
-		return types.ErrNotEnoughPermission(k.Codespace()).Result()
-	}
+	// moduleOwner := k.GetParams(ctx).Owner
+	// if msg.FromAddress.String() != moduleOwner {
+	// 	return types.ErrNotEnoughPermission(k.Codespace()).Result()
+	// }
 
 	err := k.AllowTarget(ctx, msg.Token, msg.ChainId, msg.TargetToken)
 	if err != nil {
@@ -129,10 +129,10 @@ func handleMsgAllowTarget(ctx sdk.Ctx, msg types.MsgAllowTarget, k keeper.Keeper
 }
 
 func handleMsgDisallowTarget(ctx sdk.Ctx, msg types.MsgDisallowTarget, k keeper.Keeper) sdk.Result {
-	moduleOwner := k.GetParams(ctx).Owner
-	if msg.FromAddress.String() != moduleOwner {
-		return types.ErrNotEnoughPermission(k.Codespace()).Result()
-	}
+	// moduleOwner := k.GetParams(ctx).Owner
+	// if msg.FromAddress.String() != moduleOwner {
+	// 	return types.ErrNotEnoughPermission(k.Codespace()).Result()
+	// }
 
 	k.DisallowTarget(ctx, msg.Token, msg.ChainId)
 	ctx.EventManager().EmitEvents(sdk.Events{

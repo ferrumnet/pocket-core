@@ -3,6 +3,7 @@ package keeper
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 
 	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/common"
@@ -65,6 +66,7 @@ func GetSigner(chainId string, payee string, amount sdk.Coin,
 func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, payee string, amount sdk.Coin,
 	salt string, signature []byte) sdk.Error {
 
+	fmt.Println("WithdrawSigned1")
 	// verify signature
 	signer, messageBytes, err := GetSigner(ctx.ChainID(), payee, amount, salt, signature)
 	if err != nil {
@@ -76,13 +78,16 @@ func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, payee string, amount sd
 	// 	return types.ErrInvalidSigner(k.codespace)
 	// }
 
+	fmt.Println("WithdrawSigned2")
 	// avoid using same signature and salt again
 	if k.IsUsedMessage(ctx, messageBytes) {
 		return types.ErrAlreadyUsedWithdrawMessage(k.codespace)
 	}
 
+	fmt.Println("WithdrawSigned3")
 	// handle fees
 	feeRate := k.GetFeeRate(ctx, amount.Denom)
+	fmt.Println("WithdrawSigned3-0", feeRate, amount.Denom, amount.Amount.String())
 	fee := amount.Amount.Mul(sdk.NewInt(int64(feeRate))).Quo(sdk.NewInt(int64(10000)))
 	amountWithoutFee := amount.Amount
 	if fee.IsPositive() {
@@ -91,10 +96,13 @@ func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, payee string, amount sd
 			return types.ErrUnexpectedError(k.codespace, err)
 		}
 
+		fmt.Println("WithdrawSigned3-1")
 		k.bridgeFeeKeeper.DistributeTax(ctx, amount.Denom)
+		fmt.Println("WithdrawSigned3-2")
 		amountWithoutFee = amountWithoutFee.Sub(fee)
 	}
 
+	fmt.Println("WithdrawSigned4")
 	// transfer amount except fee to payee account
 	payeeAcc, err := sdk.AddressFromHex(payee)
 	err = k.AccountKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, payeeAcc, sdk.Coins{sdk.NewCoin(amount.Denom, amountWithoutFee)})
@@ -102,6 +110,7 @@ func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, payee string, amount sd
 		return types.ErrUnexpectedError(k.codespace, err)
 	}
 
+	fmt.Println("WithdrawSigned5")
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTransferBySignature,
