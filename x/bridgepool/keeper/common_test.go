@@ -77,7 +77,7 @@ func createTestInput(t *testing.T, isCheckTx bool) (sdk.Context, []auth.Account,
 		apptypes.StakedPoolName:   {auth.Minter, auth.Burner},
 		auth.FeeCollectorName:     nil,
 		types.ModuleName:          nil,
-		bridgefeeTypes.ModuleName: nil,
+		bridgefeeTypes.ModuleName: {auth.Burner},
 	}
 	modAccAddrs := make(map[string]bool)
 	for acc := range maccPerms {
