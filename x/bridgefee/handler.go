@@ -34,6 +34,7 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 }
 
 func handleMsgSetTokenInfo(ctx sdk.Ctx, msg types.MsgSetTokenInfo, k keeper.Keeper) sdk.Result {
+	// TODO: enable this when goes live
 	// moduleOwner := k.GetParams(ctx).Owner
 	// if msg.FromAddress.String() != moduleOwner {
 	// 	return types.ErrNotEnoughPermission(k.Codespace()).Result()
@@ -54,6 +55,7 @@ func handleMsgSetTokenInfo(ctx sdk.Ctx, msg types.MsgSetTokenInfo, k keeper.Keep
 }
 
 func handleMsgSetTokenTargetInfos(ctx sdk.Ctx, msg types.MsgSetTokenTargetInfos, k keeper.Keeper) sdk.Result {
+	// TODO: enable this when goes live
 	// moduleOwner := k.GetParams(ctx).Owner
 	// if msg.FromAddress.String() != moduleOwner {
 	// 	return types.ErrNotEnoughPermission(k.Codespace()).Result()
@@ -78,6 +80,7 @@ func handleMsgSetTokenTargetInfos(ctx sdk.Ctx, msg types.MsgSetTokenTargetInfos,
 }
 
 func handleMsgSetGlobalTargetInfos(ctx sdk.Ctx, msg types.MsgSetGlobalTargetInfos, k keeper.Keeper) sdk.Result {
+	// TODO: enable this when goes live
 	// moduleOwner := k.GetParams(ctx).Owner
 	// if msg.FromAddress.String() != moduleOwner {
 	// 	return types.ErrNotEnoughPermission(k.Codespace()).Result()

@@ -3,6 +3,8 @@ package keeper
 import (
 	"testing"
 
+	"github.com/pokt-network/pocket-core/crypto"
+	sdk "github.com/pokt-network/pocket-core/types"
 	"github.com/pokt-network/pocket-core/x/bridgepool/types"
 	"github.com/stretchr/testify/assert"
 )
@@ -19,6 +21,9 @@ func TestInitGenesis(t *testing.T) {
 	context, _, keeper, _ := createTestInput(t, true)
 
 	genesis := types.DefaultGenesisState()
+	genesis.Params = types.Params{
+		Owner: sdk.Address(crypto.GenerateEd25519PrivKey().PublicKey().Address()).String(),
+	}
 	genesis.AllowedTargets = []types.AllowedTarget{{
 		"upokt", "137", "0x7B848510E92B2f2F7ea06d46e7B370198F7369Bc",
 	}}
@@ -38,6 +43,8 @@ func TestInitGenesis(t *testing.T) {
 	genesis.UsedWithdrawMessages = [][]byte{[]byte("example")}
 	keeper.InitGenesis(context, genesis)
 
+	params := keeper.GetParams(context)
+	assert.Equal(t, params, genesis.Params)
 	signers := keeper.GetAllSigners(context)
 	assert.Equal(t, signers, genesis.Signers)
 	liquidities := keeper.GetAllLiquidities(context)

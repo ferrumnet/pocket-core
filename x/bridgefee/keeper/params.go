@@ -12,7 +12,9 @@ func ParamKeyTable() sdk.KeyTable {
 
 // Get all parameteras as types.Params
 func (k Keeper) GetParams(ctx sdk.Ctx) types.Params {
-	return types.Params{}
+	params := types.Params{}
+	k.Paramstore.GetParamSet(ctx, &params)
+	return params
 }
 
 // set the params

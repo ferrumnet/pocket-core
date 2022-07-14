@@ -46,6 +46,7 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 }
 
 func handleMsgAddSigner(ctx sdk.Ctx, msg types.MsgAddSigner, k keeper.Keeper) sdk.Result {
+	// TODO: enable this when goes live
 	// moduleOwner := k.GetParams(ctx).Owner
 	// if msg.FromAddress.String() != moduleOwner {
 	// 	return types.ErrNotEnoughPermission(k.Codespace()).Result()
@@ -66,6 +67,7 @@ func handleMsgAddSigner(ctx sdk.Ctx, msg types.MsgAddSigner, k keeper.Keeper) sd
 }
 
 func handleMsgRemoveSigner(ctx sdk.Ctx, msg types.MsgRemoveSigner, k keeper.Keeper) sdk.Result {
+	// TODO: enable this when goes live
 	// moduleOwner := k.GetParams(ctx).Owner
 	// if msg.FromAddress.String() != moduleOwner {
 	// 	return types.ErrNotEnoughPermission(k.Codespace()).Result()
@@ -86,6 +88,7 @@ func handleMsgRemoveSigner(ctx sdk.Ctx, msg types.MsgRemoveSigner, k keeper.Keep
 }
 
 func handleMsgSetFee(ctx sdk.Ctx, msg types.MsgSetFee, k keeper.Keeper) sdk.Result {
+	// TODO: enable this when goes live
 	// moduleOwner := k.GetParams(ctx).Owner
 	// if msg.FromAddress.String() != moduleOwner {
 	// 	return types.ErrNotEnoughPermission(k.Codespace()).Result()
@@ -107,6 +110,7 @@ func handleMsgSetFee(ctx sdk.Ctx, msg types.MsgSetFee, k keeper.Keeper) sdk.Resu
 }
 
 func handleMsgAllowTarget(ctx sdk.Ctx, msg types.MsgAllowTarget, k keeper.Keeper) sdk.Result {
+	// TODO: enable this when goes live
 	// moduleOwner := k.GetParams(ctx).Owner
 	// if msg.FromAddress.String() != moduleOwner {
 	// 	return types.ErrNotEnoughPermission(k.Codespace()).Result()
@@ -129,6 +133,7 @@ func handleMsgAllowTarget(ctx sdk.Ctx, msg types.MsgAllowTarget, k keeper.Keeper
 }
 
 func handleMsgDisallowTarget(ctx sdk.Ctx, msg types.MsgDisallowTarget, k keeper.Keeper) sdk.Result {
+	// TODO: enable this when goes live
 	// moduleOwner := k.GetParams(ctx).Owner
 	// if msg.FromAddress.String() != moduleOwner {
 	// 	return types.ErrNotEnoughPermission(k.Codespace()).Result()
