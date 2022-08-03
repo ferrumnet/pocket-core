@@ -47,3 +47,6 @@ pocket_core bridgefee set-global-target-infos 169869f67cd3f78a722fb4795b69949fb4
 pocket_core query bridgefee-params
 pocket_core query all-token-infos
 pocket_core query all-token-target-infos
+
+pocket_core bridgepool withdraw-signed a9cb5f27e7a4b2be3045439f151d3e68108cd65c upokt a9cb5f27e7a4b2be3045439f151d3e68108cd65c 1000000upokt 10000 testnet
+pocket_core bridgepool swap a9cb5f27e7a4b2be3045439f151d3e68108cd65c upokt 10000000 polygon a9cb5f27e7a4b2be3045439f151d3e68108cd65c 169869f67cd3f78a722fb4795b69949fb4bc9084 10000 testnet

@@ -43,28 +43,6 @@ message Params {
   string owner = 1;
 }
 
-message MsgAddAllowedActor {
-  option (gogoproto.messagename) = true;
-  option (gogoproto.goproto_getters) = false;
-
-  bytes fromAddress = 1 [
-    (gogoproto.jsontag) = "fromAddress",
-    (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
-  ];
-  string actor = 2;
-}
-
-message MsgRemoveAllowedActor {
-  option (gogoproto.messagename) = true;
-  option (gogoproto.goproto_getters) = false;
-
-  bytes fromAddress = 1 [
-    (gogoproto.jsontag) = "fromAddress",
-    (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
-  ];
-  string actor = 2;
-}
-
 message MsgSetTokenInfo {
   option (gogoproto.messagename) = true;
   option (gogoproto.goproto_getters) = false;

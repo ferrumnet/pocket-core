@@ -39,12 +39,6 @@ message Liquidity {
   uint64 amount = 3;
 }
 
-message TokenTarget {
-    string token = 1;
-    string chainId = 2;
-    string targetToken = 3;
-}
-
 message WithdrawSignMessage {
   string chainId = 1;
   string payee = 2;
