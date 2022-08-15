@@ -778,8 +778,13 @@ func Swap(fromAddr, token string, amount uint64, targetNetwork, targetToken, tar
 	}, nil
 }
 
-func WithdrawSigned(fromAddr, token, payee string, amount sdk.Coin, passphrase, chainID string, fees int64) (*rpc.SendRawTxParams, error) {
+func WithdrawSigned(fromAddr, payee string, amount sdk.Coin, salt, signature string, passphrase, chainID string, fees int64) (*rpc.SendRawTxParams, error) {
 	fa, err := sdk.AddressFromHex(fromAddr)
+	if err != nil {
+		return nil, err
+	}
+
+	signatureBytes, err := hex.DecodeString(signature)
 	if err != nil {
 		return nil, err
 	}
@@ -789,8 +794,8 @@ func WithdrawSigned(fromAddr, token, payee string, amount sdk.Coin, passphrase, 
 		FromAddress: fa,
 		Payee:       payee,
 		Amount:      amount,
-		Salt:        "",
-		Signature:   []byte{},
+		Salt:        salt,
+		Signature:   signatureBytes,
 	}
 	kb, err := app.GetKeybase()
 	if err != nil {
