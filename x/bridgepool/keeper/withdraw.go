@@ -71,10 +71,9 @@ func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, payee string, amount sd
 		return types.ErrUnexpectedError(k.codespace, err)
 	}
 
-	// TODO: enable this when goes live
-	// if !k.IsSigner(ctx, signer.String()) {
-	// 	return types.ErrInvalidSigner(k.codespace)
-	// }
+	if !k.IsSigner(ctx, signer.String()) {
+		return types.ErrInvalidSigner(k.codespace)
+	}
 
 	// avoid using same signature and salt again
 	if k.IsUsedMessage(ctx, messageBytes) {

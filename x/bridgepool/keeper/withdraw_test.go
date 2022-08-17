@@ -66,7 +66,7 @@ func TestWithdrawSigned(t *testing.T) {
 			amount:    sdk.NewInt64Coin("upokt", 100000),
 			salt:      "74b82d4c386d401a708f401b5f1b831cb7c34adc2f02f39e60a4d5d220d66303",
 			signature: "fd41b43ee89d28652b34f0e5c769753ba3b4f0cb6b85bc63f29ba6680cedbf89688d66145b5326c1afb811117a196f0f14b73989b062dde980ce13cd06f1ad801b",
-			signer:    "0x7B848510E92B2f2F7ea06d46e7B370198F7369Bc",
+			signer:    "0x4ea546a2c0623d0224f242EC7E5d8Db5f68F47d9",
 			feeTarget: addr1,
 			errors:    false,
 		},
@@ -78,7 +78,7 @@ func TestWithdrawSigned(t *testing.T) {
 			amount:    sdk.NewInt64Coin("upokt", 100000),
 			salt:      "74b82d4c386d401a708f401b5f1b831cb7c34adc2f02f39e60a4d5d220d66303",
 			signature: "fd41b43ee89d28652b34f0e5c769753ba3b4f0cb6b85bc63f29ba6680cedbf89688d66145b5326c1afb811117a196f0f14b73989b062dde980ce13cd06f1ad801b",
-			signer:    "0x77777777E92B2f2F7ea06d46e7B370198F7369Bc",
+			signer:    "0x4ea546a2c0623d0224f242EC7E5d8Db5f68F47d9",
 			feeTarget: sdk.Address{},
 			errors:    false,
 		},
@@ -90,7 +90,7 @@ func TestWithdrawSigned(t *testing.T) {
 			amount:    sdk.NewInt64Coin("upokt", 100000),
 			salt:      "74b82d4c386d401a708f401b5f1b831cb7c34adc2f02f39e60a4d5d220d66303",
 			signature: "fd41b43ee89d28652b34f0e5c769753ba3b4f0cb6b85bc63f29ba6680cedbf89688d66145b5326c1afb811117a196f0f14b73989b062dde980ce13cd06f1ad801b",
-			signer:    "0x77777777E92B2f2F7ea06d46e7B370198F7369Bc",
+			signer:    "0x4ea546a2c0623d0224f242EC7E5d8Db5f68F47d9",
 			feeTarget: addr1,
 			errors:    false,
 		},
@@ -102,9 +102,9 @@ func TestWithdrawSigned(t *testing.T) {
 			amount:    sdk.NewInt64Coin("upokt", 100000),
 			salt:      "74b82d4c386d401a708f401b5f1b831cb7c34adc2f02f39e60a4d5d220d66303",
 			signature: "fd41b43ee89d28652b34f0e5c769753ba3b4f0cb6b85bc63f29ba6680cedbf89688d66145b5326c1afb811117a196f0f14b73989b062dde980ce13cd06f1ad801b",
-			signer:    "0x77777777E92B2f2F7ea06d46e7B370198F7369Bc",
+			signer:    "0xeeee46a2c0623d0224f242EC7E5d8Db5f68F47d9",
 			feeTarget: addr1,
-			errors:    false, // TODO: should be true when signer checker is set
+			errors:    true,
 		},
 		{
 			name:      "Not enough balance on module case",
@@ -114,7 +114,7 @@ func TestWithdrawSigned(t *testing.T) {
 			amount:    sdk.NewInt64Coin("upokt", 10000000000000),
 			salt:      "74b82d4c386d401a708f401b5f1b831cb7c34adc2f02f39e60a4d5d220d66303",
 			signature: "fd41b43ee89d28652b34f0e5c769753ba3b4f0cb6b85bc63f29ba6680cedbf89688d66145b5326c1afb811117a196f0f14b73989b062dde980ce13cd06f1ad801b",
-			signer:    "0x7B848510E92B2f2F7ea06d46e7B370198F7369Bc",
+			signer:    "0x4ea546a2c0623d0224f242EC7E5d8Db5f68F47d9",
 			feeTarget: addr1,
 			errors:    true,
 		},
@@ -124,6 +124,8 @@ func TestWithdrawSigned(t *testing.T) {
 			context, accs, keeper, feeKeeper := createTestInput(t, true)
 			_, _, _ = context, accs, keeper
 			err := keeper.SetFeeRate(context, tc.amount.Denom, tc.feeRate)
+			assert.Nil(t, err)
+			err = keeper.SetSigner(context, tc.signer)
 			assert.Nil(t, err)
 			err = keeper.AccountKeeper.MintCoins(context, apptypes.StakedPoolName, sdk.Coins{tc.moduleBal})
 			assert.Nil(t, err)
