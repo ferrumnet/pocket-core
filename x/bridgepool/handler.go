@@ -45,7 +45,55 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 	}
 }
 
+func handleMsgAddSigner(ctx sdk.Ctx, msg types.MsgAddSigner, k keeper.Keeper) sdk.Result {
+	// TODO: enable this when goes live
+	// moduleOwner := k.GetParams(ctx).Owner
+	// if msg.FromAddress.String() != moduleOwner {
+	// 	return types.ErrNotEnoughPermission(k.Codespace()).Result()
+	// }
+
+	err := k.SetSigner(ctx, msg.Signer)
+	if err != nil {
+		return err.Result()
+	}
+
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventTypeSetSigner,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Signer),
+		)},
+	)
+	return sdk.Result{Events: ctx.EventManager().Events()}
+}
+
+func handleMsgRemoveSigner(ctx sdk.Ctx, msg types.MsgRemoveSigner, k keeper.Keeper) sdk.Result {
+	// TODO: enable this when goes live
+	// moduleOwner := k.GetParams(ctx).Owner
+	// if msg.FromAddress.String() != moduleOwner {
+	// 	return types.ErrNotEnoughPermission(k.Codespace()).Result()
+	// }
+
+	err := k.DeleteSigner(ctx, msg.Signer)
+	if err != nil {
+		return err.Result()
+	}
+
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			types.EventTypeRemoveSigner,
+			sdk.NewAttribute(types.AttributeKeySigner, msg.Signer),
+		)},
+	)
+	return sdk.Result{Events: ctx.EventManager().Events()}
+}
+
 func handleMsgSetFee(ctx sdk.Ctx, msg types.MsgSetFee, k keeper.Keeper) sdk.Result {
+	// TODO: enable this when goes live
+	// moduleOwner := k.GetParams(ctx).Owner
+	// if msg.FromAddress.String() != moduleOwner {
+	// 	return types.ErrNotEnoughPermission(k.Codespace()).Result()
+	// }
+
 	err := k.SetFeeRate(ctx, msg.Token, msg.Fee10000)
 	if err != nil {
 		return err.Result()
@@ -62,26 +110,41 @@ func handleMsgSetFee(ctx sdk.Ctx, msg types.MsgSetFee, k keeper.Keeper) sdk.Resu
 }
 
 func handleMsgAllowTarget(ctx sdk.Ctx, msg types.MsgAllowTarget, k keeper.Keeper) sdk.Result {
-	k.AllowTarget(ctx, msg.Token, msg.ChainId, msg.TargetToken)
+	// TODO: enable this when goes live
+	// moduleOwner := k.GetParams(ctx).Owner
+	// if msg.FromAddress.String() != moduleOwner {
+	// 	return types.ErrNotEnoughPermission(k.Codespace()).Result()
+	// }
+
+	err := k.AllowTarget(ctx, msg.Token, msg.ChainId, msg.TargetToken)
+	if err != nil {
+		return err.Result()
+	}
 
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTypeAllowTarget,
 			sdk.NewAttribute(types.AttributeKeyToken, msg.Token),
-			sdk.NewAttribute(types.AttributeKeyChainId, fmt.Sprintf("%d", msg.ChainId)),
-			sdk.NewAttribute(types.AttributeKeyTargetToken, fmt.Sprintf("%d", msg.TargetToken)),
+			sdk.NewAttribute(types.AttributeKeyChainId, msg.ChainId),
+			sdk.NewAttribute(types.AttributeKeyTargetToken, msg.TargetToken),
 		)},
 	)
 	return sdk.Result{Events: ctx.EventManager().Events()}
 }
 
 func handleMsgDisallowTarget(ctx sdk.Ctx, msg types.MsgDisallowTarget, k keeper.Keeper) sdk.Result {
+	// TODO: enable this when goes live
+	// moduleOwner := k.GetParams(ctx).Owner
+	// if msg.FromAddress.String() != moduleOwner {
+	// 	return types.ErrNotEnoughPermission(k.Codespace()).Result()
+	// }
+
 	k.DisallowTarget(ctx, msg.Token, msg.ChainId)
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTypeDisallowTarget,
 			sdk.NewAttribute(types.AttributeKeyToken, msg.Token),
-			sdk.NewAttribute(types.AttributeKeyChainId, fmt.Sprintf("%d", msg.ChainId)),
+			sdk.NewAttribute(types.AttributeKeyChainId, msg.ChainId),
 		)},
 	)
 	return sdk.Result{Events: ctx.EventManager().Events()}
@@ -104,7 +167,7 @@ func handleMsgRemoveLiquidity(ctx sdk.Ctx, msg types.MsgRemoveLiquidity, k keepe
 }
 
 func handleMsgSwap(ctx sdk.Ctx, msg types.MsgSwap, k keeper.Keeper) sdk.Result {
-	err := k.Swap(ctx, msg.FromAddress, msg.Token, msg.Amount, msg.TargetNetwork, msg.TargetToken, msg.TargetAddress)
+	err := k.Swap(ctx, msg.FromAddress, msg.Token, msg.Amount, msg.TargetChainId, msg.TargetToken, msg.TargetAddress)
 	if err != nil {
 		return err.Result()
 	}
@@ -112,31 +175,9 @@ func handleMsgSwap(ctx sdk.Ctx, msg types.MsgSwap, k keeper.Keeper) sdk.Result {
 }
 
 func handleMsgWithdrawSigned(ctx sdk.Ctx, msg types.MsgWithdrawSigned, k keeper.Keeper) sdk.Result {
-	err := k.WithdrawSigned(ctx, msg.FromAddress.String(), msg.Token, msg.Payee, msg.Amount, msg.Salt, msg.Signature)
+	err := k.WithdrawSigned(ctx, msg.FromAddress.String(), msg.Payee, msg.Amount, msg.Salt, msg.Signature)
 	if err != nil {
 		return err.Result()
 	}
-	return sdk.Result{Events: ctx.EventManager().Events()}
-}
-
-func handleMsgAddSigner(ctx sdk.Ctx, msg types.MsgAddSigner, k keeper.Keeper) sdk.Result {
-	k.SetSigner(ctx, msg.Signer.String())
-	ctx.EventManager().EmitEvents(sdk.Events{
-		sdk.NewEvent(
-			types.EventTypeSetSigner,
-			sdk.NewAttribute(types.AttributeKeySigner, msg.Signer.String()),
-		)},
-	)
-	return sdk.Result{Events: ctx.EventManager().Events()}
-}
-
-func handleMsgRemoveSigner(ctx sdk.Ctx, msg types.MsgRemoveSigner, k keeper.Keeper) sdk.Result {
-	k.DeleteSigner(ctx, msg.Signer.String())
-	ctx.EventManager().EmitEvents(sdk.Events{
-		sdk.NewEvent(
-			types.EventTypeRemoveSigner,
-			sdk.NewAttribute(types.AttributeKeySigner, msg.Signer.String()),
-		)},
-	)
 	return sdk.Result{Events: ctx.EventManager().Events()}
 }

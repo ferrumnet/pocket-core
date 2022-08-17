@@ -14,7 +14,8 @@ message GenesisState {
   repeated string signers = 2 [ (gogoproto.nullable) = false ];
   repeated Liquidity liquidities = 3 [ (gogoproto.nullable) = false ];
   repeated FeeRate fees = 4 [ (gogoproto.nullable) = false ];
-  repeated AllowedTarget allowed_targets = 5 [ (gogoproto.nullable) = false ];
+  repeated AllowedTarget allowedTargets = 5 [ (gogoproto.nullable) = false ];
+  repeated bytes usedWithdrawMessages = 6;
 }
 
 message Params {
@@ -28,8 +29,8 @@ message FeeRate {
 
 message AllowedTarget {
   string token = 1;
-  uint64 chain_id = 2;
-  string target_token = 3;
+  string chainId = 2;
+  string targetToken = 3;
 }
 
 message Liquidity {
@@ -38,10 +39,11 @@ message Liquidity {
   uint64 amount = 3;
 }
 
-message TokenTarget {
-    string token = 1;
-    string chain_id = 2;
-    string target_token = 3;
+message WithdrawSignMessage {
+  string chainId = 1;
+  string payee = 2;
+  types.Coin amount = 3 [(gogoproto.nullable) = false];
+  string salt = 4;
 }
 
 message MsgSetFee {
@@ -49,7 +51,7 @@ message MsgSetFee {
   option (gogoproto.goproto_getters) = false;
 
   bytes fromAddress = 1 [
-    (gogoproto.jsontag) = "from_address",
+    (gogoproto.jsontag) = "fromAddress",
     (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
   ];
   string token = 2;
@@ -61,11 +63,11 @@ message MsgAllowTarget {
   option (gogoproto.goproto_getters) = false;
 
   bytes fromAddress = 1 [
-    (gogoproto.jsontag) = "from_address",
+    (gogoproto.jsontag) = "fromAddress",
     (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
   ];
   string token = 2;
-  uint64 chainId = 3;
+  string chainId = 3;
   string targetToken = 4;
 }
 
@@ -74,11 +76,11 @@ message MsgDisallowTarget {
   option (gogoproto.goproto_getters) = false;
 
   bytes fromAddress = 1 [
-    (gogoproto.jsontag) = "from_address",
+    (gogoproto.jsontag) = "fromAddress",
     (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
   ];
   string token = 2;
-  uint64 chainId = 3;
+  string chainId = 3;
 }
 
 message MsgAddLiquidity {
@@ -86,7 +88,7 @@ message MsgAddLiquidity {
   option (gogoproto.goproto_getters) = false;
 
   bytes fromAddress = 1 [
-    (gogoproto.jsontag) = "from_address",
+    (gogoproto.jsontag) = "fromAddress",
     (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
   ];
   string token = 2;
@@ -98,7 +100,7 @@ message MsgRemoveLiquidity {
   option (gogoproto.goproto_getters) = false;
 
   bytes fromAddress = 1 [
-    (gogoproto.jsontag) = "from_address",
+    (gogoproto.jsontag) = "fromAddress",
     (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
   ];
   string token = 2;
@@ -110,12 +112,12 @@ message MsgSwap {
   option (gogoproto.goproto_getters) = false;
 
   bytes fromAddress = 1 [
-    (gogoproto.jsontag) = "from_address",
+    (gogoproto.jsontag) = "fromAddress",
     (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
   ];
   string token = 2;
   uint64 amount = 3;
-  string targetNetwork = 4;
+  string targetChainId = 4;
   string targetToken = 5;
   string targetAddress = 6;
 }
@@ -125,34 +127,27 @@ message MsgWithdrawSigned {
   option (gogoproto.goproto_getters) = false;
 
   bytes fromAddress = 1 [
-    (gogoproto.jsontag) = "from_address",
+    (gogoproto.jsontag) = "fromAddress",
     (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
   ];
-  string token = 2;
-  string payee = 3;
-  uint64 amount = 4;
-  bytes salt = 5;
-  bytes signature = 6;
+  string payee = 2;
+  types.Coin amount = 3 [ (gogoproto.nullable) = false ];
+  string salt = 4;
+  bytes signature = 5;
 }
 
 message MsgAddSigner {
   bytes fromAddress = 1 [
-    (gogoproto.jsontag) = "from_address",
+    (gogoproto.jsontag) = "fromAddress",
     (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
   ];
-  bytes signer = 2 [
-    (gogoproto.jsontag) = "signer",
-    (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
-  ];
+  string signer = 2;
 }
 
 message MsgRemoveSigner {
   bytes fromAddress = 1 [
-    (gogoproto.jsontag) = "from_address",
+    (gogoproto.jsontag) = "fromAddress",
     (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
   ];
-  bytes signer = 2 [
-    (gogoproto.jsontag) = "signer",
-    (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
-  ];
+  string signer = 2;
 }

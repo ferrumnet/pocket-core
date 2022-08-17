@@ -18,7 +18,7 @@ const (
 	AttributeKeyAmount        = "amount"
 	AttributeKeyFee           = "fee"
 	AttributeKeyFrom          = "from"
-	AttributeKeyTargetNetwork = "target_network"
+	AttributeKeyTargetChainId = "target_chain_id"
 	AttributeKeyTargetToken   = "target_token"
 	AttributeKeyTargetAddress = "target_address"
 	AttributeKeyActor         = "actor"

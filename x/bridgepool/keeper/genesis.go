@@ -25,17 +25,20 @@ func (k Keeper) InitGenesis(ctx sdk.Ctx, data types.GenesisState) []abci.Validat
 	for _, target := range data.AllowedTargets {
 		k.AllowTarget(ctx, target.Token, target.ChainId, target.TargetToken)
 	}
+	for _, message := range data.UsedWithdrawMessages {
+		k.SetUsedMessage(ctx, message)
+	}
 	return []abci.ValidatorUpdate{}
 }
 
 // ExportGenesis returns a GenesisState for a given context and keeper
 func (k Keeper) ExportGenesis(ctx sdk.Ctx) types.GenesisState {
-
 	return types.NewGenesisState(
 		k.GetParams(ctx),
 		k.GetAllSigners(ctx),
 		k.GetAllLiquidities(ctx),
 		k.GetAllFeeRates(ctx),
 		k.GetAllAllowedTargets(ctx),
+		k.GetAllUsedMessages(ctx),
 	)
 }

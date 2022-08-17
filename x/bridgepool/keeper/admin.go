@@ -3,6 +3,7 @@ package keeper
 import (
 	"bytes"
 
+	"github.com/ethereum/go-ethereum/common"
 	sdk "github.com/pokt-network/pocket-core/types"
 	"github.com/pokt-network/pocket-core/x/bridgepool/types"
 )
@@ -55,7 +56,12 @@ func (k Keeper) GetAllFeeRates(ctx sdk.Ctx) []types.FeeRate {
 	return feeRates
 }
 
-func (k Keeper) AllowTarget(ctx sdk.Ctx, token string, chainId uint64, targetToken string) {
+func (k Keeper) AllowTarget(ctx sdk.Ctx, token string, chainId string, targetToken string) sdk.Error {
+	// check ethereum addresses
+	if !common.IsHexAddress(targetToken) {
+		return types.ErrInvalidEthereumAddress(k.codespace)
+	}
+
 	store := ctx.KVStore(k.storeKey)
 	info := types.AllowedTarget{
 		Token:       token,
@@ -64,17 +70,18 @@ func (k Keeper) AllowTarget(ctx sdk.Ctx, token string, chainId uint64, targetTok
 	}
 	bz := k.Cdc.MustMarshalJSON(&info)
 	store.Set(types.AllowedTargetKey(token, chainId), bz)
+	return nil
 }
 
-func (k Keeper) DisallowTarget(ctx sdk.Ctx, token string, chainId uint64) {
+func (k Keeper) DisallowTarget(ctx sdk.Ctx, token string, chainId string) {
 	store := ctx.KVStore(k.storeKey)
 	store.Delete(types.AllowedTargetKey(token, chainId))
 }
 
-func (k Keeper) GetAllowedTarget(ctx sdk.Ctx, token string, chainId uint64) string {
+func (k Keeper) GetAllowedTarget(ctx sdk.Ctx, token string, chainId string) string {
 	store := ctx.KVStore(k.storeKey)
 	bz, err := store.Get(types.AllowedTargetKey(token, chainId))
-	if err != nil {
+	if err != nil || bz == nil {
 		return ""
 	}
 	info := types.AllowedTarget{}
@@ -96,14 +103,26 @@ func (k Keeper) GetAllAllowedTargets(ctx sdk.Ctx) []types.AllowedTarget {
 	return allowedTargets
 }
 
-func (k Keeper) SetSigner(ctx sdk.Ctx, signer string) {
+func (k Keeper) SetSigner(ctx sdk.Ctx, signer string) sdk.Error {
+	// check ethereum addresses
+	if !common.IsHexAddress(signer) {
+		return types.ErrInvalidEthereumAddress(k.codespace)
+	}
+
 	store := ctx.KVStore(k.storeKey)
 	store.Set(types.SignerKey(signer), []byte(signer))
+	return nil
 }
 
-func (k Keeper) DeleteSigner(ctx sdk.Ctx, signer string) {
+func (k Keeper) DeleteSigner(ctx sdk.Ctx, signer string) sdk.Error {
+	// check ethereum addresses
+	if !common.IsHexAddress(signer) {
+		return types.ErrInvalidEthereumAddress(k.codespace)
+	}
+
 	store := ctx.KVStore(k.storeKey)
 	store.Delete(types.SignerKey(signer))
+	return nil
 }
 
 func (k Keeper) IsSigner(ctx sdk.Ctx, signer string) bool {

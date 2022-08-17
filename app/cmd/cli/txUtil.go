@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strconv"
+	"strings"
 
 	"github.com/pokt-network/pocket-core/app"
 	"github.com/pokt-network/pocket-core/app/cmd/rpc"
@@ -20,6 +22,7 @@ import (
 	sdk "github.com/pokt-network/pocket-core/types"
 	"github.com/pokt-network/pocket-core/x/auth"
 	authTypes "github.com/pokt-network/pocket-core/x/auth/types"
+	bridgefeeTypes "github.com/pokt-network/pocket-core/x/bridgefee/types"
 	bridgepoolTypes "github.com/pokt-network/pocket-core/x/bridgepool/types"
 	govTypes "github.com/pokt-network/pocket-core/x/gov/types"
 )
@@ -451,6 +454,146 @@ func Upgrade(fromAddr string, upgrade govTypes.Upgrade, passphrase, chainID stri
 	}, nil
 }
 
+func SetTokenInfo(fromAddr, token string, bufferSize uint64, tokenSpecificConfig uint32, passphrase, chainID string, fees int64) (*rpc.SendRawTxParams, error) {
+	fa, err := sdk.AddressFromHex(fromAddr)
+	if err != nil {
+		return nil, err
+	}
+
+	var msg sdk.ProtoMsg
+	msg = &bridgefeeTypes.MsgSetTokenInfo{
+		FromAddress: fa,
+		Info: bridgefeeTypes.TokenInfo{
+			Token:               token,
+			BufferSize:          bufferSize,
+			TokenSpecificConfig: tokenSpecificConfig,
+		},
+	}
+	kb, err := app.GetKeybase()
+	if err != nil {
+		return nil, err
+	}
+	err = msg.ValidateBasic()
+	if err != nil {
+		return nil, err
+	}
+	txBz, err := newTxBz(app.Codec(), msg, fa, chainID, kb, passphrase, fees, "", false)
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.SendRawTxParams{
+		Addr:        fromAddr,
+		RawHexBytes: hex.EncodeToString(txBz),
+	}, nil
+}
+
+func SetTokenTargetInfos(fromAddr, token string, targetsStr, weightsStr, targetTypesStr string, passphrase, chainID string, fees int64) (*rpc.SendRawTxParams, error) {
+	fa, err := sdk.AddressFromHex(fromAddr)
+	if err != nil {
+		return nil, err
+	}
+
+	var msg sdk.ProtoMsg
+
+	targets := []bridgefeeTypes.TargetInfo{}
+	targetAddrs := strings.Split(targetsStr, ",")
+	weights := strings.Split(weightsStr, ",")
+	targetTypes := strings.Split(targetTypesStr, ",")
+
+	if len(targetAddrs) != len(weights) || len(weights) != len(targetTypes) {
+		return nil, fmt.Errorf("length mismatch for targetAddrs, weights, targetTypes")
+	}
+
+	for index, targetAddr := range targetAddrs {
+		ttype := bridgefeeTypes.TargetType_value[targetTypes[index]]
+		weight, err := strconv.Atoi(weights[index])
+		if err != nil {
+			return nil, err
+		}
+
+		targets = append(targets, bridgefeeTypes.TargetInfo{
+			Target: targetAddr,
+			TType:  bridgefeeTypes.TargetType(ttype),
+			Weight: uint64(weight),
+		})
+	}
+
+	msg = &bridgefeeTypes.MsgSetTokenTargetInfos{
+		FromAddress: fa,
+		Token:       token,
+		Targets:     targets,
+	}
+	kb, err := app.GetKeybase()
+	if err != nil {
+		return nil, err
+	}
+	err = msg.ValidateBasic()
+	if err != nil {
+		return nil, err
+	}
+	txBz, err := newTxBz(app.Codec(), msg, fa, chainID, kb, passphrase, fees, "", false)
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.SendRawTxParams{
+		Addr:        fromAddr,
+		RawHexBytes: hex.EncodeToString(txBz),
+	}, nil
+}
+
+func SetGlobalTargetInfos(fromAddr string, targetsStr, weightsStr, targetTypesStr string, passphrase, chainID string, fees int64) (*rpc.SendRawTxParams, error) {
+	fa, err := sdk.AddressFromHex(fromAddr)
+	if err != nil {
+		return nil, err
+	}
+
+	var msg sdk.ProtoMsg
+
+	targets := []bridgefeeTypes.TargetInfo{}
+	targetAddrs := strings.Split(targetsStr, ",")
+	weights := strings.Split(weightsStr, ",")
+	targetTypes := strings.Split(targetTypesStr, ",")
+
+	if len(targetAddrs) != len(weights) || len(weights) != len(targetTypes) {
+		return nil, fmt.Errorf("length mismatch for targetAddrs, weights, targetTypes")
+	}
+
+	for index, targetAddr := range targetAddrs {
+		ttype := bridgefeeTypes.TargetType_value[targetTypes[index]]
+		weight, err := strconv.Atoi(weights[index])
+		if err != nil {
+			return nil, err
+		}
+
+		targets = append(targets, bridgefeeTypes.TargetInfo{
+			Target: targetAddr,
+			TType:  bridgefeeTypes.TargetType(ttype),
+			Weight: uint64(weight),
+		})
+	}
+
+	msg = &bridgefeeTypes.MsgSetGlobalTargetInfos{
+		FromAddress: fa,
+		Targets:     targets,
+	}
+	kb, err := app.GetKeybase()
+	if err != nil {
+		return nil, err
+	}
+	err = msg.ValidateBasic()
+	if err != nil {
+		return nil, err
+	}
+	txBz, err := newTxBz(app.Codec(), msg, fa, chainID, kb, passphrase, fees, "", false)
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.SendRawTxParams{
+		Addr:        fromAddr,
+		RawHexBytes: hex.EncodeToString(txBz),
+	}, nil
+}
+
 func SetFee(fromAddr, token string, fee uint64, passphrase, chainID string, fees int64) (*rpc.SendRawTxParams, error) {
 	fa, err := sdk.AddressFromHex(fromAddr)
 	if err != nil {
@@ -481,7 +624,7 @@ func SetFee(fromAddr, token string, fee uint64, passphrase, chainID string, fees
 	}, nil
 }
 
-func AllowTarget(fromAddr, token string, targetChainId uint64, targetToken string, passphrase, chainID string, fees int64) (*rpc.SendRawTxParams, error) {
+func AllowTarget(fromAddr, token string, targetChainId string, targetToken string, passphrase, chainID string, fees int64) (*rpc.SendRawTxParams, error) {
 	fa, err := sdk.AddressFromHex(fromAddr)
 	if err != nil {
 		return nil, err
@@ -512,7 +655,7 @@ func AllowTarget(fromAddr, token string, targetChainId uint64, targetToken strin
 	}, nil
 }
 
-func DisallowTarget(fromAddr, token string, targetChainId uint64, passphrase, chainID string, fees int64) (*rpc.SendRawTxParams, error) {
+func DisallowTarget(fromAddr, token, targetChainId, passphrase, chainID string, fees int64) (*rpc.SendRawTxParams, error) {
 	fa, err := sdk.AddressFromHex(fromAddr)
 	if err != nil {
 		return nil, err
@@ -613,7 +756,7 @@ func Swap(fromAddr, token string, amount uint64, targetNetwork, targetToken, tar
 		FromAddress:   fa,
 		Token:         token,
 		Amount:        amount,
-		TargetNetwork: targetNetwork,
+		TargetChainId: targetNetwork,
 		TargetToken:   targetToken,
 		TargetAddress: targetAddress,
 	}
@@ -635,8 +778,13 @@ func Swap(fromAddr, token string, amount uint64, targetNetwork, targetToken, tar
 	}, nil
 }
 
-func WithdrawSigned(fromAddr, token, payee string, amount uint64, passphrase, chainID string, fees int64) (*rpc.SendRawTxParams, error) {
+func WithdrawSigned(fromAddr, payee string, amount sdk.Coin, salt, signature string, passphrase, chainID string, fees int64) (*rpc.SendRawTxParams, error) {
 	fa, err := sdk.AddressFromHex(fromAddr)
+	if err != nil {
+		return nil, err
+	}
+
+	signatureBytes, err := hex.DecodeString(signature)
 	if err != nil {
 		return nil, err
 	}
@@ -644,11 +792,10 @@ func WithdrawSigned(fromAddr, token, payee string, amount uint64, passphrase, ch
 	var msg sdk.ProtoMsg
 	msg = &bridgepoolTypes.MsgWithdrawSigned{
 		FromAddress: fa,
-		Token:       token,
 		Payee:       payee,
 		Amount:      amount,
-		Salt:        []byte{},
-		Signature:   []byte{},
+		Salt:        salt,
+		Signature:   signatureBytes,
 	}
 	kb, err := app.GetKeybase()
 	if err != nil {
@@ -674,15 +821,10 @@ func AddSigner(fromAddr, signer string, passphrase, chainID string, fees int64) 
 		return nil, err
 	}
 
-	sa, err := sdk.AddressFromHex(fromAddr)
-	if err != nil {
-		return nil, err
-	}
-
 	var msg sdk.ProtoMsg
 	msg = &bridgepoolTypes.MsgAddSigner{
 		FromAddress: fa,
-		Signer:      sa,
+		Signer:      signer,
 	}
 	kb, err := app.GetKeybase()
 	if err != nil {
@@ -708,15 +850,10 @@ func RemoveSigner(fromAddr, signer string, passphrase, chainID string, fees int6
 		return nil, err
 	}
 
-	sa, err := sdk.AddressFromHex(fromAddr)
-	if err != nil {
-		return nil, err
-	}
-
 	var msg sdk.ProtoMsg
 	msg = &bridgepoolTypes.MsgRemoveSigner{
 		FromAddress: fa,
-		Signer:      sa,
+		Signer:      signer,
 	}
 	kb, err := app.GetKeybase()
 	if err != nil {

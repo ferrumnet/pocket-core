@@ -1428,3 +1428,5 @@ func NewValidChallengeProof(t *testing.T, privateKeys []crypto.PrivateKey) (chal
 	}
 	return proof
 }
+
+// TODO: add test for RPC commands

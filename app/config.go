@@ -27,6 +27,7 @@ import (
 	apps "github.com/pokt-network/pocket-core/x/apps"
 	appsTypes "github.com/pokt-network/pocket-core/x/apps/types"
 	"github.com/pokt-network/pocket-core/x/auth"
+	"github.com/pokt-network/pocket-core/x/bridgefee"
 	"github.com/pokt-network/pocket-core/x/bridgepool"
 	"github.com/pokt-network/pocket-core/x/gov"
 	"github.com/pokt-network/pocket-core/x/nodes"
@@ -720,6 +721,7 @@ func MakeCodec() {
 		nodes.AppModuleBasic{},
 		pocket.AppModuleBasic{},
 		bridgepool.AppModuleBasic{},
+		bridgefee.AppModuleBasic{},
 	).RegisterCodec(cdc)
 	// register the sdk types
 	sdk.RegisterCodec(cdc)

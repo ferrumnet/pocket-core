@@ -13,6 +13,8 @@ import (
 	appsKeeper "github.com/pokt-network/pocket-core/x/apps/keeper"
 	appsTypes "github.com/pokt-network/pocket-core/x/apps/types"
 	"github.com/pokt-network/pocket-core/x/auth"
+	bridgefeeKeeper "github.com/pokt-network/pocket-core/x/bridgefee/keeper"
+	bridgefeeTypes "github.com/pokt-network/pocket-core/x/bridgefee/types"
 	bridgepoolKeeper "github.com/pokt-network/pocket-core/x/bridgepool/keeper"
 	bridgepoolTypes "github.com/pokt-network/pocket-core/x/bridgepool/types"
 	"github.com/pokt-network/pocket-core/x/gov"
@@ -46,6 +48,7 @@ type PocketCoreApp struct {
 	govKeeper        govKeeper.Keeper
 	pocketKeeper     pocketKeeper.Keeper
 	bridgepoolKeeper bridgepoolKeeper.Keeper
+	bridgeFeeKeeper  bridgefeeKeeper.Keeper
 	// Module Manager
 	mm *module.Manager
 }
@@ -67,6 +70,7 @@ func NewPocketBaseApp(logger log.Logger, db db.DB, cache bool, iavlCacheSize int
 		gov.StoreKey,
 		pocketTypes.StoreKey,
 		bridgepoolTypes.StoreKey,
+		bridgefeeTypes.StoreKey,
 	)
 	// setup the transient store Keys
 	tkeys := sdk.NewTransientStoreKeys(
@@ -75,6 +79,7 @@ func NewPocketBaseApp(logger log.Logger, db db.DB, cache bool, iavlCacheSize int
 		pocketTypes.TStoreKey,
 		gov.TStoreKey,
 		bridgepoolTypes.TStoreKey,
+		bridgefeeTypes.TStoreKey,
 	)
 	// add params Keys too
 	// Create the application
@@ -220,6 +225,7 @@ var (
 		govTypes.DAOAccountName:    {auth.Burner, auth.Minter, auth.Staking},
 		nodesTypes.ModuleName:      {auth.Burner, auth.Minter, auth.Staking},
 		bridgepoolTypes.ModuleName: nil,
+		bridgefeeTypes.ModuleName:  {auth.Burner},
 		appsTypes.ModuleName:       nil,
 	}
 )

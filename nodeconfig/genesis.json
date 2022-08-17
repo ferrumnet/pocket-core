@@ -266,7 +266,16 @@
             "receipts": null,
             "claims": null
         },
-        "bridgepool": {}
+        "bridgepool": {
+            "params": {
+                "owner": "169869f67cd3f78a722fb4795b69949fb4bc9084"
+            }
+        },
+        "bridgefee": {
+            "params": {
+                "owner": "169869f67cd3f78a722fb4795b69949fb4bc9084"
+            }
+        }
     }
 }
 

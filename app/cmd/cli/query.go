@@ -46,6 +46,9 @@ func init() {
 	queryCmd.AddCommand(queryBridgePoolAllLiquidities)
 	queryCmd.AddCommand(queryBridgePoolAllFeeRates)
 	queryCmd.AddCommand(queryBridgePoolAllAllowedTargets)
+	queryCmd.AddCommand(queryBridgeFeeParams)
+	queryCmd.AddCommand(queryBridgeFeeAllTokenInfos)
+	queryCmd.AddCommand(queryBridgeFeeAllTokenTargetInfos)
 }
 
 var queryCmd = &cobra.Command{
@@ -1171,6 +1174,108 @@ var queryBridgePoolAllAllowedTargets = &cobra.Command{
 			return
 		}
 		res, err := QueryRPC(GetBridgePoolAllAllowedTargetsPath, j)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(res)
+	},
+}
+
+var queryBridgeFeeParams = &cobra.Command{
+	Use:   "bridgefee-params [<height>]",
+	Short: "Get module params for bridgefee",
+	Long:  `Get module params for bridgefee at <height>.`,
+	Args:  cobra.MinimumNArgs(0),
+	Run: func(cmd *cobra.Command, args []string) {
+		app.InitConfig(datadir, tmNode, persistentPeers, seeds, remoteCLIURL)
+		var err error
+		var height int
+		switch len(args) {
+		case 1:
+			height, err = strconv.Atoi(args[0])
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+		}
+		params := rpc.HeightParams{
+			Height: int64(height),
+		}
+		j, err := json.Marshal(params)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		res, err := QueryRPC(GetBridgeFeeParamsPath, j)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(res)
+	},
+}
+
+var queryBridgeFeeAllTokenInfos = &cobra.Command{
+	Use:   "all-token-infos [<height>]",
+	Short: "Get all token infos for bridgefee",
+	Long:  `Get all token infos for bridgefee at <height>.`,
+	Args:  cobra.MinimumNArgs(0),
+	Run: func(cmd *cobra.Command, args []string) {
+		app.InitConfig(datadir, tmNode, persistentPeers, seeds, remoteCLIURL)
+		var err error
+		var height int
+		switch len(args) {
+		case 1:
+			height, err = strconv.Atoi(args[0])
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+		}
+		params := rpc.HeightParams{
+			Height: int64(height),
+		}
+		j, err := json.Marshal(params)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		res, err := QueryRPC(GetBridgeFeeAllTokenInfosPath, j)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(res)
+	},
+}
+
+var queryBridgeFeeAllTokenTargetInfos = &cobra.Command{
+	Use:   "all-token-target-infos [<height>]",
+	Short: "Get all token target infos on bridge fee",
+	Long:  `Get all token target infos on bridge fee at <height>.`,
+	Args:  cobra.MinimumNArgs(0),
+	Run: func(cmd *cobra.Command, args []string) {
+		app.InitConfig(datadir, tmNode, persistentPeers, seeds, remoteCLIURL)
+		var err error
+		var height int
+		switch len(args) {
+		case 1:
+			height, err = strconv.Atoi(args[0])
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+		}
+		params := rpc.HeightParams{
+			Height: int64(height),
+		}
+		j, err := json.Marshal(params)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		res, err := QueryRPC(GetBridgeFeeAllTokenTargetInfosPath, j)
 		if err != nil {
 			fmt.Println(err)
 			return
