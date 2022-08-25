@@ -1,8 +1,6 @@
 package keeper
 
 import (
-	"bytes"
-
 	"github.com/ethereum/go-ethereum/common"
 	sdk "github.com/pokt-network/pocket-core/types"
 	"github.com/pokt-network/pocket-core/x/bridgepool/types"
@@ -10,10 +8,11 @@ import (
 
 func (k Keeper) SetFeeRate(ctx sdk.Ctx, token string, fee10000 uint64) sdk.Error {
 	store := ctx.KVStore(k.storeKey)
-	bz, err := k.Cdc.MarshalBinaryBare(fee10000, ctx.BlockHeight())
-	if err != nil {
-		panic(err)
+	info := types.FeeRate{
+		Token: token,
+		Rate:  fee10000,
 	}
+	bz := k.Cdc.MustMarshalJSON(&info)
 	store.Set(types.FeeRateKey(token), bz)
 	return nil
 }
@@ -27,12 +26,9 @@ func (k Keeper) GetFeeRate(ctx sdk.Ctx, token string) uint64 {
 	if bz == nil {
 		return 0
 	}
-	fee10000 := uint64(0)
-	err = k.Cdc.UnmarshalBinaryBare(bz, &fee10000, ctx.BlockHeight())
-	if err != nil {
-		return 0
-	}
-	return fee10000
+	info := types.FeeRate{}
+	k.Cdc.MustUnmarshalJSON(bz, &info)
+	return info.Rate
 }
 
 func (k Keeper) GetAllFeeRates(ctx sdk.Ctx) []types.FeeRate {
@@ -42,16 +38,9 @@ func (k Keeper) GetAllFeeRates(ctx sdk.Ctx) []types.FeeRate {
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		tokenBytes := bytes.TrimPrefix(iterator.Key(), types.FeeRateKeyPrefix)
-		fee10000 := uint64(0)
-		err := k.Cdc.UnmarshalBinaryBare(iterator.Value(), &fee10000, ctx.BlockHeight())
-		if err != nil {
-			panic(err)
-		}
-		feeRates = append(feeRates, types.FeeRate{
-			Token: string(tokenBytes),
-			Rate:  fee10000,
-		})
+		info := types.FeeRate{}
+		k.Cdc.MustUnmarshalJSON(iterator.Value(), &info)
+		feeRates = append(feeRates, info)
 	}
 	return feeRates
 }
