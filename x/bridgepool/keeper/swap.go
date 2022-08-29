@@ -8,6 +8,7 @@ import (
 	"github.com/pokt-network/pocket-core/x/bridgepool/types"
 )
 
+// Swap get deposits from an account and emit swap event for relay nodes to catch
 func (k Keeper) Swap(ctx sdk.Ctx, from sdk.Address, token string, amount uint64, targetChainId string,
 	targetToken string, targetAddress string) sdk.Error {
 	allowedTarget := k.GetAllowedTarget(ctx, token, targetChainId)
@@ -29,6 +30,7 @@ func (k Keeper) Swap(ctx sdk.Ctx, from sdk.Address, token string, amount uint64,
 		return err
 	}
 
+	// emit event for swap to be caught by relayers
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventBridgeSwap,

@@ -7,6 +7,7 @@ import (
 	"github.com/pokt-network/pocket-core/x/bridgepool/types"
 )
 
+// SetLiquidity sets liquidity amount put by an address
 func (k Keeper) SetLiquidity(ctx sdk.Ctx, token string, user sdk.Address, amount uint64) sdk.Error {
 	store := ctx.KVStore(k.storeKey)
 	liq := types.Liquidity{
@@ -19,6 +20,7 @@ func (k Keeper) SetLiquidity(ctx sdk.Ctx, token string, user sdk.Address, amount
 	return nil
 }
 
+// AddLiquidity deposit tokens from account and increases liquidity for an address
 func (k Keeper) AddLiquidity(ctx sdk.Ctx, token string, user sdk.Address, amount uint64) sdk.Error {
 	// send tokens from the user to module
 	err := k.AccountKeeper.SendCoinsFromAccountToModule(ctx, user, types.ModuleName, sdk.Coins{sdk.NewInt64Coin(token, int64(amount))})
@@ -26,6 +28,7 @@ func (k Keeper) AddLiquidity(ctx sdk.Ctx, token string, user sdk.Address, amount
 		return err
 	}
 
+	// emit an event for liquidity addition
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventBridgeLiquidityAdded,
@@ -35,10 +38,12 @@ func (k Keeper) AddLiquidity(ctx sdk.Ctx, token string, user sdk.Address, amount
 		),
 	})
 
+	// get previous liquidity and increase it
 	liquidity := k.GetLiquidity(ctx, token, user)
 	return k.SetLiquidity(ctx, token, user, liquidity+amount)
 }
 
+// RemoveLiquidity withdraw tokens from module and decreases liquidity for an address
 func (k Keeper) RemoveLiquidity(ctx sdk.Ctx, token string, user sdk.Address, amount uint64) sdk.Error {
 	// send tokens from the module to user for `amount`
 	err := k.AccountKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, user, sdk.Coins{sdk.NewInt64Coin(token, int64(amount))})
@@ -46,6 +51,7 @@ func (k Keeper) RemoveLiquidity(ctx sdk.Ctx, token string, user sdk.Address, amo
 		return err
 	}
 
+	// emit an event for liquidity removal
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventBridgeLiquidityRemoved,
@@ -55,6 +61,7 @@ func (k Keeper) RemoveLiquidity(ctx sdk.Ctx, token string, user sdk.Address, amo
 		),
 	})
 
+	// get previous liquidity and decrease it
 	liquidity := k.GetLiquidity(ctx, token, user)
 	if liquidity < amount {
 		return types.ErrNotEnoughLiquidity(k.codespace)
@@ -63,6 +70,7 @@ func (k Keeper) RemoveLiquidity(ctx sdk.Ctx, token string, user sdk.Address, amo
 	return k.SetLiquidity(ctx, token, user, liquidity-amount)
 }
 
+// GetLiquidity gets specific token liquidity put by an address
 func (k Keeper) GetLiquidity(ctx sdk.Ctx, token string, user sdk.Address) uint64 {
 	store := ctx.KVStore(k.storeKey)
 	bz, err := store.Get(types.LiquidityKey(token, user))
@@ -78,6 +86,7 @@ func (k Keeper) GetLiquidity(ctx sdk.Ctx, token string, user sdk.Address) uint64
 	return liq.Amount
 }
 
+// GetAllLiquidities gets all liquidities by address and token
 func (k Keeper) GetAllLiquidities(ctx sdk.Ctx) []types.Liquidity {
 	liquidities := []types.Liquidity{}
 	store := ctx.KVStore(k.storeKey)
