@@ -3,6 +3,7 @@ package app
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/tendermint/tendermint/libs/os"
 
 	bam "github.com/pokt-network/pocket-core/baseapp"
@@ -12,6 +13,10 @@ import (
 	appsKeeper "github.com/pokt-network/pocket-core/x/apps/keeper"
 	appsTypes "github.com/pokt-network/pocket-core/x/apps/types"
 	"github.com/pokt-network/pocket-core/x/auth"
+	bridgefeeKeeper "github.com/pokt-network/pocket-core/x/bridgefee/keeper"
+	bridgefeeTypes "github.com/pokt-network/pocket-core/x/bridgefee/types"
+	bridgepoolKeeper "github.com/pokt-network/pocket-core/x/bridgepool/keeper"
+	bridgepoolTypes "github.com/pokt-network/pocket-core/x/bridgepool/types"
 	"github.com/pokt-network/pocket-core/x/gov"
 	govKeeper "github.com/pokt-network/pocket-core/x/gov/keeper"
 	govTypes "github.com/pokt-network/pocket-core/x/gov/types"
@@ -37,11 +42,13 @@ type PocketCoreApp struct {
 	Keys  map[string]*sdk.KVStoreKey
 	Tkeys map[string]*sdk.TransientStoreKey
 	// Keepers for each module
-	accountKeeper auth.Keeper
-	appsKeeper    appsKeeper.Keeper
-	nodesKeeper   nodesKeeper.Keeper
-	govKeeper     govKeeper.Keeper
-	pocketKeeper  pocketKeeper.Keeper
+	accountKeeper    auth.Keeper
+	appsKeeper       appsKeeper.Keeper
+	nodesKeeper      nodesKeeper.Keeper
+	govKeeper        govKeeper.Keeper
+	pocketKeeper     pocketKeeper.Keeper
+	bridgepoolKeeper bridgepoolKeeper.Keeper
+	bridgeFeeKeeper  bridgefeeKeeper.Keeper
 	// Module Manager
 	mm *module.Manager
 }
@@ -55,9 +62,25 @@ func NewPocketBaseApp(logger log.Logger, db db.DB, cache bool, iavlCacheSize int
 	// set version of the baseapp
 	bApp.SetAppVersion(AppVersion)
 	// setup the key value store Keys
-	k := sdk.NewKVStoreKeys(bam.MainStoreKey, auth.StoreKey, nodesTypes.StoreKey, appsTypes.StoreKey, gov.StoreKey, pocketTypes.StoreKey)
+	k := sdk.NewKVStoreKeys(
+		bam.MainStoreKey,
+		auth.StoreKey,
+		nodesTypes.StoreKey,
+		appsTypes.StoreKey,
+		gov.StoreKey,
+		pocketTypes.StoreKey,
+		bridgepoolTypes.StoreKey,
+		bridgefeeTypes.StoreKey,
+	)
 	// setup the transient store Keys
-	tkeys := sdk.NewTransientStoreKeys(nodesTypes.TStoreKey, appsTypes.TStoreKey, pocketTypes.TStoreKey, gov.TStoreKey)
+	tkeys := sdk.NewTransientStoreKeys(
+		nodesTypes.TStoreKey,
+		appsTypes.TStoreKey,
+		pocketTypes.TStoreKey,
+		gov.TStoreKey,
+		bridgepoolTypes.TStoreKey,
+		bridgefeeTypes.TStoreKey,
+	)
 	// add params Keys too
 	// Create the application
 	return &PocketCoreApp{
@@ -196,12 +219,14 @@ func (app *PocketCoreApp) GetClient() client.Client {
 var (
 	// module account permissions
 	moduleAccountPermissions = map[string][]string{
-		auth.FeeCollectorName:     {auth.Burner, auth.Minter, auth.Staking},
-		nodesTypes.StakedPoolName: {auth.Burner, auth.Minter, auth.Staking},
-		appsTypes.StakedPoolName:  {auth.Burner, auth.Minter, auth.Staking},
-		govTypes.DAOAccountName:   {auth.Burner, auth.Minter, auth.Staking},
-		nodesTypes.ModuleName:     {auth.Burner, auth.Minter, auth.Staking},
-		appsTypes.ModuleName:      nil,
+		auth.FeeCollectorName:      {auth.Burner, auth.Minter, auth.Staking},
+		nodesTypes.StakedPoolName:  {auth.Burner, auth.Minter, auth.Staking},
+		appsTypes.StakedPoolName:   {auth.Burner, auth.Minter, auth.Staking},
+		govTypes.DAOAccountName:    {auth.Burner, auth.Minter, auth.Staking},
+		nodesTypes.ModuleName:      {auth.Burner, auth.Minter, auth.Staking},
+		bridgepoolTypes.ModuleName: nil,
+		bridgefeeTypes.ModuleName:  {auth.Burner},
+		appsTypes.ModuleName:       nil,
 	}
 )
 

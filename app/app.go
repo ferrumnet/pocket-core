@@ -10,6 +10,12 @@ import (
 	appsKeeper "github.com/pokt-network/pocket-core/x/apps/keeper"
 	appsTypes "github.com/pokt-network/pocket-core/x/apps/types"
 	"github.com/pokt-network/pocket-core/x/auth"
+	"github.com/pokt-network/pocket-core/x/bridgefee"
+	bridgefeeKeeper "github.com/pokt-network/pocket-core/x/bridgefee/keeper"
+	bridgefeeTypes "github.com/pokt-network/pocket-core/x/bridgefee/types"
+	"github.com/pokt-network/pocket-core/x/bridgepool"
+	bridgepoolKeeper "github.com/pokt-network/pocket-core/x/bridgepool/keeper"
+	bridgepoolTypes "github.com/pokt-network/pocket-core/x/bridgepool/types"
 	"github.com/pokt-network/pocket-core/x/gov"
 	govKeeper "github.com/pokt-network/pocket-core/x/gov/keeper"
 	govTypes "github.com/pokt-network/pocket-core/x/gov/types"
@@ -38,6 +44,8 @@ func NewPocketCoreApp(genState GenesisState, keybase keys.Keybase, tmClient clie
 	nodesSubspace := sdk.NewSubspace(nodesTypes.DefaultParamspace)
 	appsSubspace := sdk.NewSubspace(appsTypes.DefaultParamspace)
 	pocketSubspace := sdk.NewSubspace(pocketTypes.DefaultParamspace)
+	bridgepoolSubspace := sdk.NewSubspace(bridgepoolTypes.DefaultParamspace)
+	bridgefeeSubspace := sdk.NewSubspace(bridgefeeTypes.DefaultParamspace)
 	// The AuthKeeper handles address -> account lookups
 	app.accountKeeper = auth.NewKeeper(
 		app.cdc,
@@ -52,6 +60,23 @@ func NewPocketCoreApp(genState GenesisState, keybase keys.Keybase, tmClient clie
 		app.accountKeeper,
 		nodesSubspace,
 		nodesTypes.DefaultCodespace,
+	)
+	// The bridgefeeKeeper keeper handles pocket core bridgepool
+	app.bridgeFeeKeeper = bridgefeeKeeper.NewKeeper(
+		app.Keys[bridgefeeTypes.StoreKey],
+		app.cdc,
+		app.accountKeeper,
+		bridgefeeSubspace,
+		bridgefeeTypes.DefaultCodespace,
+	)
+	// The bridgepoolKeeper keeper handles pocket core bridgepool
+	app.bridgepoolKeeper = bridgepoolKeeper.NewKeeper(
+		app.Keys[bridgepoolTypes.StoreKey],
+		app.cdc,
+		app.accountKeeper,
+		app.bridgeFeeKeeper,
+		bridgepoolSubspace,
+		bridgepoolTypes.DefaultCodespace,
 	)
 	// The apps keeper handles pocket core applications
 	app.appsKeeper = appsKeeper.NewKeeper(
@@ -94,10 +119,26 @@ func NewPocketCoreApp(genState GenesisState, keybase keys.Keybase, tmClient clie
 		apps.NewAppModule(app.appsKeeper),
 		pocket.NewAppModule(app.pocketKeeper),
 		gov.NewAppModule(app.govKeeper),
+		bridgepool.NewAppModule(app.bridgepoolKeeper),
+		bridgefee.NewAppModule(app.bridgeFeeKeeper),
 	)
 	// setup the order of begin and end blockers
-	app.mm.SetOrderBeginBlockers(nodesTypes.ModuleName, appsTypes.ModuleName, pocketTypes.ModuleName, govTypes.ModuleName)
-	app.mm.SetOrderEndBlockers(nodesTypes.ModuleName, appsTypes.ModuleName, pocketTypes.ModuleName, govTypes.ModuleName)
+	app.mm.SetOrderBeginBlockers(
+		nodesTypes.ModuleName,
+		appsTypes.ModuleName,
+		pocketTypes.ModuleName,
+		govTypes.ModuleName,
+		bridgepoolTypes.ModuleName,
+		bridgefeeTypes.ModuleName,
+	)
+	app.mm.SetOrderEndBlockers(
+		nodesTypes.ModuleName,
+		appsTypes.ModuleName,
+		pocketTypes.ModuleName,
+		govTypes.ModuleName,
+		bridgepoolTypes.ModuleName,
+		bridgefeeTypes.ModuleName,
+	)
 	// setup the order of Genesis
 	app.mm.SetOrderInitGenesis(
 		auth.ModuleName,
@@ -105,6 +146,8 @@ func NewPocketCoreApp(genState GenesisState, keybase keys.Keybase, tmClient clie
 		appsTypes.ModuleName,
 		pocketTypes.ModuleName,
 		gov.ModuleName,
+		bridgepoolTypes.ModuleName,
+		bridgefeeTypes.ModuleName,
 	)
 	// register all module routes and module queriers
 	app.mm.RegisterRoutes(app.Router(), app.QueryRouter())

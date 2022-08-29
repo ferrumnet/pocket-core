@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	sdk "github.com/pokt-network/pocket-core/types"
-	"github.com/pokt-network/pocket-core/x/pocketcore/types"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 	"time"
+
+	sdk "github.com/pokt-network/pocket-core/types"
+	"github.com/pokt-network/pocket-core/x/pocketcore/types"
 
 	"github.com/pokt-network/pocket-core/app"
 	"github.com/pokt-network/pocket-core/app/cmd/rpc"
@@ -43,7 +44,15 @@ var (
 	GetParamPath,
 	GetStopPath,
 	GetQueryChains,
-	GetAccountsPath string
+	GetAccountsPath,
+	GetBridgePoolParamsPath,
+	GetBridgePoolAllSignersPath,
+	GetBridgePoolAllLiquiditiesPath,
+	GetBridgePoolAllFeeRatesPath,
+	GetBridgePoolAllAllowedTargetsPath,
+	GetBridgeFeeParamsPath,
+	GetBridgeFeeAllTokenInfosPath,
+	GetBridgeFeeAllTokenTargetInfosPath string
 )
 
 func init() {
@@ -106,6 +115,22 @@ func init() {
 			GetStopPath = route.Path
 		case "QueryChains":
 			GetQueryChains = route.Path
+		case "QueryBridgePoolParams":
+			GetBridgePoolParamsPath = route.Path
+		case "QueryBridgePoolAllSigners":
+			GetBridgePoolAllSignersPath = route.Path
+		case "QueryBridgePoolAllLiquidities":
+			GetBridgePoolAllLiquiditiesPath = route.Path
+		case "QueryBridgePoolAllFeeRates":
+			GetBridgePoolAllFeeRatesPath = route.Path
+		case "QueryBridgePoolAllAllowedTargets":
+			GetBridgePoolAllAllowedTargetsPath = route.Path
+		case "QueryBridgeFeeParams":
+			GetBridgeFeeParamsPath = route.Path
+		case "QueryBridgeFeeAllTokenInfos":
+			GetBridgeFeeAllTokenInfosPath = route.Path
+		case "QueryBridgeFeeAllTokenTargetInfos":
+			GetBridgeFeeAllTokenTargetInfosPath = route.Path
 		default:
 			continue
 		}
