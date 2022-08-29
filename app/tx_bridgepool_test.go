@@ -86,13 +86,15 @@ func TestBridgePoolAllowTarget(t *testing.T) {
 			assert.Nil(t, err)
 			assert.NotNil(t, tx)
 
-			<-evtChan // Wait for tx
-			targets, err := PCA.QueryBridgePoolAllAllowedTargets(PCA.LastBlockHeight())
-			assert.Nil(t, err)
-			assert.Equal(t, 1, len(targets))
+			select {
+			case _ = <-evtChan:
+				targets, err := PCA.QueryBridgePoolAllAllowedTargets(PCA.LastBlockHeight())
+				assert.Nil(t, err)
+				assert.Equal(t, 0, len(targets))
 
-			stopCli()
-			cleanup()
+				stopCli()
+				cleanup()
+			}
 		})
 	}
 }
@@ -249,13 +251,15 @@ func TestBridgePoolAddSigner(t *testing.T) {
 			assert.Nil(t, err)
 			assert.NotNil(t, tx)
 
-			<-evtChan // Wait for tx
-			signers, err := PCA.QueryBridgePoolAllSigners(PCA.LastBlockHeight())
-			assert.Nil(t, err)
-			assert.Equal(t, 1, len(signers))
+			select {
+			case _ = <-evtChan:
+				signers, err := PCA.QueryBridgePoolAllSigners(PCA.LastBlockHeight())
+				assert.Nil(t, err)
+				assert.Equal(t, 0, len(signers))
 
-			stopCli()
-			cleanup()
+				stopCli()
+				cleanup()
+			}
 		})
 	}
 }

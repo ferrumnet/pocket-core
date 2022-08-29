@@ -11,7 +11,6 @@ import (
 	fp "path/filepath"
 	"strings"
 	"sync"
-	"syscall"
 	"time"
 
 	kitlevel "github.com/go-kit/kit/log/level"

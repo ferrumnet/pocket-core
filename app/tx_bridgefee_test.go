@@ -47,13 +47,15 @@ func TestBridgeFeeSetTokenInfo(t *testing.T) {
 			assert.Nil(t, err)
 			assert.NotNil(t, tx)
 
-			<-evtChan // Wait for tx
-			tokenInfos, err := PCA.QueryBridgeFeeAllTokenInfos(PCA.LastBlockHeight())
-			assert.Nil(t, err)
-			assert.Equal(t, 1, len(tokenInfos))
+			select {
+			case _ = <-evtChan:
+				tokenInfos, err := PCA.QueryBridgeFeeAllTokenInfos(PCA.LastBlockHeight())
+				assert.Nil(t, err)
+				assert.Equal(t, 0, len(tokenInfos))
 
-			stopCli()
-			cleanup()
+				stopCli()
+				cleanup()
+			}
 		})
 	}
 }
@@ -94,13 +96,15 @@ func TestBridgeFeeSetTokenTargetInfos(t *testing.T) {
 			assert.Nil(t, err)
 			assert.NotNil(t, tx)
 
-			<-evtChan // Wait for tx
-			targetInfos, err := PCA.QueryBridgeFeeAllTokenTargetInfos(PCA.LastBlockHeight())
-			assert.Nil(t, err)
-			assert.Equal(t, 1, len(targetInfos))
+			select {
+			case _ = <-evtChan:
+				targetInfos, err := PCA.QueryBridgeFeeAllTokenTargetInfos(PCA.LastBlockHeight())
+				assert.Nil(t, err)
+				assert.Equal(t, 0, len(targetInfos))
 
-			stopCli()
-			cleanup()
+				stopCli()
+				cleanup()
+			}
 		})
 	}
 }
@@ -139,14 +143,15 @@ func TestBridgeFeeSetGlobalTargetInfos(t *testing.T) {
 			tx, err = bridgefee.SetGlobalTargetInfosTx(memCodec(), memCli, kb, targets, kp, "test", tc.codecUpgrade.upgradeMod)
 			assert.Nil(t, err)
 			assert.NotNil(t, tx)
+			select {
+			case _ = <-evtChan:
+				targetInfos, err := PCA.QueryBridgeFeeAllTokenTargetInfos(PCA.LastBlockHeight())
+				assert.Nil(t, err)
+				assert.Equal(t, 0, len(targetInfos))
 
-			<-evtChan // Wait for tx
-			targetInfos, err := PCA.QueryBridgeFeeAllTokenTargetInfos(PCA.LastBlockHeight())
-			assert.Nil(t, err)
-			assert.Equal(t, 1, len(targetInfos))
-
-			stopCli()
-			cleanup()
+				stopCli()
+				cleanup()
+			}
 		})
 	}
 }
