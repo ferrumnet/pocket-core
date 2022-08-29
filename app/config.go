@@ -80,7 +80,7 @@ func InitApp(datadir, tmNode, persistentPeers, seeds, remoteCLIURL string, keyba
 	InitConfig(datadir, tmNode, persistentPeers, seeds, remoteCLIURL)
 	GlobalConfig.PocketConfig.Cache = useCache
 	// init AuthToken
-	InitAuthToken()
+	InitAuthToken(GlobalConfig.PocketConfig.GenerateTokenOnStart)
 	// init the keyfiles
 	InitKeyfiles()
 	// get hosted blockchains
@@ -128,7 +128,7 @@ func InitConfig(datadir, tmNode, persistentPeers, seeds, remoteCLIURL string) {
 	defer jsonFile.Close()
 	// if file exists open, else create and open
 	if _, err := os.Stat(configFilepath); err == nil {
-		jsonFile, err = os.OpenFile(configFilepath, os.O_RDWR, os.ModePerm)
+		jsonFile, err = os.OpenFile(configFilepath, os.O_RDONLY, os.ModePerm)
 		if err != nil {
 			log2.Fatalf("cannot open config json file: " + err.Error())
 		}
@@ -156,6 +156,17 @@ func InitConfig(datadir, tmNode, persistentPeers, seeds, remoteCLIURL string) {
 			log2.Fatalf("cannot write default config to json file: " + err.Error())
 		}
 	}
+
+	// Config Checks
+	// Mempool Cache size should be at least the size of the Mempool Size
+	if c.TendermintConfig.Mempool.CacheSize < c.TendermintConfig.Mempool.Size {
+		log2.Fatalf("Mempool cache size: %v should be larger or equal to Mempool size: %v. Check your config.json", c.TendermintConfig.Mempool.CacheSize, c.TendermintConfig.Mempool.Size)
+	}
+	//Indexer null block
+	if c.TendermintConfig.TxIndex.Indexer == "null" {
+		log2.Fatalf("TxIndexer cannot be null, type should be kv. Check your config.json")
+	}
+
 	// flags trump config file
 	if tmNode != "" {
 		c.PocketConfig.TendermintURI = tmNode
@@ -517,7 +528,7 @@ func HotReloadChains(chains *types.HostedBlockchains) {
 				return
 			}
 			// reopen the file to read into the variable
-			jsonFile, err := os.OpenFile(chainsPath, os.O_RDWR|os.O_CREATE, os.ModePerm)
+			jsonFile, err := os.OpenFile(chainsPath, os.O_RDONLY|os.O_CREATE, os.ModePerm)
 			if err != nil {
 				log2.Fatal(NewInvalidChainsError(err))
 			}
@@ -567,7 +578,7 @@ func NewHostedChains(generate bool) *types.HostedBlockchains {
 		return generateChainsJson(chainsPath)
 	}
 	// reopen the file to read into the variable
-	jsonFile, err := os.OpenFile(chainsPath, os.O_RDWR|os.O_CREATE, os.ModePerm)
+	jsonFile, err := os.OpenFile(chainsPath, os.O_RDONLY|os.O_CREATE, os.ModePerm)
 	if err != nil {
 		log2.Fatal(NewInvalidChainsError(err))
 	}
@@ -713,7 +724,7 @@ func Codec() *codec.Codec {
 func MakeCodec() {
 	// create a new codec
 	cdc = codec.NewCodec(types2.NewInterfaceRegistry())
-	// register all of the app module types
+	// register all the app module types
 	module.NewBasicManager(
 		apps.AppModuleBasic{},
 		auth.AppModuleBasic{},
@@ -735,7 +746,7 @@ func Credentials(pwd string) string {
 	if pwd != "" && strings.TrimSpace(pwd) != "" {
 		return strings.TrimSpace(pwd)
 	} else {
-		bytePassword, err := terminal.ReadPassword(syscall.Stdin)
+		bytePassword, err := terminal.ReadPassword(int(os.Stdin.Fd()))
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -862,7 +873,25 @@ func GetDefaultConfig(datadir string) string {
 	return string(jsonbytes)
 }
 
-func InitAuthToken() {
+func InitAuthToken(generateToken bool) {
+	//Example auth.json located in the config folder
+	//{
+	//	"Value": "S6fvg51BOeUO89HafOhF6jPuT",
+	//	"Issued": "2022-06-20T16:06:47.419153-04:00"
+	//}
+
+	if generateToken {
+		//default behaviour: generate a new token on each start.
+		GenerateToken()
+	} else {
+		//new: if config is set to false use existing auth.json and do not generate
+		//User should make sure file exist, else execution will end with error ("cannot open/create auth token json file:"...)
+		t := GetAuthTokenFromFile()
+		AuthToken = t
+	}
+}
+
+func GenerateToken() {
 	var t = sdk.AuthToken{
 		Value:  rand.Str(25),
 		Issued: time.Now(),
@@ -875,7 +904,7 @@ func InitAuthToken() {
 
 	jsonFile, err := os.OpenFile(configFilepath, os.O_RDWR|os.O_CREATE, os.ModePerm)
 	if err != nil {
-		log2.Fatalf("canot open/create auth token json file: " + err.Error())
+		log2.Fatalf("cannot open/create auth token json file: " + err.Error())
 	}
 	err = jsonFile.Truncate(0)
 
@@ -901,17 +930,17 @@ func GetAuthTokenFromFile() sdk.AuthToken {
 	defer jsonFile.Close()
 
 	if _, err := os.Stat(configFilepath); err == nil {
-		jsonFile, err = os.OpenFile(configFilepath, os.O_RDWR, os.ModePerm)
+		jsonFile, err = os.OpenFile(configFilepath, os.O_RDONLY, os.ModePerm)
 		if err != nil {
-			log2.Fatalf("cannot open config json file: " + err.Error())
+			log2.Fatalf("cannot open auth token json file: " + err.Error())
 		}
 		b, err := ioutil.ReadAll(jsonFile)
 		if err != nil {
-			log2.Fatalf("cannot read config file: " + err.Error())
+			log2.Fatalf("cannot read auth token json file: " + err.Error())
 		}
 		err = json.Unmarshal(b, &t)
 		if err != nil {
-			log2.Fatalf("cannot read config file into json: " + err.Error())
+			log2.Fatalf("cannot read auth token json file into json: " + err.Error())
 		}
 	}
 

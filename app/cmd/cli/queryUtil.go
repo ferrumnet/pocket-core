@@ -44,6 +44,7 @@ var (
 	GetParamPath,
 	GetStopPath,
 	GetQueryChains,
+	GetAccountsPath,
 	GetBridgePoolParamsPath,
 	GetBridgePoolAllSignersPath,
 	GetBridgePoolAllLiquiditiesPath,
@@ -72,6 +73,8 @@ func init() {
 			GetHeightPath = route.Path
 		case "QueryAccount":
 			GetAccountPath = route.Path
+		case "QueryAccounts":
+			GetAccountsPath = route.Path
 		case "QueryApp":
 			GetAppPath = route.Path
 		case "QueryTX":

@@ -1,5 +1,21 @@
 # Changelog
 =======
+## RC-0.9.0
+- Mempool Refinements :
+  - Tx max life in mempool is 2 blocks, after that txs are considered stale and evicted from the mempool
+  so they won't get to the block.
+  - Add validation for edge case on cache equals to 0.
+- Backport tendermint #6068 (terminate broadcastEvidenceRoutine when peer is stopped)
+- Add new rpc endpoint /query/accounts.
+- New config.json option to enable/disable authToken generation on start (auth.json).
+- Implementation of PIP22 (Stake Weighted Servicer Rewards)[RSCAL][VEDIT].
+- Customizable Max Block Size bytes and new tendermint evidence age.[BLOCK].
+- Fix sync from scratch issue related to handling of new additional parameters.
+
+## RC-0.8.3
+
+- Add config.json check for Indexer and Mempool.
+- Update Indirect Dependency related to CVE-2022-28948
 
 ## RC-0.8.1
 

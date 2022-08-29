@@ -41,6 +41,7 @@ func ValidateServiceURL(u string) sdk.Error {
 	if !strings.Contains(u, period) {
 		return ErrInvalidServiceURL(ModuleName, fmt.Errorf("must contain one '.'"))
 	}
+
 	return nil
 }
 

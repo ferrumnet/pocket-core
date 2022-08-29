@@ -85,6 +85,9 @@ func Block(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		WriteErrorResponse(w, 400, err.Error())
 		return
 	}
+	if params.Height == 0 {
+		params.Height = app.PCA.BaseApp.LastBlockHeight()
+	}
 	res, err := app.PCA.QueryBlock(&params.Height)
 	if err != nil {
 		WriteErrorResponse(w, 400, err.Error())
@@ -352,6 +355,28 @@ func Account(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		params.Height = app.PCA.BaseApp.LastBlockHeight()
 	}
 	res, err := app.PCA.QueryAccount(params.Address, params.Height)
+	if err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	s, err := json.Marshal(res)
+	if err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	WriteJSONResponse(w, string(s), r.URL.Path, r.Host)
+}
+
+func Accounts(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	var params = PaginatedHeightParams{Height: 0}
+	if err := PopModel(w, r, ps, &params); err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	if params.Height == 0 {
+		params.Height = app.PCA.BaseApp.LastBlockHeight()
+	}
+	res, err := app.PCA.QueryAccounts(params.Height, params.Page, params.PerPage)
 	if err != nil {
 		WriteErrorResponse(w, 400, err.Error())
 		return
@@ -956,7 +981,7 @@ func Upgrade(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if params.Height == 0 {
 		params.Height = app.PCA.BaseApp.LastBlockHeight()
 	}
-	res, err := app.PCA.QueryUpgrade(0)
+	res, err := app.PCA.QueryUpgrade(params.Height)
 	if err != nil {
 		WriteErrorResponse(w, 400, err.Error())
 		return
