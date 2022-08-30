@@ -4,6 +4,10 @@ package app
 import (
 	"encoding/hex"
 	"fmt"
+	"math/rand"
+	"testing"
+	"time"
+
 	"github.com/pokt-network/pocket-core/codec"
 	"github.com/pokt-network/pocket-core/crypto"
 	"github.com/pokt-network/pocket-core/crypto/keys"
@@ -20,9 +24,6 @@ import (
 	rand2 "github.com/tendermint/tendermint/libs/rand"
 	"github.com/tendermint/tendermint/node"
 	tmTypes "github.com/tendermint/tendermint/types"
-	"math/rand"
-	"testing"
-	"time"
 )
 
 func TestMain(m *testing.M) {

@@ -122,6 +122,14 @@ func GetRoutes() Routes {
 		Route{Name: "QueryUpgrade", Method: "POST", Path: "/v1/query/upgrade", HandlerFunc: Upgrade},
 		Route{Name: "QuerySigningInfo", Method: "POST", Path: "/v1/query/signinginfo", HandlerFunc: SigningInfo},
 		Route{Name: "QueryChains", Method: "POST", Path: "/v1/private/chains", HandlerFunc: Chains},
+		Route{Name: "QueryBridgePoolParams", Method: "POST", Path: "/v1/query/bridgepoolParams", HandlerFunc: QueryBridgePoolParams},
+		Route{Name: "QueryBridgePoolAllSigners", Method: "POST", Path: "/v1/query/bridgepoolAllSigners", HandlerFunc: QueryBridgePoolAllSigners},
+		Route{Name: "QueryBridgePoolAllLiquidities", Method: "POST", Path: "/v1/query/bridgepoolAllLiquidities", HandlerFunc: QueryBridgePoolAllLiquidities},
+		Route{Name: "QueryBridgePoolAllFeeRates", Method: "POST", Path: "/v1/query/bridgepoolAllFeeRates", HandlerFunc: QueryBridgePoolAllFeeRates},
+		Route{Name: "QueryBridgePoolAllAllowedTargets", Method: "POST", Path: "/v1/query/bridgepoolAllAllowedTargets", HandlerFunc: QueryBridgePoolAllAllowedTargets},
+		Route{Name: "QueryBridgeFeeParams", Method: "POST", Path: "/v1/query/bridgefeeParams", HandlerFunc: QueryBridgeFeeParams},
+		Route{Name: "QueryBridgeFeeAllTokenInfos", Method: "POST", Path: "/v1/query/bridgefeeAllTokenInfos", HandlerFunc: QueryBridgeFeeAllTokenInfos},
+		Route{Name: "QueryBridgeFeeAllTokenTargetInfos", Method: "POST", Path: "/v1/query/bridgefeeAllTokenTargetInfos", HandlerFunc: QueryBridgeFeeAllTokenTargetInfos},
 	}
 	return routes
 }

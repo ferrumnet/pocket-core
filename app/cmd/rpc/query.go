@@ -4,18 +4,21 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"math/big"
+	"net/http"
+	"strconv"
+
 	sdk "github.com/pokt-network/pocket-core/types"
 	types2 "github.com/pokt-network/pocket-core/x/auth/types"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/bytes"
 	"github.com/tendermint/tendermint/types"
-	"math/big"
-	"net/http"
-	"strconv"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/pokt-network/pocket-core/app"
 	appTypes "github.com/pokt-network/pocket-core/x/apps/types"
+	bridgefeeTypes "github.com/pokt-network/pocket-core/x/bridgefee/types"
+	bridgepoolTypes "github.com/pokt-network/pocket-core/x/bridgepool/types"
 	nodeTypes "github.com/pokt-network/pocket-core/x/nodes/types"
 	core_types "github.com/tendermint/tendermint/rpc/core/types"
 )
@@ -510,6 +513,188 @@ func NodeParams(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		return
 	}
 	j, err := app.Codec().MarshalJSON(res)
+	if err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	WriteJSONResponse(w, string(j), r.URL.Path, r.Host)
+}
+
+func QueryBridgePoolParams(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	var params = HeightParams{Height: 0}
+	if err := PopModel(w, r, ps, &params); err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	bridgepoolParams, err := app.PCA.QueryBridgePoolParams(params.Height)
+	if err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	j, err := app.Codec().MarshalJSON(bridgepoolParams)
+	if err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	WriteJSONResponse(w, string(j), r.URL.Path, r.Host)
+}
+
+type SignersResponse struct {
+	Signers []string
+}
+
+func QueryBridgePoolAllSigners(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	var params = HeightParams{Height: 0}
+	if err := PopModel(w, r, ps, &params); err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	allSigners, err := app.PCA.QueryBridgePoolAllSigners(params.Height)
+	if err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	j, err := app.Codec().MarshalJSON(SignersResponse{
+		Signers: allSigners,
+	})
+	if err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	WriteJSONResponse(w, string(j), r.URL.Path, r.Host)
+}
+
+type AllLiquiditiesResponse struct {
+	Liquidities []bridgepoolTypes.Liquidity
+}
+
+func QueryBridgePoolAllLiquidities(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	var params = HeightParams{Height: 0}
+	if err := PopModel(w, r, ps, &params); err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	allLiquidities, err := app.PCA.QueryBridgePoolAllLiquidities(params.Height)
+	if err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	j, err := app.Codec().MarshalJSON(AllLiquiditiesResponse{
+		Liquidities: allLiquidities,
+	})
+	if err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	WriteJSONResponse(w, string(j), r.URL.Path, r.Host)
+}
+
+type AllFeeRatesResponse struct {
+	FeeRates []bridgepoolTypes.FeeRate
+}
+
+func QueryBridgePoolAllFeeRates(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	var params = HeightParams{Height: 0}
+	if err := PopModel(w, r, ps, &params); err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	allFeeRates, err := app.PCA.QueryBridgePoolAllFeeRates(params.Height)
+	if err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	j, err := app.Codec().MarshalJSON(AllFeeRatesResponse{FeeRates: allFeeRates})
+	if err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	WriteJSONResponse(w, string(j), r.URL.Path, r.Host)
+}
+
+type AllAllowedTargetsResponse struct {
+	AllowedTargets []bridgepoolTypes.AllowedTarget
+}
+
+func QueryBridgePoolAllAllowedTargets(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	var params = HeightParams{Height: 0}
+	if err := PopModel(w, r, ps, &params); err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	allAllowedTargets, err := app.PCA.QueryBridgePoolAllAllowedTargets(params.Height)
+	if err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	j, err := app.Codec().MarshalJSON(AllAllowedTargetsResponse{AllowedTargets: allAllowedTargets})
+	if err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	WriteJSONResponse(w, string(j), r.URL.Path, r.Host)
+}
+
+func QueryBridgeFeeParams(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	var params = HeightParams{Height: 0}
+	if err := PopModel(w, r, ps, &params); err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	bridgefeeParams, err := app.PCA.QueryBridgeFeeParams(params.Height)
+	if err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	j, err := app.Codec().MarshalJSON(bridgefeeParams)
+	if err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	WriteJSONResponse(w, string(j), r.URL.Path, r.Host)
+}
+
+type TokenInfosResponse struct {
+	Infos []bridgefeeTypes.TokenInfo
+}
+
+func QueryBridgeFeeAllTokenInfos(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	var params = HeightParams{Height: 0}
+	if err := PopModel(w, r, ps, &params); err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	allTokenInfos, err := app.PCA.QueryBridgeFeeAllTokenInfos(params.Height)
+	if err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	j, err := app.Codec().MarshalJSON(TokenInfosResponse{
+		Infos: allTokenInfos,
+	})
+	if err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	WriteJSONResponse(w, string(j), r.URL.Path, r.Host)
+}
+
+type AllTokenTargetInfosResponse struct {
+	Infos []bridgefeeTypes.TokenTargetInfo
+}
+
+func QueryBridgeFeeAllTokenTargetInfos(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	var params = HeightParams{Height: 0}
+	if err := PopModel(w, r, ps, &params); err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	tokenTargetInfos, err := app.PCA.QueryBridgeFeeAllTokenTargetInfos(params.Height)
+	if err != nil {
+		WriteErrorResponse(w, 400, err.Error())
+		return
+	}
+	j, err := app.Codec().MarshalJSON(AllTokenTargetInfosResponse{Infos: tokenTargetInfos})
 	if err != nil {
 		WriteErrorResponse(w, 400, err.Error())
 		return

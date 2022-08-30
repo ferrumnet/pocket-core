@@ -4,12 +4,13 @@ package app
 import (
 	"encoding/hex"
 	"encoding/json"
-	"github.com/pokt-network/pocket-core/codec"
 	"math/big"
 	"math/rand"
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/pokt-network/pocket-core/codec"
 
 	"github.com/pokt-network/pocket-core/crypto"
 	"github.com/pokt-network/pocket-core/crypto/keys"
@@ -977,6 +978,30 @@ func TestQueryAccounts(t *testing.T) {
 			assert.NotEqual(t, 1, got.Total)
 
 			cleanup()
+		})
+	}
+}
+
+func TestQueryBridgePoolParams(t *testing.T) {
+	tt := []struct {
+		name         string
+		memoryNodeFn func(t *testing.T, genesisState []byte) (tendermint *node.Node, keybase keys.Keybase, cleanup func())
+		*upgrades
+	}{
+		{name: "query params with amino codec", memoryNodeFn: NewInMemoryTendermintNodeAmino, upgrades: &upgrades{codecUpgrade: codecUpgrade{false, 7000}}},
+		{name: "query params with proto codec", memoryNodeFn: NewInMemoryTendermintNodeProto, upgrades: &upgrades{codecUpgrade: codecUpgrade{true, 2}}},
+	}
+	for _, tc := range tt {
+		t.Run(tc.name, func(t *testing.T) {
+			_, _, cleanup := tc.memoryNodeFn(t, oneAppTwoNodeGenesis())
+			_, stopCli, evtChan := subscribeTo(t, tmTypes.EventNewBlock)
+			<-evtChan // Wait for block
+			got, err := PCA.QueryBridgePoolParams(PCA.LastBlockHeight())
+			assert.Nil(t, err)
+			assert.NotNil(t, got)
+			assert.Equal(t, "", got.Owner)
+			cleanup()
+			stopCli()
 		})
 	}
 }
