@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/pokt-network/pocket-core/app"
+	sdk "github.com/pokt-network/pocket-core/types"
 	"github.com/spf13/cobra"
 )
 
@@ -27,31 +28,27 @@ func init() {
 }
 
 var setTokenInfo = &cobra.Command{
-	Use:   "set-token-info <fromAddr> <token> <bufferSize> <tokenSpecificConfig> <fee> <chainId>",
+	Use:   "set-token-info <fromAddr> <token> <bufferSize> <fee> <chainId>",
 	Short: "Set token info for bridgefee",
 	Long: `Set token info for bridgefee.
 Will prompt the user for the <fromAddr> account passphrase.`,
 	Args: cobra.ExactArgs(6),
 	Run: func(cmd *cobra.Command, args []string) {
 		app.InitConfig(datadir, tmNode, persistentPeers, seeds, remoteCLIURL)
-		fee, err := strconv.Atoi(args[4])
+		fee, err := strconv.Atoi(args[3])
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-		bufferSize, err := strconv.Atoi(args[2])
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		tokenSpecificConfig, err := strconv.Atoi(args[3])
-		if err != nil {
-			fmt.Println(err)
+
+		bufferSize, ok := sdk.NewIntFromString(args[2])
+		if !ok {
+			fmt.Println(args[2])
 			return
 		}
 		fmt.Println("Enter Password: ")
 
-		res, err := SetTokenInfo(args[0], args[1], uint64(bufferSize), uint32(tokenSpecificConfig), app.Credentials(pwd), args[5], int64(fee))
+		res, err := SetTokenInfo(args[0], args[1], bufferSize, app.Credentials(pwd), args[4], int64(fee))
 		if err != nil {
 			fmt.Println(err)
 			return

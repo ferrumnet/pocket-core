@@ -39,11 +39,10 @@ func TestBridgeFeeSetTokenInfo(t *testing.T) {
 			var tx *sdk.TxResponse
 			var token = "upokt"
 			var bufferSize = uint64(10000)
-			var tokenSpecificConfig = uint32(0)
 
 			<-evtChan // Wait for block
 			memCli, stopCli, evtChan := subscribeTo(t, tmTypes.EventTx)
-			tx, err = bridgefee.SetTokenInfoTx(memCodec(), memCli, kb, token, bufferSize, tokenSpecificConfig, kp, "test", tc.codecUpgrade.upgradeMod)
+			tx, err = bridgefee.SetTokenInfoTx(memCodec(), memCli, kb, token, bufferSize, kp, "test", tc.codecUpgrade.upgradeMod)
 			assert.Nil(t, err)
 			assert.NotNil(t, tx)
 

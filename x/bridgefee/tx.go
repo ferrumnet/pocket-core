@@ -19,9 +19,8 @@ func SetTokenInfoTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keybase
 	msg := types.MsgSetTokenInfo{
 		FromAddress: fromAddr,
 		Info: types.TokenInfo{
-			Token:               token,
-			BufferSize:          bufferSize,
-			TokenSpecificConfig: tokenSpecificConfig,
+			Token:      token,
+			BufferSize: bufferSize,
 		},
 	}
 	txBuilder, cliCtx, err := newTx(cdc, &msg, fromAddr, tmNode, keybase, passphrase)

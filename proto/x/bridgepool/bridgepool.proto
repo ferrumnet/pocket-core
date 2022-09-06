@@ -36,7 +36,7 @@ message AllowedTarget {
 message Liquidity {
   string token = 1;
   string address = 2;
-  uint64 amount = 3;
+  string amount = 3 [(gogoproto.customtype) = "github.com/pokt-network/pocket-core/types.BigInt", (gogoproto.nullable) = false];
 }
 
 message WithdrawSignMessage {
@@ -92,7 +92,7 @@ message MsgAddLiquidity {
     (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
   ];
   string token = 2;
-  uint64 amount = 3;
+  string amount = 3 [(gogoproto.customtype) = "github.com/pokt-network/pocket-core/types.BigInt", (gogoproto.nullable) = false];
 }
 
 message MsgRemoveLiquidity {
@@ -104,7 +104,7 @@ message MsgRemoveLiquidity {
     (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
   ];
   string token = 2;
-  uint64 amount = 3;
+  string amount = 3 [(gogoproto.customtype) = "github.com/pokt-network/pocket-core/types.BigInt", (gogoproto.nullable) = false];
 }
 
 message MsgSwap {
@@ -115,11 +115,10 @@ message MsgSwap {
     (gogoproto.jsontag) = "fromAddress",
     (gogoproto.casttype) = "github.com/pokt-network/pocket-core/types.Address"
   ];
-  string token = 2;
-  uint64 amount = 3;
-  string targetChainId = 4;
-  string targetToken = 5;
-  string targetAddress = 6;
+  types.Coin amount = 2 [ (gogoproto.nullable) = false ];
+  string targetChainId = 3;
+  string targetToken = 4;
+  string targetAddress = 5;
 }
 
 message MsgWithdrawSigned {

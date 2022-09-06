@@ -25,8 +25,8 @@ pocket_core query all-token-target-infos
 ### MsgSetTokenInfo
 
 ```sh
-pocket_core bridgefee set-token-info <fromAddr> <token> <bufferSize> <tokenSpecificConfig> <fee> <chainId>
-pocket_core bridgefee set-token-info 169869f67cd3f78a722fb4795b69949fb4bc9084 upokt 1000 0 10000 testnet
+pocket_core bridgefee set-token-info <fromAddr> <token> <bufferSize> <fee> <chainId>
+pocket_core bridgefee set-token-info 169869f67cd3f78a722fb4795b69949fb4bc9084 upokt 1000 10000 testnet
 ```
 
 ### MsgSetTokenTargetInfos

@@ -8,7 +8,6 @@
 message TokenInfo {
   string token = 1;
   uint64 bufferSize = 2;
-  uint32 tokenSpecificConfig = 3; // 1 or 0
 }
 ```
 

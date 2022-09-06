@@ -156,13 +156,13 @@ Will prompt the user for the <fromAddr> account passphrase.`,
 			fmt.Println(err)
 			return
 		}
-		amount, err := strconv.Atoi(args[2])
-		if err != nil {
-			fmt.Println(err)
+		amount, ok := sdk.NewIntFromString(args[2])
+		if !ok {
+			fmt.Println(args[2])
 			return
 		}
 		fmt.Println("Enter Password: ")
-		res, err := AddLiquidity(args[0], args[1], uint64(amount), app.Credentials(pwd), args[4], int64(fee))
+		res, err := AddLiquidity(args[0], args[1], amount, app.Credentials(pwd), args[4], int64(fee))
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -194,13 +194,13 @@ Will prompt the user for the <fromAddr> account passphrase.`,
 			fmt.Println(err)
 			return
 		}
-		amount, err := strconv.Atoi(args[2])
-		if err != nil {
-			fmt.Println(err)
+		amount, ok := sdk.NewIntFromString(args[2])
+		if !ok {
+			fmt.Println(args[2])
 			return
 		}
 		fmt.Println("Enter Password: ")
-		res, err := RemoveLiquidity(args[0], args[1], uint64(amount), app.Credentials(pwd), args[4], int64(fee))
+		res, err := RemoveLiquidity(args[0], args[1], amount, app.Credentials(pwd), args[4], int64(fee))
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -220,25 +220,27 @@ Will prompt the user for the <fromAddr> account passphrase.`,
 }
 
 var swapCmd = &cobra.Command{
-	Use:   "swap <fromAddr> <token> <amount> <targetNetwork> <targetToken> <targetAddress> <fee> <chainId>",
+	Use:   "swap <fromAddr> <amount> <targetNetwork> <targetToken> <targetAddress> <fee> <chainId>",
 	Short: "Swap token to another network",
 	Long: `Swap token to another network.
 Will prompt the user for the <fromAddr> account passphrase.`,
 	Args: cobra.ExactArgs(8),
 	Run: func(cmd *cobra.Command, args []string) {
 		app.InitConfig(datadir, tmNode, persistentPeers, seeds, remoteCLIURL)
-		fee, err := strconv.Atoi(args[6])
+		fee, err := strconv.Atoi(args[5])
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-		amount, err := strconv.Atoi(args[2])
+
+		amount, err := sdk.ParseCoin(args[1])
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
+
 		fmt.Println("Enter Password: ")
-		res, err := Swap(args[0], args[1], uint64(amount), args[3], args[4], args[5], app.Credentials(pwd), args[7], int64(fee))
+		res, err := Swap(args[0], amount, args[2], args[3], args[4], app.Credentials(pwd), args[6], int64(fee))
 		if err != nil {
 			fmt.Println(err)
 			return

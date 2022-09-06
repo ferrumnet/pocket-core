@@ -17,8 +17,7 @@ enum TargetType {
 
 message TokenInfo {
   string token = 1;
-  uint64 bufferSize = 2;
-  uint32 tokenSpecificConfig = 3; // 1 or 0
+  string bufferSize = 2 [(gogoproto.customtype) = "github.com/pokt-network/pocket-core/types.BigInt", (gogoproto.nullable) = false];
 }
 
 message TargetInfo {
