@@ -454,7 +454,7 @@ func Upgrade(fromAddr string, upgrade govTypes.Upgrade, passphrase, chainID stri
 	}, nil
 }
 
-func SetTokenInfo(fromAddr, token string, bufferSize uint64, tokenSpecificConfig uint32, passphrase, chainID string, fees int64) (*rpc.SendRawTxParams, error) {
+func SetTokenInfo(fromAddr, token string, bufferSize sdk.BigInt, passphrase, chainID string, fees int64) (*rpc.SendRawTxParams, error) {
 	fa, err := sdk.AddressFromHex(fromAddr)
 	if err != nil {
 		return nil, err
@@ -464,9 +464,8 @@ func SetTokenInfo(fromAddr, token string, bufferSize uint64, tokenSpecificConfig
 	msg = &bridgefeeTypes.MsgSetTokenInfo{
 		FromAddress: fa,
 		Info: bridgefeeTypes.TokenInfo{
-			Token:               token,
-			BufferSize:          bufferSize,
-			TokenSpecificConfig: tokenSpecificConfig,
+			Token:      token,
+			BufferSize: bufferSize,
 		},
 	}
 	kb, err := app.GetKeybase()
@@ -685,7 +684,7 @@ func DisallowTarget(fromAddr, token, targetChainId, passphrase, chainID string, 
 	}, nil
 }
 
-func AddLiquidity(fromAddr, token string, amount uint64, passphrase, chainID string, fees int64) (*rpc.SendRawTxParams, error) {
+func AddLiquidity(fromAddr, token string, amount sdk.BigInt, passphrase, chainID string, fees int64) (*rpc.SendRawTxParams, error) {
 	fa, err := sdk.AddressFromHex(fromAddr)
 	if err != nil {
 		return nil, err
@@ -715,7 +714,7 @@ func AddLiquidity(fromAddr, token string, amount uint64, passphrase, chainID str
 	}, nil
 }
 
-func RemoveLiquidity(fromAddr, token string, amount uint64, passphrase, chainID string, fees int64) (*rpc.SendRawTxParams, error) {
+func RemoveLiquidity(fromAddr, token string, amount sdk.BigInt, passphrase, chainID string, fees int64) (*rpc.SendRawTxParams, error) {
 	fa, err := sdk.AddressFromHex(fromAddr)
 	if err != nil {
 		return nil, err
@@ -745,7 +744,7 @@ func RemoveLiquidity(fromAddr, token string, amount uint64, passphrase, chainID 
 	}, nil
 }
 
-func Swap(fromAddr, token string, amount uint64, targetNetwork, targetToken, targetAddress string, passphrase, chainID string, fees int64) (*rpc.SendRawTxParams, error) {
+func Swap(fromAddr string, amount sdk.Coin, targetNetwork, targetToken, targetAddress string, passphrase, chainID string, fees int64) (*rpc.SendRawTxParams, error) {
 	fa, err := sdk.AddressFromHex(fromAddr)
 	if err != nil {
 		return nil, err
@@ -754,7 +753,6 @@ func Swap(fromAddr, token string, amount uint64, targetNetwork, targetToken, tar
 	var msg sdk.ProtoMsg
 	msg = &bridgepoolTypes.MsgSwap{
 		FromAddress:   fa,
-		Token:         token,
 		Amount:        amount,
 		TargetChainId: targetNetwork,
 		TargetToken:   targetToken,

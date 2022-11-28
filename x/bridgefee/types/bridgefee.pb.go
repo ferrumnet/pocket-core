@@ -59,9 +59,8 @@ func (TargetType) EnumDescriptor() ([]byte, []int) {
 }
 
 type TokenInfo struct {
-	Token               string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
-	BufferSize          uint64 `protobuf:"varint,2,opt,name=bufferSize,proto3" json:"bufferSize,omitempty"`
-	TokenSpecificConfig uint32 `protobuf:"varint,3,opt,name=tokenSpecificConfig,proto3" json:"tokenSpecificConfig,omitempty"`
+	Token      string                                           `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	BufferSize github_com_pokt_network_pocket_core_types.BigInt `protobuf:"bytes,2,opt,name=bufferSize,proto3,customtype=github.com/pokt-network/pocket-core/types.BigInt" json:"bufferSize"`
 }
 
 func (m *TokenInfo) Reset()         { *m = TokenInfo{} }
@@ -102,20 +101,6 @@ func (m *TokenInfo) GetToken() string {
 		return m.Token
 	}
 	return ""
-}
-
-func (m *TokenInfo) GetBufferSize() uint64 {
-	if m != nil {
-		return m.BufferSize
-	}
-	return 0
-}
-
-func (m *TokenInfo) GetTokenSpecificConfig() uint32 {
-	if m != nil {
-		return m.TokenSpecificConfig
-	}
-	return 0
 }
 
 type TargetInfo struct {
@@ -335,90 +320,6 @@ func (m *Params) GetOwner() string {
 	return ""
 }
 
-type MsgAddAllowedActor struct {
-	FromAddress github_com_pokt_network_pocket_core_types.Address `protobuf:"bytes,1,opt,name=fromAddress,proto3,casttype=github.com/pokt-network/pocket-core/types.Address" json:"fromAddress"`
-	Actor       string                                            `protobuf:"bytes,2,opt,name=actor,proto3" json:"actor,omitempty"`
-}
-
-func (m *MsgAddAllowedActor) Reset()         { *m = MsgAddAllowedActor{} }
-func (m *MsgAddAllowedActor) String() string { return proto.CompactTextString(m) }
-func (*MsgAddAllowedActor) ProtoMessage()    {}
-func (*MsgAddAllowedActor) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d9c309fb2d9a4e22, []int{5}
-}
-func (m *MsgAddAllowedActor) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgAddAllowedActor) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgAddAllowedActor.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgAddAllowedActor) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgAddAllowedActor.Merge(m, src)
-}
-func (m *MsgAddAllowedActor) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgAddAllowedActor) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgAddAllowedActor.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgAddAllowedActor proto.InternalMessageInfo
-
-func (*MsgAddAllowedActor) XXX_MessageName() string {
-	return "x.bridgefee.MsgAddAllowedActor"
-}
-
-type MsgRemoveAllowedActor struct {
-	FromAddress github_com_pokt_network_pocket_core_types.Address `protobuf:"bytes,1,opt,name=fromAddress,proto3,casttype=github.com/pokt-network/pocket-core/types.Address" json:"fromAddress"`
-	Actor       string                                            `protobuf:"bytes,2,opt,name=actor,proto3" json:"actor,omitempty"`
-}
-
-func (m *MsgRemoveAllowedActor) Reset()         { *m = MsgRemoveAllowedActor{} }
-func (m *MsgRemoveAllowedActor) String() string { return proto.CompactTextString(m) }
-func (*MsgRemoveAllowedActor) ProtoMessage()    {}
-func (*MsgRemoveAllowedActor) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d9c309fb2d9a4e22, []int{6}
-}
-func (m *MsgRemoveAllowedActor) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgRemoveAllowedActor) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgRemoveAllowedActor.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgRemoveAllowedActor) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgRemoveAllowedActor.Merge(m, src)
-}
-func (m *MsgRemoveAllowedActor) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgRemoveAllowedActor) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgRemoveAllowedActor.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgRemoveAllowedActor proto.InternalMessageInfo
-
-func (*MsgRemoveAllowedActor) XXX_MessageName() string {
-	return "x.bridgefee.MsgRemoveAllowedActor"
-}
-
 type MsgSetTokenInfo struct {
 	FromAddress github_com_pokt_network_pocket_core_types.Address `protobuf:"bytes,1,opt,name=fromAddress,proto3,casttype=github.com/pokt-network/pocket-core/types.Address" json:"fromAddress"`
 	Info        TokenInfo                                         `protobuf:"bytes,2,opt,name=info,proto3" json:"info"`
@@ -428,7 +329,7 @@ func (m *MsgSetTokenInfo) Reset()         { *m = MsgSetTokenInfo{} }
 func (m *MsgSetTokenInfo) String() string { return proto.CompactTextString(m) }
 func (*MsgSetTokenInfo) ProtoMessage()    {}
 func (*MsgSetTokenInfo) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d9c309fb2d9a4e22, []int{7}
+	return fileDescriptor_d9c309fb2d9a4e22, []int{5}
 }
 func (m *MsgSetTokenInfo) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -471,7 +372,7 @@ func (m *MsgSetTokenTargetInfos) Reset()         { *m = MsgSetTokenTargetInfos{}
 func (m *MsgSetTokenTargetInfos) String() string { return proto.CompactTextString(m) }
 func (*MsgSetTokenTargetInfos) ProtoMessage()    {}
 func (*MsgSetTokenTargetInfos) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d9c309fb2d9a4e22, []int{8}
+	return fileDescriptor_d9c309fb2d9a4e22, []int{6}
 }
 func (m *MsgSetTokenTargetInfos) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -530,7 +431,7 @@ func (m *MsgSetGlobalTargetInfos) Reset()         { *m = MsgSetGlobalTargetInfos
 func (m *MsgSetGlobalTargetInfos) String() string { return proto.CompactTextString(m) }
 func (*MsgSetGlobalTargetInfos) ProtoMessage()    {}
 func (*MsgSetGlobalTargetInfos) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d9c309fb2d9a4e22, []int{9}
+	return fileDescriptor_d9c309fb2d9a4e22, []int{7}
 }
 func (m *MsgSetGlobalTargetInfos) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -580,8 +481,6 @@ func init() {
 	proto.RegisterType((*TokenTargetInfo)(nil), "x.bridgefee.TokenTargetInfo")
 	proto.RegisterType((*GenesisState)(nil), "x.bridgefee.GenesisState")
 	proto.RegisterType((*Params)(nil), "x.bridgefee.Params")
-	proto.RegisterType((*MsgAddAllowedActor)(nil), "x.bridgefee.MsgAddAllowedActor")
-	proto.RegisterType((*MsgRemoveAllowedActor)(nil), "x.bridgefee.MsgRemoveAllowedActor")
 	proto.RegisterType((*MsgSetTokenInfo)(nil), "x.bridgefee.MsgSetTokenInfo")
 	proto.RegisterType((*MsgSetTokenTargetInfos)(nil), "x.bridgefee.MsgSetTokenTargetInfos")
 	proto.RegisterType((*MsgSetGlobalTargetInfos)(nil), "x.bridgefee.MsgSetGlobalTargetInfos")
@@ -590,48 +489,45 @@ func init() {
 func init() { proto.RegisterFile("x/bridgefee/bridgefee.proto", fileDescriptor_d9c309fb2d9a4e22) }
 
 var fileDescriptor_d9c309fb2d9a4e22 = []byte{
-	// 652 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x55, 0x4f, 0x4f, 0x13, 0x41,
-	0x14, 0xef, 0xb4, 0xa5, 0xc0, 0x2b, 0x42, 0x33, 0x20, 0x14, 0x34, 0xdb, 0xa6, 0xa7, 0xc6, 0x84,
-	0x2e, 0x60, 0x8c, 0x89, 0x31, 0x31, 0xad, 0x46, 0xe2, 0x01, 0x25, 0x5b, 0x4e, 0x5e, 0x74, 0xbb,
-	0x3b, 0xbb, 0x6c, 0xda, 0xee, 0xdb, 0xcc, 0x4c, 0x2d, 0xf8, 0x09, 0x38, 0xfa, 0x01, 0x4c, 0x34,
-	0x7e, 0x07, 0x2f, 0x7e, 0x01, 0xb9, 0xc9, 0xd1, 0x13, 0x31, 0x70, 0xf3, 0x23, 0x78, 0x32, 0x3b,
-	0xb3, 0xb5, 0x4b, 0xc0, 0xf8, 0xe7, 0x80, 0xde, 0xf6, 0xf7, 0xfe, 0xcc, 0xef, 0xfd, 0xde, 0xbe,
-	0x37, 0x03, 0xd7, 0xf6, 0xcc, 0x0e, 0x0f, 0x5c, 0x9f, 0x79, 0x8c, 0x8d, 0xbf, 0x1a, 0x11, 0x47,
-	0x89, 0xb4, 0xb8, 0xd7, 0xf8, 0x61, 0x5a, 0x59, 0x76, 0x50, 0xf4, 0x51, 0x3c, 0x53, 0x2e, 0x53,
-	0x03, 0x1d, 0xb7, 0xb2, 0xe0, 0xa3, 0x8f, 0xda, 0x1e, 0x7f, 0x25, 0xd6, 0x92, 0xdc, 0x8f, 0x98,
-	0x30, 0x1d, 0x0c, 0xc2, 0xc4, 0xb2, 0xec, 0x23, 0xfa, 0x3d, 0x66, 0x2a, 0xd4, 0x19, 0x78, 0xa6,
-	0x1d, 0xee, 0x6b, 0x57, 0x4d, 0xc0, 0xf4, 0x0e, 0x76, 0x59, 0xf8, 0x28, 0xf4, 0x90, 0x2e, 0xc0,
-	0x84, 0x8c, 0x41, 0x99, 0x54, 0x49, 0x7d, 0xda, 0xd2, 0x80, 0x1a, 0x00, 0x9d, 0x81, 0xe7, 0x31,
-	0xde, 0x0e, 0x5e, 0xb2, 0x72, 0xb6, 0x4a, 0xea, 0x79, 0x2b, 0x65, 0xa1, 0x6b, 0x30, 0xaf, 0x02,
-	0xdb, 0x11, 0x73, 0x02, 0x2f, 0x70, 0xee, 0x63, 0xe8, 0x05, 0x7e, 0x39, 0x57, 0x25, 0xf5, 0x2b,
-	0xd6, 0x45, 0xae, 0x5a, 0x17, 0x60, 0xc7, 0xe6, 0x3e, 0x93, 0x8a, 0x75, 0x11, 0x0a, 0x52, 0xa1,
-	0x84, 0x36, 0x41, 0x74, 0x15, 0x26, 0xe4, 0xce, 0x7e, 0xa4, 0x29, 0x67, 0x37, 0x96, 0x1a, 0xa9,
-	0xae, 0x34, 0x74, 0x7e, 0xec, 0xb6, 0x74, 0x54, 0x7c, 0xcc, 0x90, 0x05, 0xfe, 0xae, 0x54, 0xcc,
-	0x79, 0x2b, 0x41, 0xb5, 0xe7, 0x30, 0xa7, 0x14, 0xa6, 0x18, 0x2f, 0xd6, 0x79, 0x1b, 0x26, 0x35,
-	0xb3, 0x28, 0x67, 0xab, 0xb9, 0x7a, 0xf1, 0x42, 0xc6, 0x38, 0xbf, 0x95, 0x3f, 0x3c, 0xae, 0x64,
-	0xac, 0x51, 0x74, 0xed, 0x23, 0x81, 0x99, 0x4d, 0x16, 0x32, 0x11, 0x88, 0xb6, 0xb4, 0x25, 0xa3,
-	0xeb, 0x50, 0x88, 0x6c, 0x6e, 0xf7, 0x85, 0x22, 0x28, 0x6e, 0xcc, 0x9f, 0x39, 0x68, 0x5b, 0xb9,
-	0x92, 0x43, 0x92, 0x40, 0x7a, 0x17, 0x40, 0x8e, 0xfe, 0xc3, 0x88, 0x7f, 0xf1, 0x2c, 0xff, 0xc8,
-	0x9d, 0x64, 0xa6, 0xe2, 0xe9, 0x43, 0x98, 0x91, 0x63, 0x8d, 0xa2, 0x9c, 0x53, 0xf9, 0xd7, 0xcf,
-	0xe7, 0x9f, 0x13, 0x71, 0x26, 0xaf, 0x66, 0x40, 0x41, 0x57, 0x17, 0xb7, 0x08, 0x87, 0x21, 0xe3,
-	0xa3, 0x16, 0x29, 0x50, 0x7b, 0x4d, 0x80, 0x6e, 0x09, 0xbf, 0xe9, 0xba, 0xcd, 0x5e, 0x0f, 0x87,
-	0xcc, 0x6d, 0x3a, 0x12, 0x39, 0xf5, 0xa0, 0xe8, 0x71, 0xec, 0x37, 0x5d, 0x97, 0x33, 0xa1, 0x45,
-	0xcf, 0xb4, 0x1e, 0x7c, 0x3d, 0xae, 0xa4, 0xcd, 0xdf, 0x8e, 0x2b, 0xeb, 0x7e, 0x20, 0x77, 0x07,
-	0x9d, 0x86, 0x83, 0x7d, 0x33, 0xc2, 0xae, 0x5c, 0x0d, 0x99, 0x1c, 0x22, 0xef, 0x9a, 0x11, 0x3a,
-	0x5d, 0x26, 0x57, 0x1d, 0xe4, 0xcc, 0x54, 0xd3, 0xdb, 0x48, 0x92, 0xac, 0xf4, 0x09, 0x71, 0x51,
-	0x76, 0x4c, 0xa8, 0x26, 0x62, 0xda, 0xd2, 0xe0, 0xce, 0xd4, 0xc1, 0xdb, 0x4a, 0xe6, 0xe0, 0x5d,
-	0x85, 0xd4, 0xde, 0x10, 0xb8, 0xba, 0x25, 0x7c, 0x8b, 0xf5, 0xf1, 0x05, 0xfb, 0x2f, 0x2b, 0x7c,
-	0x4f, 0x60, 0x6e, 0x4b, 0xf8, 0x6d, 0x26, 0xc7, 0x5b, 0x77, 0x59, 0xb5, 0xad, 0x41, 0x3e, 0x08,
-	0x3d, 0x54, 0xa5, 0xfd, 0x6a, 0xb8, 0x54, 0x64, 0xaa, 0xee, 0x4f, 0x04, 0x16, 0x53, 0x75, 0x8f,
-	0xc7, 0x48, 0x5c, 0x66, 0x6b, 0xf5, 0xd2, 0x66, 0x7f, 0xb2, 0xb4, 0xb9, 0x3f, 0x5a, 0xda, 0x0f,
-	0x04, 0x96, 0xb4, 0xa2, 0xcd, 0x1e, 0x76, 0xec, 0xde, 0xbf, 0x90, 0xf4, 0xb7, 0x37, 0xce, 0x8d,
-	0x7b, 0xa3, 0x0b, 0x54, 0xdd, 0x7c, 0x00, 0x85, 0xc7, 0x28, 0xdb, 0x4c, 0x96, 0x32, 0x74, 0x0a,
-	0xf2, 0xad, 0x01, 0x0f, 0x4b, 0x84, 0x16, 0x61, 0x32, 0xe1, 0x29, 0x65, 0xe9, 0x2c, 0x80, 0xc5,
-	0x86, 0x36, 0x77, 0xb7, 0x11, 0x7b, 0xa5, 0x5c, 0xeb, 0xc9, 0xe1, 0x89, 0x41, 0x8e, 0x4e, 0x0c,
-	0xf2, 0xe5, 0xc4, 0x20, 0xaf, 0x4e, 0x8d, 0xcc, 0xd1, 0xa9, 0x91, 0xf9, 0x7c, 0x6a, 0x64, 0x9e,
-	0xde, 0xfa, 0x1d, 0x4d, 0xe9, 0xc7, 0x4b, 0xe9, 0xeb, 0x14, 0xd4, 0x73, 0x72, 0xf3, 0x7b, 0x00,
-	0x00, 0x00, 0xff, 0xff, 0x78, 0xf5, 0xb7, 0xb5, 0xd8, 0x06, 0x00, 0x00,
+	// 598 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xc4, 0x54, 0xc1, 0x6e, 0xd3, 0x40,
+	0x10, 0xf5, 0x26, 0x69, 0xda, 0x4e, 0xa2, 0x36, 0x32, 0x55, 0x9a, 0x16, 0x64, 0x47, 0x3e, 0x45,
+	0x48, 0xb1, 0xdb, 0x22, 0x04, 0x42, 0x48, 0x08, 0x0b, 0x51, 0xf5, 0x00, 0x54, 0x4e, 0x0e, 0x88,
+	0x0b, 0xd8, 0xc9, 0xda, 0xb5, 0x92, 0x78, 0xad, 0xf5, 0x46, 0x69, 0xe0, 0x07, 0x7a, 0xe4, 0x13,
+	0x10, 0xff, 0xc0, 0x85, 0x1f, 0xa0, 0x37, 0x7a, 0x44, 0x1c, 0x22, 0x94, 0xdc, 0xf8, 0x04, 0x4e,
+	0xc8, 0xbb, 0x76, 0xe3, 0xa8, 0x45, 0x14, 0x0e, 0x70, 0xf3, 0x9b, 0x99, 0x37, 0x6f, 0xdf, 0x78,
+	0x76, 0xe1, 0xfa, 0xb1, 0xe1, 0x50, 0xbf, 0xeb, 0x61, 0x17, 0xe3, 0xf9, 0x97, 0x1e, 0x52, 0xc2,
+	0x88, 0x5c, 0x3a, 0xd6, 0xcf, 0x43, 0xdb, 0x5b, 0x1d, 0x12, 0x0d, 0x48, 0xf4, 0x92, 0xa7, 0x0c,
+	0x01, 0x44, 0xdd, 0xf6, 0x86, 0x47, 0x3c, 0x22, 0xe2, 0xf1, 0x57, 0x12, 0xad, 0xb0, 0x71, 0x88,
+	0x23, 0xa3, 0x43, 0xfc, 0x20, 0x89, 0x6c, 0x79, 0x84, 0x78, 0x7d, 0x6c, 0x70, 0xe4, 0x0c, 0x5d,
+	0xc3, 0x0e, 0xc6, 0x22, 0xa5, 0xbd, 0x81, 0xd5, 0x36, 0xe9, 0xe1, 0xe0, 0x20, 0x70, 0x89, 0xbc,
+	0x01, 0x4b, 0x2c, 0x06, 0x35, 0x54, 0x47, 0x8d, 0x55, 0x4b, 0x00, 0xf9, 0x39, 0x80, 0x33, 0x74,
+	0x5d, 0x4c, 0x5b, 0xfe, 0x6b, 0x5c, 0xcb, 0xc5, 0x29, 0xf3, 0xee, 0xe9, 0x44, 0x95, 0xbe, 0x4e,
+	0xd4, 0x1d, 0xcf, 0x67, 0x47, 0x43, 0x47, 0xef, 0x90, 0x81, 0x11, 0x92, 0x1e, 0x6b, 0x06, 0x98,
+	0x8d, 0x08, 0xed, 0x19, 0x21, 0xe9, 0xf4, 0x30, 0x6b, 0x76, 0x08, 0xc5, 0x06, 0x3f, 0x8f, 0x6e,
+	0xfa, 0xde, 0x41, 0xc0, 0xac, 0x4c, 0x2f, 0xad, 0x07, 0xd0, 0xb6, 0xa9, 0x87, 0x19, 0x57, 0xaf,
+	0x42, 0x91, 0x71, 0x94, 0xc8, 0x27, 0x48, 0x6e, 0xc2, 0x12, 0x6b, 0x8f, 0x43, 0x21, 0xbd, 0xb6,
+	0xb7, 0xa9, 0x67, 0xa6, 0xa3, 0x0b, 0x7e, 0x9c, 0xb6, 0x44, 0x55, 0xdc, 0x66, 0x84, 0x7d, 0xef,
+	0x88, 0xd5, 0xf2, 0x75, 0xd4, 0x28, 0x58, 0x09, 0xd2, 0x5e, 0xc1, 0x3a, 0x77, 0x9a, 0x51, 0xbc,
+	0xdc, 0xef, 0x1d, 0x58, 0x16, 0xca, 0x51, 0x2d, 0x57, 0xcf, 0x37, 0x4a, 0x97, 0x2a, 0xc6, 0x7c,
+	0xb3, 0x10, 0x4f, 0xc1, 0x4a, 0xab, 0xb5, 0x4f, 0x08, 0xca, 0xfb, 0x38, 0xc0, 0x91, 0x1f, 0xb5,
+	0x98, 0xcd, 0xb0, 0xbc, 0x0b, 0xc5, 0xd0, 0xa6, 0xf6, 0x20, 0xe2, 0x02, 0xa5, 0xbd, 0x6b, 0x0b,
+	0x8d, 0x0e, 0x79, 0x2a, 0x69, 0x92, 0x14, 0xca, 0xf7, 0x01, 0x58, 0xfa, 0x3f, 0x52, 0xfd, 0xea,
+	0xa2, 0x7e, 0x9a, 0x4e, 0x98, 0x99, 0x7a, 0xf9, 0x31, 0x94, 0xd9, 0xdc, 0x63, 0x54, 0xcb, 0x73,
+	0xfe, 0x8d, 0x8b, 0xfc, 0x0b, 0x26, 0x16, 0x78, 0x9a, 0x02, 0x45, 0x71, 0xba, 0x78, 0x44, 0x64,
+	0x14, 0x60, 0x9a, 0x8e, 0x88, 0x03, 0xed, 0x03, 0x82, 0xf5, 0x27, 0x91, 0xd7, 0xc2, 0x6c, 0xbe,
+	0x3c, 0x2e, 0x94, 0x5c, 0x4a, 0x06, 0x0f, 0xbb, 0x5d, 0x8a, 0x23, 0xe1, 0xb8, 0x6c, 0x3e, 0xfa,
+	0x3e, 0x51, 0xb3, 0xe1, 0x1f, 0x13, 0x75, 0xf7, 0xea, 0x2b, 0x93, 0x90, 0xac, 0x6c, 0x07, 0x79,
+	0x07, 0x0a, 0x7e, 0xe0, 0x12, 0xbe, 0x0d, 0xbf, 0x9b, 0x0d, 0xaf, 0xbc, 0xb7, 0x72, 0xf2, 0x4e,
+	0x95, 0x4e, 0xde, 0xab, 0x48, 0xfb, 0x8c, 0xa0, 0x9a, 0x39, 0xf7, 0x7c, 0x0a, 0xd1, 0x3f, 0x3b,
+	0xfe, 0xf9, 0xce, 0xe5, 0x7e, 0xb1, 0x73, 0xf9, 0x3f, 0xda, 0xb9, 0x8f, 0x08, 0x36, 0x85, 0xa3,
+	0xfd, 0x3e, 0x71, 0xec, 0xfe, 0xff, 0xb0, 0xf4, 0xb7, 0x17, 0xe6, 0xe6, 0x83, 0xf4, 0xfe, 0xf3,
+	0x8b, 0x0b, 0x50, 0x7c, 0x4a, 0x58, 0x0b, 0xb3, 0x8a, 0x24, 0xaf, 0x40, 0xc1, 0x1c, 0xd2, 0xa0,
+	0x82, 0xe4, 0x12, 0x2c, 0x27, 0x3a, 0x95, 0x9c, 0xbc, 0x06, 0x60, 0xe1, 0x91, 0x4d, 0xbb, 0x87,
+	0x84, 0xf4, 0x2b, 0x79, 0xf3, 0xd9, 0xe9, 0x54, 0x41, 0x67, 0x53, 0x05, 0x7d, 0x9b, 0x2a, 0xe8,
+	0xed, 0x4c, 0x91, 0xce, 0x66, 0x8a, 0xf4, 0x65, 0xa6, 0x48, 0x2f, 0x6e, 0x5f, 0xc5, 0x53, 0xf6,
+	0x0d, 0xe6, 0xfe, 0x9c, 0x22, 0x7f, 0x15, 0x6f, 0xfd, 0x0c, 0x00, 0x00, 0xff, 0xff, 0x84, 0xe4,
+	0x73, 0xa0, 0x9f, 0x05, 0x00, 0x00,
 }
 
 func (m *TokenInfo) Marshal() (dAtA []byte, err error) {
@@ -654,16 +550,16 @@ func (m *TokenInfo) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.TokenSpecificConfig != 0 {
-		i = encodeVarintBridgefee(dAtA, i, uint64(m.TokenSpecificConfig))
-		i--
-		dAtA[i] = 0x18
+	{
+		size := m.BufferSize.Size()
+		i -= size
+		if _, err := m.BufferSize.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintBridgefee(dAtA, i, uint64(size))
 	}
-	if m.BufferSize != 0 {
-		i = encodeVarintBridgefee(dAtA, i, uint64(m.BufferSize))
-		i--
-		dAtA[i] = 0x10
-	}
+	i--
+	dAtA[i] = 0x12
 	if len(m.Token) > 0 {
 		i -= len(m.Token)
 		copy(dAtA[i:], m.Token)
@@ -849,80 +745,6 @@ func (m *Params) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgAddAllowedActor) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgAddAllowedActor) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgAddAllowedActor) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.Actor) > 0 {
-		i -= len(m.Actor)
-		copy(dAtA[i:], m.Actor)
-		i = encodeVarintBridgefee(dAtA, i, uint64(len(m.Actor)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.FromAddress) > 0 {
-		i -= len(m.FromAddress)
-		copy(dAtA[i:], m.FromAddress)
-		i = encodeVarintBridgefee(dAtA, i, uint64(len(m.FromAddress)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgRemoveAllowedActor) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgRemoveAllowedActor) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgRemoveAllowedActor) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.Actor) > 0 {
-		i -= len(m.Actor)
-		copy(dAtA[i:], m.Actor)
-		i = encodeVarintBridgefee(dAtA, i, uint64(len(m.Actor)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.FromAddress) > 0 {
-		i -= len(m.FromAddress)
-		copy(dAtA[i:], m.FromAddress)
-		i = encodeVarintBridgefee(dAtA, i, uint64(len(m.FromAddress)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
 func (m *MsgSetTokenInfo) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -1079,12 +901,8 @@ func (m *TokenInfo) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovBridgefee(uint64(l))
 	}
-	if m.BufferSize != 0 {
-		n += 1 + sovBridgefee(uint64(m.BufferSize))
-	}
-	if m.TokenSpecificConfig != 0 {
-		n += 1 + sovBridgefee(uint64(m.TokenSpecificConfig))
-	}
+	l = m.BufferSize.Size()
+	n += 1 + l + sovBridgefee(uint64(l))
 	return n
 }
 
@@ -1156,40 +974,6 @@ func (m *Params) Size() (n int) {
 	var l int
 	_ = l
 	l = len(m.Owner)
-	if l > 0 {
-		n += 1 + l + sovBridgefee(uint64(l))
-	}
-	return n
-}
-
-func (m *MsgAddAllowedActor) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.FromAddress)
-	if l > 0 {
-		n += 1 + l + sovBridgefee(uint64(l))
-	}
-	l = len(m.Actor)
-	if l > 0 {
-		n += 1 + l + sovBridgefee(uint64(l))
-	}
-	return n
-}
-
-func (m *MsgRemoveAllowedActor) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.FromAddress)
-	if l > 0 {
-		n += 1 + l + sovBridgefee(uint64(l))
-	}
-	l = len(m.Actor)
 	if l > 0 {
 		n += 1 + l + sovBridgefee(uint64(l))
 	}
@@ -1321,10 +1105,10 @@ func (m *TokenInfo) Unmarshal(dAtA []byte) error {
 			m.Token = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
-			if wireType != 0 {
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field BufferSize", wireType)
 			}
-			m.BufferSize = 0
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowBridgefee
@@ -1334,30 +1118,26 @@ func (m *TokenInfo) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.BufferSize |= uint64(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-		case 3:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field TokenSpecificConfig", wireType)
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthBridgefee
 			}
-			m.TokenSpecificConfig = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowBridgefee
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.TokenSpecificConfig |= uint32(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthBridgefee
 			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.BufferSize.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipBridgefee(dAtA[iNdEx:])
@@ -1826,238 +1606,6 @@ func (m *Params) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.Owner = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipBridgefee(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthBridgefee
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgAddAllowedActor) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowBridgefee
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgAddAllowedActor: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgAddAllowedActor: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field FromAddress", wireType)
-			}
-			var byteLen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowBridgefee
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				byteLen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if byteLen < 0 {
-				return ErrInvalidLengthBridgefee
-			}
-			postIndex := iNdEx + byteLen
-			if postIndex < 0 {
-				return ErrInvalidLengthBridgefee
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.FromAddress = append(m.FromAddress[:0], dAtA[iNdEx:postIndex]...)
-			if m.FromAddress == nil {
-				m.FromAddress = []byte{}
-			}
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Actor", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowBridgefee
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthBridgefee
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthBridgefee
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Actor = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipBridgefee(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthBridgefee
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgRemoveAllowedActor) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowBridgefee
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgRemoveAllowedActor: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgRemoveAllowedActor: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field FromAddress", wireType)
-			}
-			var byteLen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowBridgefee
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				byteLen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if byteLen < 0 {
-				return ErrInvalidLengthBridgefee
-			}
-			postIndex := iNdEx + byteLen
-			if postIndex < 0 {
-				return ErrInvalidLengthBridgefee
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.FromAddress = append(m.FromAddress[:0], dAtA[iNdEx:postIndex]...)
-			if m.FromAddress == nil {
-				m.FromAddress = []byte{}
-			}
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Actor", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowBridgefee
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthBridgefee
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthBridgefee
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Actor = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

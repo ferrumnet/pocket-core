@@ -13,14 +13,14 @@ import (
 	"github.com/tendermint/tendermint/rpc/client"
 )
 
+// SetTokenInfoTx broadcasts a transaction that sends token information for fee distribution
 func SetTokenInfoTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keybase, token string, bufferSize uint64, tokenSpecificConfig uint32, kp keys.KeyPair, passphrase string, legacyCodec bool) (*sdk.TxResponse, error) {
 	fromAddr := kp.GetAddress()
 	msg := types.MsgSetTokenInfo{
 		FromAddress: fromAddr,
 		Info: types.TokenInfo{
-			Token:               token,
-			BufferSize:          bufferSize,
-			TokenSpecificConfig: tokenSpecificConfig,
+			Token:      token,
+			BufferSize: bufferSize,
 		},
 	}
 	txBuilder, cliCtx, err := newTx(cdc, &msg, fromAddr, tmNode, keybase, passphrase)
@@ -34,6 +34,7 @@ func SetTokenInfoTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keybase
 	return util.CompleteAndBroadcastTxCLI(txBuilder, cliCtx, &msg, legacyCodec)
 }
 
+// SetTokenTargetInfosTx broadcasts a transaction that sends token targets information for fee distribution
 func SetTokenTargetInfosTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keybase, token string, targets []types.TargetInfo, kp keys.KeyPair, passphrase string, legacyCodec bool) (*sdk.TxResponse, error) {
 	fromAddr := kp.GetAddress()
 	msg := types.MsgSetTokenTargetInfos{
@@ -52,6 +53,7 @@ func SetTokenTargetInfosTx(cdc *codec.Codec, tmNode client.Client, keybase keys.
 	return util.CompleteAndBroadcastTxCLI(txBuilder, cliCtx, &msg, legacyCodec)
 }
 
+// SetTokenTargetInfosTx broadcasts a transaction that sends token targets information for fee distribution
 func SetGlobalTargetInfosTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keybase, targets []types.TargetInfo, kp keys.KeyPair, passphrase string, legacyCodec bool) (*sdk.TxResponse, error) {
 	fromAddr := kp.GetAddress()
 	msg := types.MsgSetGlobalTargetInfos{
@@ -69,6 +71,7 @@ func SetGlobalTargetInfosTx(cdc *codec.Codec, tmNode client.Client, keybase keys
 	return util.CompleteAndBroadcastTxCLI(txBuilder, cliCtx, &msg, legacyCodec)
 }
 
+// newTx defines generalized transaction broadcast functionality from a proto message
 func newTx(cdc *codec.Codec, msg sdk.ProtoMsg, fromAddr sdk.Address, tmNode client.Client, keybase keys.Keybase, passphrase string) (txBuilder auth.TxBuilder, cliCtx util.CLIContext, err error) {
 	genDoc, err := tmNode.Genesis()
 	if err != nil {

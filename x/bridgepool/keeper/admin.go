@@ -6,6 +6,7 @@ import (
 	"github.com/pokt-network/pocket-core/x/bridgepool/types"
 )
 
+// SetFeeRate set fee rate for a token on the store
 func (k Keeper) SetFeeRate(ctx sdk.Ctx, token string, fee10000 uint64) sdk.Error {
 	store := ctx.KVStore(k.storeKey)
 	info := types.FeeRate{
@@ -17,6 +18,7 @@ func (k Keeper) SetFeeRate(ctx sdk.Ctx, token string, fee10000 uint64) sdk.Error
 	return nil
 }
 
+// GetFeeRate gets fee rate for a token from the store
 func (k Keeper) GetFeeRate(ctx sdk.Ctx, token string) uint64 {
 	store := ctx.KVStore(k.storeKey)
 	bz, err := store.Get(types.FeeRateKey(token))
@@ -31,6 +33,7 @@ func (k Keeper) GetFeeRate(ctx sdk.Ctx, token string) uint64 {
 	return info.Rate
 }
 
+// GetFeeRate gets all registered fee rates from the store
 func (k Keeper) GetAllFeeRates(ctx sdk.Ctx) []types.FeeRate {
 	feeRates := []types.FeeRate{}
 	store := ctx.KVStore(k.storeKey)
@@ -45,6 +48,7 @@ func (k Keeper) GetAllFeeRates(ctx sdk.Ctx) []types.FeeRate {
 	return feeRates
 }
 
+// AllowTarget allow swap target chain and target token address for a denom
 func (k Keeper) AllowTarget(ctx sdk.Ctx, token string, chainId string, targetToken string) sdk.Error {
 	// check ethereum addresses
 	if !common.IsHexAddress(targetToken) {
@@ -62,11 +66,13 @@ func (k Keeper) AllowTarget(ctx sdk.Ctx, token string, chainId string, targetTok
 	return nil
 }
 
+// DisallowTarget disallow swap target chain for a denom
 func (k Keeper) DisallowTarget(ctx sdk.Ctx, token string, chainId string) {
 	store := ctx.KVStore(k.storeKey)
 	store.Delete(types.AllowedTargetKey(token, chainId))
 }
 
+// GetAllowedTarget gets target chain token address for a denom
 func (k Keeper) GetAllowedTarget(ctx sdk.Ctx, token string, chainId string) string {
 	store := ctx.KVStore(k.storeKey)
 	bz, err := store.Get(types.AllowedTargetKey(token, chainId))
@@ -78,6 +84,7 @@ func (k Keeper) GetAllowedTarget(ctx sdk.Ctx, token string, chainId string) stri
 	return info.TargetToken
 }
 
+// GetAllAllowedTargets gets all allowed targets
 func (k Keeper) GetAllAllowedTargets(ctx sdk.Ctx) []types.AllowedTarget {
 	allowedTargets := []types.AllowedTarget{}
 	store := ctx.KVStore(k.storeKey)
@@ -92,6 +99,7 @@ func (k Keeper) GetAllAllowedTargets(ctx sdk.Ctx) []types.AllowedTarget {
 	return allowedTargets
 }
 
+// SetSigner set allowed signer by module admin
 func (k Keeper) SetSigner(ctx sdk.Ctx, signer string) sdk.Error {
 	// check ethereum addresses
 	if !common.IsHexAddress(signer) {
@@ -103,6 +111,7 @@ func (k Keeper) SetSigner(ctx sdk.Ctx, signer string) sdk.Error {
 	return nil
 }
 
+// DeleteSigner removes allowed signer by module admin
 func (k Keeper) DeleteSigner(ctx sdk.Ctx, signer string) sdk.Error {
 	// check ethereum addresses
 	if !common.IsHexAddress(signer) {
@@ -114,6 +123,7 @@ func (k Keeper) DeleteSigner(ctx sdk.Ctx, signer string) sdk.Error {
 	return nil
 }
 
+// IsSigner returns if an address is signer or not
 func (k Keeper) IsSigner(ctx sdk.Ctx, signer string) bool {
 	store := ctx.KVStore(k.storeKey)
 	bz, err := store.Get(types.SignerKey(signer))
@@ -123,6 +133,7 @@ func (k Keeper) IsSigner(ctx sdk.Ctx, signer string) bool {
 	return true
 }
 
+// GetAllSigners returns all registered signers
 func (k Keeper) GetAllSigners(ctx sdk.Ctx) []string {
 	signers := []string{}
 	store := ctx.KVStore(k.storeKey)

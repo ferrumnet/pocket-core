@@ -13,6 +13,7 @@ import (
 	"github.com/tendermint/tendermint/rpc/client"
 )
 
+// SetFeeTx broadcasts a transaction to set fee rate for a token
 func SetFeeTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keybase, token string, fee10000 uint64, kp keys.KeyPair, passphrase string, legacyCodec bool) (*sdk.TxResponse, error) {
 	fromAddr := kp.GetAddress()
 	msg := types.MsgSetFee{
@@ -31,6 +32,7 @@ func SetFeeTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keybase, toke
 	return util.CompleteAndBroadcastTxCLI(txBuilder, cliCtx, &msg, legacyCodec)
 }
 
+// AllowTargetTx broadcasts a transaction to allow swap target
 func AllowTargetTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keybase, token, chainId, targetToken string, kp keys.KeyPair, passphrase string, legacyCodec bool) (*sdk.TxResponse, error) {
 	fromAddr := kp.GetAddress()
 	msg := types.MsgAllowTarget{
@@ -50,6 +52,7 @@ func AllowTargetTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keybase,
 	return util.CompleteAndBroadcastTxCLI(txBuilder, cliCtx, &msg, legacyCodec)
 }
 
+// DisallowTargetTx broadcasts a transaction to disallow swap target
 func DisallowTargetTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keybase, token, chainId string, kp keys.KeyPair, passphrase string, legacyCodec bool) (*sdk.TxResponse, error) {
 	fromAddr := kp.GetAddress()
 	msg := types.MsgDisallowTarget{
@@ -68,6 +71,7 @@ func DisallowTargetTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keyba
 	return util.CompleteAndBroadcastTxCLI(txBuilder, cliCtx, &msg, legacyCodec)
 }
 
+// AddLiquidityTx broadcasts a transaction to add liquidity into the module
 func AddLiquidityTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keybase, token string, amount uint64, kp keys.KeyPair, passphrase string, legacyCodec bool) (*sdk.TxResponse, error) {
 	fromAddr := kp.GetAddress()
 	msg := types.MsgAddLiquidity{
@@ -86,6 +90,7 @@ func AddLiquidityTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keybase
 	return util.CompleteAndBroadcastTxCLI(txBuilder, cliCtx, &msg, legacyCodec)
 }
 
+// RemoveLiquidityTx broadcasts a transaction to remove liquidity into the module
 func RemoveLiquidityTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keybase, token string, amount uint64, kp keys.KeyPair, passphrase string, legacyCodec bool) (*sdk.TxResponse, error) {
 	fromAddr := kp.GetAddress()
 	msg := types.MsgRemoveLiquidity{
@@ -104,6 +109,7 @@ func RemoveLiquidityTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keyb
 	return util.CompleteAndBroadcastTxCLI(txBuilder, cliCtx, &msg, legacyCodec)
 }
 
+// SwapTx broadcasts a transaction to swap tokens from current chain to target chain
 func SwapTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keybase, token string, amount uint64, targetChainId, targetToken, targetAddress string, kp keys.KeyPair, passphrase string, legacyCodec bool) (*sdk.TxResponse, error) {
 	fromAddr := kp.GetAddress()
 	msg := types.MsgSwap{
@@ -125,6 +131,7 @@ func SwapTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keybase, token 
 	return util.CompleteAndBroadcastTxCLI(txBuilder, cliCtx, &msg, legacyCodec)
 }
 
+// WithdrawSignedTx broadcasts a transaction to withdraw tokens from the module based on signer's signature
 func WithdrawSignedTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keybase, payee string, amount sdk.Coin, salt string, signature []byte, kp keys.KeyPair, passphrase string, legacyCodec bool) (*sdk.TxResponse, error) {
 	fromAddr := kp.GetAddress()
 	msg := types.MsgWithdrawSigned{
@@ -146,6 +153,7 @@ func WithdrawSignedTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keyba
 	return util.CompleteAndBroadcastTxCLI(txBuilder, cliCtx, &msg, legacyCodec)
 }
 
+// AddSignerTx broadcasts a transaction to add signer on the module
 func AddSignerTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keybase, signer string, kp keys.KeyPair, passphrase string, legacyCodec bool) (*sdk.TxResponse, error) {
 	fromAddr := kp.GetAddress()
 	msg := types.MsgAddSigner{
@@ -164,6 +172,7 @@ func AddSignerTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keybase, s
 	return util.CompleteAndBroadcastTxCLI(txBuilder, cliCtx, &msg, legacyCodec)
 }
 
+// AddSignerTx broadcasts a transaction to remove signer from the module
 func RemoveSignerTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keybase, signer string, kp keys.KeyPair, passphrase string, legacyCodec bool) (*sdk.TxResponse, error) {
 	fromAddr := kp.GetAddress()
 	msg := types.MsgRemoveSigner{
@@ -182,6 +191,7 @@ func RemoveSignerTx(cdc *codec.Codec, tmNode client.Client, keybase keys.Keybase
 	return util.CompleteAndBroadcastTxCLI(txBuilder, cliCtx, &msg, legacyCodec)
 }
 
+// newTx defines generalized transaction broadcast functionality from a proto message
 func newTx(cdc *codec.Codec, msg sdk.ProtoMsg, fromAddr sdk.Address, tmNode client.Client, keybase keys.Keybase, passphrase string) (txBuilder auth.TxBuilder, cliCtx util.CLIContext, err error) {
 	genDoc, err := tmNode.Genesis()
 	if err != nil {

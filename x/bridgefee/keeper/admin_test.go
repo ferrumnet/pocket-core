@@ -21,9 +21,8 @@ func TestTokenInfo(t *testing.T) {
 
 	// set token info
 	info := types.TokenInfo{
-		Token:               "upokt",
-		BufferSize:          1000000,
-		TokenSpecificConfig: 1,
+		Token:      "upokt",
+		BufferSize: sdk.NewInt(1000000),
 	}
 	err := keeper.SetTokenInfo(context, info)
 	assert.Nil(t, err)
@@ -38,9 +37,8 @@ func TestTokenInfo(t *testing.T) {
 
 	// set token info for second token
 	info2 := types.TokenInfo{
-		Token:               "upokt2",
-		BufferSize:          1000000,
-		TokenSpecificConfig: 1,
+		Token:      "upokt2",
+		BufferSize: sdk.NewInt(1000000),
 	}
 	err = keeper.SetTokenInfo(context, info2)
 	assert.Nil(t, err)

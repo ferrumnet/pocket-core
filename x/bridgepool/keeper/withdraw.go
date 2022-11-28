@@ -12,17 +12,20 @@ import (
 	"github.com/pokt-network/pocket-core/x/bridgepool/types"
 )
 
-func (k Keeper) SetUsedMessage(ctx sdk.Ctx, salt []byte) {
+// SetUsedMessage sets used message to prevent using same message for double withdrawal
+func (k Keeper) SetUsedMessage(ctx sdk.Ctx, message []byte) {
 	store := ctx.KVStore(k.storeKey)
-	store.Set(types.WithdrawSaltKey(salt), salt)
+	store.Set(types.WithdrawSaltKey(message), message)
 }
 
+// IsUsedMessage checks if a message is used for withdrawal or not
 func (k Keeper) IsUsedMessage(ctx sdk.Ctx, message []byte) bool {
 	store := ctx.KVStore(k.storeKey)
 	bz, _ := store.Get(types.WithdrawSaltKey(message))
 	return bytes.Equal(bz, message)
 }
 
+// GetAllUsedMessages returns all used messages for withdrawal from other networks
 func (k Keeper) GetAllUsedMessages(ctx sdk.Ctx) [][]byte {
 	usedMessages := [][]byte{}
 	store := ctx.KVStore(k.storeKey)
@@ -35,11 +38,12 @@ func (k Keeper) GetAllUsedMessages(ctx sdk.Ctx) [][]byte {
 	return usedMessages
 }
 
+// GetSigner calculate signer from withdraw signed message parameters
 func GetSigner(chainId string, payee string, amount sdk.Coin,
 	salt string, signature []byte) (common.Address, []byte, error) {
 	signer := common.Address{}
 
-	// verify signature
+	// get sign message to be used for signature verification
 	message := &types.WithdrawSignMessage{
 		ChainId: chainId,
 		Payee:   payee,
@@ -50,6 +54,8 @@ func GetSigner(chainId string, payee string, amount sdk.Coin,
 	if err != nil {
 		return signer, messageBytes, err
 	}
+
+	// get signer from sign message and signature
 	if len(signature) > crypto.RecoveryIDOffset {
 		signature[crypto.RecoveryIDOffset] -= 27 // Transform yellow paper V from 27/28 to 0/1
 		recovered, err := crypto.SigToPub(accounts.TextHash(messageBytes), signature)
@@ -62,15 +68,17 @@ func GetSigner(chainId string, payee string, amount sdk.Coin,
 	return signer, messageBytes, nil
 }
 
+// WithdrawSigned execute withdrawal from module to specific account with signature
 func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, payee string, amount sdk.Coin,
 	salt string, signature []byte) sdk.Error {
 
-	// verify signature
+	// gets signer from params
 	signer, messageBytes, err := GetSigner(ctx.ChainID(), payee, amount, salt, signature)
 	if err != nil {
 		return types.ErrUnexpectedError(k.codespace, err)
 	}
 
+	// ensure that the signer is registered on-chain
 	if !k.IsSigner(ctx, signer.String()) {
 		return types.ErrInvalidSigner(k.codespace)
 	}
@@ -101,6 +109,7 @@ func (k Keeper) WithdrawSigned(ctx sdk.Ctx, from string, payee string, amount sd
 		return types.ErrUnexpectedError(k.codespace, err)
 	}
 
+	// emit events for withdrawal
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			types.EventTransferBySignature,

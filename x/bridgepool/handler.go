@@ -11,6 +11,7 @@ import (
 	"github.com/pokt-network/pocket-core/x/bridgepool/types"
 )
 
+// NewHandler process module messages
 func NewHandler(k keeper.Keeper) sdk.Handler {
 	return func(ctx sdk.Ctx, msg sdk.Msg, _ crypto.PublicKey) sdk.Result {
 		ctx = ctx.WithEventManager(sdk.NewEventManager())

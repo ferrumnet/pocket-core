@@ -134,9 +134,8 @@ func TestWithdrawSigned(t *testing.T) {
 
 			if tc.feeTarget.String() != "" {
 				feeKeeper.SetTokenInfo(context, bridgefeeTypes.TokenInfo{
-					Token:               "upokt",
-					BufferSize:          1,
-					TokenSpecificConfig: 1,
+					Token:      "upokt",
+					BufferSize: sdk.NewInt(1),
 				})
 				feeKeeper.SetTokenTargetInfo(context, bridgefeeTypes.TokenTargetInfo{
 					Token: "upokt",

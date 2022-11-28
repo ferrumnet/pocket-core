@@ -44,7 +44,7 @@ pocket_core query allowed-targets
 
 ### MsgSetFee
 
-#### To set the bridge fee for a particular token 
+#### To set the bridge fee for a particular token
 
 ```sh
 pocket_core bridgepool set-fee <fromAddr> <token> <fee-rate> <fee> <chainId>
@@ -54,6 +54,7 @@ pocket_core bridgepool set-fee 169869f67cd3f78a722fb4795b69949fb4bc9084 upokt 10
 ### MsgAllowTarget
 
 #### To set the allowed targets pairs on source/target blockchains
+
 ```sh
 pocket_core bridgepool allow-target <fromAddr> <token> <targetChainId> <targetToken> <fee> <chainId>
 pocket_core bridgepool allow-target 169869f67cd3f78a722fb4795b69949fb4bc9084 upokt 137 0xa5e0829caced8ffdd4de3c43696c57f7d7a678ff 10000 testnet
@@ -73,8 +74,8 @@ pocket_core bridgepool disallow-target 169869f67cd3f78a722fb4795b69949fb4bc9084 
 #### To set the liquidity of a particular token (by a liquidity provider) on the bridge
 
 ```sh
-pocket_core bridgepool add-liquidity <fromAddr> <token> <amount> <fee> <chainId>
-pocket_core bridgepool add-liquidity 169869f67cd3f78a722fb4795b69949fb4bc9084 upokt 11111111 10000 testnet
+pocket_core bridgepool add-liquidity <fromAddr> <amount> <fee> <chainId>
+pocket_core bridgepool add-liquidity 169869f67cd3f78a722fb4795b69949fb4bc9084 11111111upokt 10000 testnet
 ```
 
 ### MsgRemoveLiquidity
@@ -82,8 +83,8 @@ pocket_core bridgepool add-liquidity 169869f67cd3f78a722fb4795b69949fb4bc9084 up
 #### To remove the liquidity of a particular token (by a liquidity provider) on the bridge
 
 ```sh
-pocket_core bridgepool remove-liquidity <fromAddr> <token> <amount> <fee> <chainId>
-pocket_core bridgepool remove-liquidity 169869f67cd3f78a722fb4795b69949fb4bc9084 upokt 11011 10000 testnet
+pocket_core bridgepool remove-liquidity <fromAddr> <amount> <fee> <chainId>
+pocket_core bridgepool remove-liquidity 169869f67cd3f78a722fb4795b69949fb4bc9084 11011upokt 10000 testnet
 ```
 
 ### MsgAddSigner
@@ -106,10 +107,11 @@ pocket_core bridgepool remove-signer 169869f67cd3f78a722fb4795b69949fb4bc9084 16
 
 ### MsgSwap
 
-#### To perform a swap from POKT to Target Blockchain 
+#### To perform a swap from POKT to Target Blockchain
+
 ```sh
-pocket_core bridgepool swap <fromAddr> <token> <amount> <targetNetwork> <targetToken> <targetAddress> <fee> <chainId>
-pocket_core bridgepool swap 169869f67cd3f78a722fb4795b69949fb4bc9084 upokt 10000000 polygon 0xa5e0829caced8ffdd4de3c43696c57f7d7a678ff 169869f67cd3f78a722fb4795b69949fb4bc9084 10000 testnet
+pocket_core bridgepool swap <fromAddr> <amount> <targetNetwork> <targetToken> <targetAddress> <fee> <chainId>
+pocket_core bridgepool swap 169869f67cd3f78a722fb4795b69949fb4bc9084 10000000upokt 137 0xa5e0829caced8ffdd4de3c43696c57f7d7a678ff 169869f67cd3f78a722fb4795b69949fb4bc9084 10000 testnet
 ```
 
 ### MsgWithdrawSigned
